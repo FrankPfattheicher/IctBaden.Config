@@ -1,0 +1,32 @@
+﻿namespace IctBaden.Config.Unit
+{
+  public enum SelectionType
+  {
+    None,
+    ParentFlat,
+    ParentHierarchical,
+    Edit,
+    EditHtml,
+    EditMultiline,
+    EditPassword,
+    EditScript,
+    Boolean,
+    ListOnly,
+    ListEdit,
+    SelectBits,
+    Color,
+    Icon,
+    Geography,
+    Reference,
+    ReferenceList,
+    DbConnectString,
+    SelectFolder,
+    SelectFile,
+    PhoneNumber,
+    TimeSpan,
+    Date,
+    Time,
+    AvailableTtsEngines,
+    AvailableComPorts
+  }
+}

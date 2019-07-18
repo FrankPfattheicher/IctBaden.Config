@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfigurationUnit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DataType="Empty" Selection="None" xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config">
+  <ConfigurationUnit DataType="Object" Selection="None" Id="Onager" DisplayName="Onager.cfg" DisplayImage="IniFile" Description="C:\Program Files (x86)\ICT Baden\Data\Onager.cfg" ToolTip="" DefaultValue="" DefaultValueDisplayText="" Unit="" ValueSource="" ValidationRule="" NamespaceProvider="file://C:\Program Files (x86)\ICT Baden\Data\Onager.cfg">
+    <ConfigurationUnit DataType="Object" Selection="None" Id="SMS" DisplayName="SMS" DisplayImage="IniSection">
+      <ConfigurationUnit DataType="String" Id="PIN" DisplayName="PIN" Input="Mandatory" />
+    </ConfigurationUnit>
+    <ConfigurationUnit DataType="Object" Selection="None" Id="EMail" DisplayName="EMail" DisplayImage="IniSection">
+      <ConfigurationUnit DataType="String" Id="Host" DisplayName="Host" Input="Mandatory" />
+      <ConfigurationUnit DataType="String" Id="User" DisplayName="User" />
+      <ConfigurationUnit DataType="String" Selection="EditPassword" Id="Password" DisplayName="Password" />
+      <ConfigurationUnit DataType="String" Id="Sender" DisplayName="Sender" />
+    </ConfigurationUnit>
+  </ConfigurationUnit>
+</ConfigurationUnit>

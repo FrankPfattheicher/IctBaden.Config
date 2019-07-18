@@ -1,0 +1,384 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using IctBaden.Config.Namespace;
+using IctBaden.Config.Session;
+using IctBaden.Config.Unit;
+using Xunit;
+
+namespace IctBaden.Config.Test
+{
+    public class ProfileTest : IDisposable
+    {
+        private static readonly string ProfileCfg = TestResources.LoadResourceString("Profile.cfg");
+        private static readonly string ProfileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempProfile.cfg");
+
+        public ProfileTest()
+        {
+            Dispose();
+            File.WriteAllText(ProfileName, ProfileCfg);
+        }
+
+        public void Dispose()
+        {
+            if (File.Exists(ProfileName))
+            {
+                File.Delete(ProfileName);
+            }
+        }
+
+        [Fact]
+        public void Create()
+        {
+            var root = new ConfigurationUnit { DisplayName = "Test" };
+            var session = new ConfigurationSession();
+            Assert.NotNull(session);
+            session.Namespace.AddChild(root);
+
+            var ini = new NamespaceProviderProfile(ProfileName);
+            session.RegisterNamespaceProvider("usr", ini);
+        }
+
+        [Fact]
+        public void LoadNamespace()
+        {
+            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(TestResources.LoadResourceString("test_settings.xaml")));
+            var session = new ConfigurationSession();
+            Assert.NotNull(session.Namespace);
+            session.Namespace.AddChild(root);
+        }
+
+        private static ConfigurationSession CreateDefaultSessionSettings()
+        {
+            return CreateDefaultSession(TestResources.LoadResourceString("test_settings.xaml"));
+        }
+        private static ConfigurationSession CreateDefaultSessionTargets()
+        {
+            return CreateDefaultSession(TestResources.LoadResourceString("test_targets.xaml"));
+        }
+        private static ConfigurationSession CreateDefaultSession(string definition)
+        {
+            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(definition));
+            var session = new ConfigurationSession();
+            session.Namespace.AddChildren(root.Children);
+
+            Assert.True(File.Exists(ProfileName), "Test data file not deployed");
+
+            var ini = new NamespaceProviderProfile(ProfileName);
+            session.RegisterNamespaceProvider("usr", ini);
+            return session;
+        }
+
+        [Fact]
+        public void NamespaceProviderList()
+        {
+            var session = CreateDefaultSessionSettings();
+            var providers = session.Namespace.GetNamespaceProviderList();
+            Assert.Equal(2, providers.Count);
+        }
+
+        [Fact]
+        public void SelectionValuesBase()
+        {
+            var session = CreateDefaultSessionSettings();
+            session.RegisterNamespaceProvider("test", new NamespaceProviderMemory(""));
+            var unit = session.Namespace.GetUnitById("LogCycle");
+            var selValues = unit.ValueList;
+            Assert.NotNull(selValues);
+        }
+
+        [Fact]
+        public void SelectionValuesProfile()
+        {
+            var session = CreateDefaultSessionSettings();
+            var unit = session.Namespace.GetUnitById("LogCycle");
+            unit.NamespaceProvider = "usr";
+            var selValues = unit.ValueList;
+            Assert.NotNull(selValues);
+            Assert.Equal(3, selValues.Count);
+        }
+
+        [Fact]
+        public void NonExistingUnit()
+        {
+            var session = CreateDefaultSessionTargets();
+            var unit = session.Namespace.GetUnitById("??????");
+            Assert.True(unit.IsEmpty, "Unknown unit should be empty");
+        }
+
+        [Fact]
+        public void ConfigurationUnitProperties()
+        {
+            var session = CreateDefaultSessionSettings();
+            var root = session.Namespace;
+
+            {
+                var provider = root.GetUnitById("Provider");
+                Assert.False(provider.IsEmpty, "Provider should not be empty");
+                Assert.False(provider.IsUserUnit, "Provider is not an user unit");
+                Assert.False(provider.IsRoot, "Provider is not a root unit");
+                Assert.False(provider.IsParent, "Provider is not an parent unit");
+                Assert.False(provider.IsFolder, "Provider is not an folder unit");
+                Assert.True(provider.IsItem, "Provider is an item unit");
+                Assert.False(provider.IsProperty, "Provider is not a property unit");
+                Assert.False(provider.IsTemplate, "Provider is not a template unit");
+            }
+
+            {
+                var email = root.GetUnitById("ProviderEmailSmtp");
+                Assert.False(email.IsEmpty, "Email should not be empty");
+                Assert.False(email.IsUserUnit, "Email is not an user unit");
+                Assert.False(email.IsRoot, "Email is not a root unit");
+                Assert.False(email.IsParent, "Email is not an parent unit");
+                Assert.False(email.IsFolder, "Email is not an folder unit");
+                Assert.True(email.IsItem, "Email is an item unit");
+                Assert.False(email.IsProperty, "Email is not an property unit");
+                Assert.False(email.IsTemplate, "Email is not a template unit");
+            }
+
+            {
+                var host = root.GetUnitById("Host");
+                Assert.False(host.IsEmpty, "Host should not be empty");
+                Assert.False(host.IsUserUnit, "Host is not an user unit");
+                Assert.False(host.IsRoot, "Host is not a root unit");
+                Assert.False(host.IsParent, "Host is not an parent unit");
+                Assert.False(host.IsFolder, "Host is not an folder unit");
+                Assert.False(host.IsItem, "Host is not an item unit");
+                Assert.True(host.IsProperty, "Host is a property unit");
+                Assert.False(host.IsTemplate, "Host is not a template unit");
+            }
+
+            {
+                var channels = root.GetUnitById("Channels");
+                Assert.False(channels.IsEmpty, "Channels should not be empty");
+                Assert.False(channels.IsUserUnit, "Channels is not an user unit");
+                Assert.False(channels.IsRoot, "Channels is not a root unit");
+                Assert.False(channels.IsParent, "Channels is not a public parent unit");
+                Assert.False(channels.IsFolder, "Channels is not a public folder unit");
+                Assert.True(channels.IsItem, "Channels is an item unit");
+                Assert.False(channels.IsProperty, "Channels is not an property unit");
+                Assert.False(channels.IsTemplate, "Channels is not a template unit");
+            }
+
+            {
+                var isdn = root.GetUnitById("ChannelIsdn");
+                Assert.False(isdn.IsEmpty, "ChannelIsdn should not be empty");
+                Assert.False(isdn.IsUserUnit, "ChannelIsdn is not an user unit");
+                Assert.False(isdn.IsRoot, "ChannelIsdn is not a root unit");
+                Assert.False(isdn.IsParent, "ChannelIsdn is not an parent unit");
+                Assert.False(isdn.IsFolder, "ChannelIsdn is not an folder unit");
+                Assert.False(isdn.IsItem, "ChannelIsdn is not an item unit");
+                Assert.False(isdn.IsProperty, "ChannelIsdn is a property unit");
+                Assert.True(isdn.IsTemplate, "ChannelIsdn is a template unit");
+            }
+        }
+
+        [Fact]
+        public void RegisterProvider()
+        {
+            var session = CreateDefaultSessionSettings();
+            var customer = session.Namespace.GetUnitById("License/Customer");
+            Assert.NotNull(customer);
+        }
+
+        [Fact]
+        public void ReadValue()
+        {
+            var session = CreateDefaultSessionSettings();
+            var customer = session.Namespace.GetUnitById("License/Customer");
+            var value = customer.GetValue<string>();
+            Assert.Equal("ICT Baden, Frank Pfattheicher", value);
+            value = customer.ValueDisplayText;
+            Assert.Equal("ICT Baden, Frank Pfattheicher", value);
+        }
+
+        [Fact]
+        public void WriteValue()
+        {
+            var session = CreateDefaultSessionSettings();
+            var serial = session.Namespace.GetUnitById("License/SerialNumber");
+            serial.SetValue("0000-0000");
+
+            var session2 = CreateDefaultSessionSettings();
+            var serial2 = session2.Namespace.GetUnitById("License/SerialNumber");
+            var value2 = serial2.GetValue<string>();
+            Assert.Equal("0000-0000", value2);
+        }
+
+        [Fact]
+        public void ReadUserItems()
+        {
+            var session = CreateDefaultSessionSettings();
+            var channels = session.Namespace.GetUnitById("Settings/Channels");
+            var value = channels.ChildItems.ToList();
+            Assert.Equal(3, value.Count);
+        }
+
+        [Fact]
+        public void FindUserFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var folder = targets.GetUnitByName("Test", true);
+            Assert.False(folder.IsEmpty, "Folder could not be created");
+            Assert.True(folder.IsFolder, "Folder could be a folder");
+
+            var folder2 = session.Namespace.GetUnitByName("Empfänger/Test", true);
+            Assert.True(folder2.IsFolder);
+        }
+
+        [Fact]
+        public void FindUserItem()
+        {
+            var session = CreateDefaultSessionTargets();
+            var target = session.Namespace.GetUnitByName("Smarty");
+            Assert.True(target.IsItem);
+        }
+
+        [Fact]
+        public void FindUserItemInFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var target = session.Namespace.GetUnitByName("DieGruppe");
+            Assert.True(target.IsItem);
+        }
+
+        [Fact]
+        public void FindUserItemInNamedFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var target = session.Namespace.GetUnitByName("Test/DieGruppe");
+            Assert.True(target.IsItem);
+        }
+
+        [Fact]
+        public void CreateFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var newFolder = targets.CreateFolder("CreateFolder");
+            Assert.True(newFolder.IsUserUnit);
+            Assert.True(newFolder.IsFolder);
+
+            var session2 = CreateDefaultSessionTargets();
+            var folder = session2.Namespace.GetUnitByName("CreateFolder", true);
+            Assert.False(folder.IsEmpty, "folder does not exist");
+            Assert.True(folder.IsUserUnit);
+            Assert.True(folder.IsFolder);
+            Assert.True(folder.Class == null);
+            Assert.True(folder.DisplayName == "CreateFolder");
+        }
+
+        [Fact]
+        public void DeleteFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var folder = targets.GetUnitByName("EinOrdner", true);
+            Assert.True(folder.IsUserUnit);
+            Assert.True(folder.IsFolder);
+            Assert.True(folder.Class == null);
+
+            folder.Delete();
+
+            var session2 = CreateDefaultSessionTargets();
+            var folder2 = session2.Namespace.GetUnitByName("EinOrdner", true);
+            Assert.True(folder2.IsEmpty);
+        }
+
+        [Fact]
+        public void CreateUserItem()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var template = targets.GetUnitById("TargetSms");
+            var newItem = targets.CreateItem(template, "CreateUserItem");
+            Assert.True(newItem.IsItem);
+
+            var session2 = CreateDefaultSessionTargets();
+            var target = session2.Namespace.GetUnitByName("CreateUserItem");
+            Assert.True(target.IsItem);
+            Assert.True(target.IsUserUnit);
+            Assert.True(target.Class == "TargetSms");
+            Assert.True(target.DisplayName == "CreateUserItem");
+        }
+
+        [Fact]
+        public void DeleteUserItem()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var template = targets.GetUnitById("TargetSms");
+            var newItem = targets.CreateItem(template, "DeleteUserItem");
+            Assert.True(newItem.IsItem);
+
+            newItem.Delete();
+
+            var session2 = CreateDefaultSessionTargets();
+            var target = session2.Namespace.GetUnitByName("DeleteUserItem");
+            Assert.True(target.IsEmpty);
+        }
+
+        [Fact]
+        public void RenameUserItem()
+        {
+            var session = CreateDefaultSessionTargets();
+            var target1 = session.Namespace.GetUnitByName("DieFolge");
+            Assert.True(target1.IsItem);
+
+            target1.Rename("DasTier");
+
+            var session2 = CreateDefaultSessionTargets();
+            var target2 = session2.Namespace.GetUnitByName("DieFolge");
+            Assert.True(target2.IsEmpty, "old item not deleted");
+            var target3 = session2.Namespace.GetUnitByName("DasTier");
+            Assert.False(target3.IsEmpty, "new name not found");
+        }
+
+        [Fact]
+        public void UserItemChangeClass()
+        {
+            var session = CreateDefaultSessionTargets();
+            var target1 = session.Namespace.GetUnitByName("Alex");
+            Assert.True(target1.IsItem);
+            Assert.Equal("TargetSms", target1.Class);
+
+            var targets = session.Namespace.GetUnitById("Targets");
+            var template = targets.GetUnitById("TargetSpeaker");
+            target1.ChangeClass(template);
+
+            var session2 = CreateDefaultSessionTargets();
+            var target2 = session2.Namespace.GetUnitByName("Alex");
+            Assert.True(target2.IsItem);
+            Assert.Equal("TargetSpeaker", target2.Class);
+        }
+
+        [Fact]
+        public void NewUnitTypes()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var newTypes = targets.NewUnitTemplates.ToList();
+            Assert.Equal(9, newTypes.Count);
+            foreach (var newType in newTypes)
+            {
+                Assert.True(newType.IsTemplate);
+            }
+        }
+
+        [Fact]
+        public void GetUserUnits()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var userUnits = targets.GetUserUnits(null);
+            Assert.Equal(9, userUnits.Count);
+            foreach (var unit in userUnits)
+            {
+                Assert.True(unit.IsUserUnit);
+            }
+        }
+
+
+    }
+}

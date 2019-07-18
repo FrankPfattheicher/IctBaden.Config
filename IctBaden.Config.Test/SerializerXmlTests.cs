@@ -1,0 +1,65 @@
+﻿using System;
+using System.IO;
+using IctBaden.Config.Namespace;
+using Xunit;
+
+namespace IctBaden.Config.Test
+{
+    public class SerializerXmlTests
+    {
+        private readonly string _testSettings = TestResources.LoadResourceString("test_settings.xaml");
+        private const string SchemaName = "SettingsXml.schema";
+
+        [Fact]
+        public void Load()
+        {
+            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            Assert.NotNull(root);
+        }
+
+        [Fact]
+        public void DescriptionShouldBeLoadedFromAttributeAndEmbeddedElement()
+        {
+            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            Assert.Equal("DescriptionAsAttribute", root.Children[0].Description);
+            Assert.Equal("DescriptionAsEmbedded", root.Children[1].Description);
+        }
+
+        [Fact]
+        public void LoadInvalid()
+        {
+            var invalid = _testSettings.Replace("Id=\"Sequence\"", "Id=\"Sequence");
+            var caught = false;
+            try
+            {
+                var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(invalid));
+                Assert.Null(root);
+                Assert.True(false, "Missing FormatException");
+            }
+            catch (FormatException)
+            {
+                caught = true;
+            }
+            Assert.True(caught);
+        }
+
+        [Fact]
+        public void Save()
+        {
+            if (File.Exists(SchemaName))
+            {
+                File.Delete(SchemaName);
+            }
+
+            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            using (var wrt = new StreamWriter(SchemaName))
+            {
+                ConfigurationNamespaceXmlSerializer.Save(root, wrt);
+            }
+
+            Assert.True(File.Exists(SchemaName));
+            var xml = File.ReadAllText(SchemaName);
+            Assert.StartsWith("<?xml version=", xml);
+        }
+    }
+}

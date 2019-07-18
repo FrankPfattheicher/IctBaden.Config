@@ -1,0 +1,570 @@
+{
+  "Selection": "None",
+  "Children": [
+    {
+      "Id": "Folder",
+      "DisplayName": "Ordner",
+      "Description": "DescriptionAsAttribute",
+      "Selection": "None",
+      "Children": []
+    },
+    {
+      "Id": "License",
+      "Description": "DescriptionAsEmbedded",
+      "Selection": "None",
+      "NamespaceProviderInternal": "usr",
+      "Children": [
+        {
+          "Id": "Customer",
+          "DataType": "String",
+          "Children": []
+        },
+        {
+          "Id": "SerialNumber",
+          "DataType": "String",
+          "Children": []
+        },
+        {
+          "Id": "ScadaSms",
+          "DataType": "String",
+          "Children": []
+        }
+      ]
+    },
+    {
+      "Id": "Settings",
+      "DisplayName": "Einstellungen",
+      "DisplayImage": "control_panel",
+      "Description": "Wählen Sie ein Element aus dem Baum um dessen Einstellungen zu ändern.",
+      "DataType": "Object",
+      "Selection": "None",
+      "Children": [
+        {
+          "Id": "System",
+          "DisplayName": "System",
+          "DisplayImage": "server",
+          "Description": "Allgemeine Systemkonfiguration.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Logging",
+              "DisplayName": "Protokollierung",
+              "DisplayImage": "documents_gear",
+              "Description": "Konfiguration der Protokollierung von Zustellungen und Ereignissen.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "LogPath",
+                  "DisplayName": "Verzeichnis",
+                  "Description": "Legt das Verzeichnis fest in dem die Log-Dateien abgelegt werden.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "LogCycle",
+                  "DisplayName": "Zyklus",
+                  "Description": "Legt den Zyklus fest, in dem neue Dateien angelegt werden.",
+                  "DataType": "Int16",
+                  "Selection": "ListOnly",
+                  "ValueSource": "Cycles",
+                  "NamespaceProviderInternal": "test",
+                  "Children": []
+                },
+                {
+                  "Id": "LogSize",
+                  "DisplayName": "Maximalgröße",
+                  "Description": "Gibt die maximale Größe (in Kilo-Bytes) an, die eine Datei erreichen kann. Bei Überschreiten gehen die ältesten Einträge verloren.",
+                  "DataType": "Int32",
+                  "Unit": "kB",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "Monitoring",
+              "DisplayName": "Überwachung",
+              "DisplayImage": "flash_yellow",
+              "Description": "Einstellungen zur Systemüberwachung.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "SendSystemEvents",
+                  "DisplayName": "Aktivieren",
+                  "Description": "Aktiviert den Versand von Systemereignissen.",
+                  "DataType": "Boolean",
+                  "DefaultValue": "false",
+                  "Children": []
+                },
+                {
+                  "Id": "SystemEventTargets",
+                  "DisplayName": "Empfänger",
+                  "Description": "Liste der Empfänger an die Ereignisse der Systemüberwachung gesendet werden.",
+                  "DataType": "String",
+                  "ValueSource": "Targets",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Provider",
+          "DisplayName": "Dienste",
+          "DisplayImage": "cubes",
+          "Description": "Konfiguriert die Einstellungen der angegebenen Übertragungsdienste",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "ProviderSpeaker",
+              "DisplayName": "Lokaler Lautsprecher",
+              "DisplayImage": "loudspeaker",
+              "Description": "Ausgabe von Nachrichten über den lokalen Lautsprecher",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Active",
+                  "Category": "Allgemein",
+                  "DisplayName": "Aktivieren",
+                  "Description": "Aktiviert die verwendung des Dienstes (Neustart erforderlich).",
+                  "DataType": "Boolean",
+                  "DefaultValue": "True",
+                  "Children": []
+                },
+                {
+                  "Id": "TtsEngine",
+                  "Category": "Extras",
+                  "DisplayName": "Stimme",
+                  "Description": "Die standardmäßig zu verwendende Text-to-speech Stimme für den lokalen Lautsprecher.",
+                  "DataType": "String",
+                  "DefaultValueDisplayText": "Automatische Auswahl",
+                  "Selection": "AvailableTtsEngines",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderVoiceIsdn",
+              "DisplayName": "ISDN",
+              "DisplayImage": "isdn",
+              "Description": "Ausgabe von Nachrichten per Sprache über ISDN",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "LineAccess",
+                  "Category": "Telefonanschluss",
+                  "DisplayName": "Amtsholung",
+                  "Description": "Ziffern die gewählt werden müssen um eine Amtsleitung zu bekommen.",
+                  "DataType": "String",
+                  "DefaultValueDisplayText": "ohne (direkte Amtsleitung)",
+                  "Children": []
+                },
+                {
+                  "Id": "AreaCode",
+                  "Category": "Telefonanschluss",
+                  "DisplayName": "Vorwahl",
+                  "Description": "Angabe der Ortsnetzkennzahl.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "TtsEngine",
+                  "Category": "Extras",
+                  "DisplayName": "Stimme",
+                  "Description": "Die standardmäßig zu verwendende Text-to-speech Stimme für ISDN.",
+                  "DataType": "String",
+                  "DefaultValueDisplayText": "Automatische Auswahl",
+                  "Selection": "AvailableTtsEngines",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderEmailSmtp",
+              "DisplayName": "E-Mail (SMTP)",
+              "DisplayImage": "mail",
+              "Description": "Senden von E-Mails über einen externen SMTP-Server",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Host",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Server",
+                  "Description": "Name oder IP-Adresse des SMTP Mail-Servers.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "User",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Anmeldung",
+                  "Description": "Benutzername zur Anmeldung am Mail-Server.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "Password",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Kennwort",
+                  "Description": "Kennwort das für die Anmeldung erforderlich ist.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "Subject",
+                  "Category": "Nachricht",
+                  "DisplayName": "Betreff",
+                  "Description": "Betreffzeile der Nachrichten.",
+                  "DataType": "String",
+                  "DefaultValue": "SCADA Informant",
+                  "Children": []
+                },
+                {
+                  "Id": "Sender",
+                  "Category": "Nachricht",
+                  "DisplayName": "Absender",
+                  "Description": "Name des Absenders der Nachrichten.",
+                  "DataType": "String",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderFile",
+              "DisplayName": "Meldedatei",
+              "DisplayImage": "document_notebook",
+              "Description": "Ausgabe von Nachrichten in eine Textdatei.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Encoding",
+                  "DisplayName": "Codierung",
+                  "Description": "Angabe der Codierung die für die Ausgabe verwendet werden soll.",
+                  "DataType": "String",
+                  "DefaultValue": "iso-8859-1",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderTwilio",
+              "DisplayName": "Twilio",
+              "DisplayImage": "element_up",
+              "Description": "https://www.twilio.com",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "AccountSid",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Account SID",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "AuthToken",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Auth Token",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Selection": "EditPassword",
+                  "Children": []
+                },
+                {
+                  "Id": "FromNumber",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Absendernummer",
+                  "Description": "Im internationalen Format (+49...).",
+                  "DataType": "String",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Channels",
+          "DisplayName": "Anschlüsse",
+          "DisplayImage": "plug_usb",
+          "Description": "Konfiguriert die Anschlüsse zu externen Geräten (z.B. Modems)",
+          "DataType": "Object",
+          "Selection": "None",
+          "NamespaceProviderInternal": "usr",
+          "Children": [
+            {
+              "Id": "ChannelGsm",
+              "DisplayName": "GSM Modem",
+              "DisplayImage": "antenna",
+              "Description": ".",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Port",
+                  "Category": "Anschluss",
+                  "DisplayName": "Schnittstelle",
+                  "Description": "Serielle Schnittstelle an der das Modem angeschlossen ist.",
+                  "DataType": "String",
+                  "DefaultValue": "COM1",
+                  "Children": []
+                },
+                {
+                  "Id": "Baud",
+                  "Category": "Anschluss",
+                  "DisplayName": "Baudrate",
+                  "Description": "Übertragungsrate der seriellen Schnittstelle an der das Modem angeschlossen ist.",
+                  "DataType": "Int32",
+                  "DefaultValue": "19200",
+                  "Children": []
+                },
+                {
+                  "Id": "Number",
+                  "Category": "Allgemein",
+                  "DisplayName": "Eigene Nummer",
+                  "Description": "Rufnummer der SIM Karte.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "PIN",
+                  "Category": "Sicherheit",
+                  "DisplayName": "PIN",
+                  "Description": "PIN Nummer der SIM Karte.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "InitCommands",
+                  "Category": "Extras",
+                  "DisplayName": "Initialisierung",
+                  "Description": "Erlaubt besondere Einstellungen des Modems.",
+                  "DataType": "String",
+                  "UserLevel": 2,
+                  "Children": []
+                },
+                {
+                  "Id": "SmsCenter",
+                  "Category": "Extras",
+                  "DisplayName": "SMS-Kurzmitteilungszentrale",
+                  "Description": "Bei manchen Anbietern gilt es zu beachten, dass es teilweise unterschiedlichen SMS Zentralen für einen Handyvertrag und Prepaid Karten gelten.",
+                  "DataType": "String",
+                  "UserLevel": 2,
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ChannelLteRouter",
+              "DisplayName": "LTE Router",
+              "DisplayImage": "modem_earth",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "IpAddress",
+                  "Category": "LTE-Router",
+                  "DisplayName": "Router-Adresse",
+                  "Description": "Name oder IP-Adresse des LTE-Routers.",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "Port",
+                  "Category": "LTE-Router",
+                  "DisplayName": "IP-Port",
+                  "Description": "Diesen IP-Port für die Verbindung zum Router verwenden.",
+                  "DataType": "UInt16",
+                  "DefaultValue": "1432",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ChannelIsdn",
+              "DisplayName": "ISDN Kanal",
+              "DisplayImage": "isdn",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Controller",
+                  "Category": "Anschluss",
+                  "DisplayName": "ISDN-Karte",
+                  "DataType": "UInt16",
+                  "DefaultValue": "1",
+                  "Children": []
+                },
+                {
+                  "Id": "Port",
+                  "Category": "Anschluss",
+                  "DisplayName": "Port",
+                  "DataType": "UInt16",
+                  "DefaultValue": "1",
+                  "Children": []
+                },
+                {
+                  "Id": "Channel",
+                  "Category": "Anschluss",
+                  "DisplayName": "Kanal",
+                  "DataType": "UInt16",
+                  "DefaultValue": "1",
+                  "Children": []
+                },
+                {
+                  "Id": "Number",
+                  "Category": "Allgemein",
+                  "DisplayName": "Eigene Nummer",
+                  "Description": "MSN des Anschlusses.",
+                  "DataType": "String",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Delivery",
+          "DisplayName": "Zustellung",
+          "DisplayImage": "mail_forward_all",
+          "Description": "Einstellungen die den Ablauf der Zustellungsvorgänge regeln.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "DefaultTiming",
+              "DisplayName": "Zeiten",
+              "DisplayImage": "stopwatch",
+              "Description": "Das Standardmäßige Zeitverhalten bei der Zustellung von Meldungen.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Parallel",
+                  "DisplayName": "Einstufig",
+                  "DisplayImage": "media_play",
+                  "Description": "Empfänger und Gruppen",
+                  "DataType": "Object",
+                  "Selection": "None",
+                  "Children": [
+                    {
+                      "Id": "SendTimeout",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Sendezeit",
+                      "Description": "Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SendRetryDelay",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Pause zur Wiederholung",
+                      "Description": "Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:01:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "AckTimeout",
+                      "Category": "Quittierung",
+                      "DisplayName": "Quittierungszeit",
+                      "Description": "Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "01:00:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "AckRetryDelay",
+                      "Category": "Quittierung",
+                      "DisplayName": "Sendewiederholung",
+                      "Description": "Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    }
+                  ]
+                },
+                {
+                  "Id": "Sequence",
+                  "DisplayName": "Eskalationen",
+                  "DisplayImage": "media_fast_forward",
+                  "Description": "Folgen und Schleifen",
+                  "DataType": "Object",
+                  "Selection": "None",
+                  "Children": [
+                    {
+                      "Id": "SequenceSendTimeout",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Sendezeit",
+                      "Description": "Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceSendRetryDelay",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Pause zur Wiederholung",
+                      "Description": "Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:01:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceAckTimeout",
+                      "Category": "Quittierung",
+                      "DisplayName": "Quittierungszeit",
+                      "Description": "Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:30:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceAckRetryDelay",
+                      "Category": "Quittierung",
+                      "DisplayName": "Sendewiederholung",
+                      "Description": "Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Acknowledge",
+          "DisplayName": "Quittierung",
+          "DisplayImage": "checks",
+          "Description": "Einstellungen die die Möglichkeiten der Quittierung von Meldungen regeln.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "GlobalAckCode",
+              "DisplayName": "Globaler Quittungscode",
+              "Description": "Legt einen Quittungscode fest mit dem alle anstehenden Meldungen quittiert werden können.",
+              "DataType": "String",
+              "Children": []
+            },
+            {
+              "Id": "GlobalAbortCode",
+              "DisplayName": "Globaler Abbruchcode",
+              "Description": "Legt einen Code fest über den alle anstehenden Rufe abgebrochen werden können.",
+              "DataType": "String",
+              "Children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+﻿<ConfigurationUnit xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config">
+
+    <ConfigurationUnit Id="Folder" DataType="Empty" DisplayName="Ordner" Description="DescriptionAsAttribute" />
+
+    <ConfigurationUnit Id="License" NamespaceProvider="usr" DataType="Empty" >
+        <ConfigurationUnit.Description>DescriptionAsEmbedded</ConfigurationUnit.Description>
+        <ConfigurationUnit Id="Customer" DataType="String" />
+        <ConfigurationUnit Id="SerialNumber" DataType="String" />
+        <ConfigurationUnit Id="ScadaSms" DataType="String" />
+    </ConfigurationUnit>
+
+    <ConfigurationUnit Id="Settings" DataType="Object" DisplayName="Einstellungen" DisplayImage="control_panel" >
+        <ConfigurationUnit.Description>Wählen Sie ein Element aus dem Baum um dessen Einstellungen zu ändern.</ConfigurationUnit.Description>
+
+        <ConfigurationUnit Id="System" DataType="Object" DisplayName="System" DisplayImage="server" >
+            <ConfigurationUnit.Description>Allgemeine Systemkonfiguration.</ConfigurationUnit.Description>
+
+            <ConfigurationUnit Id="Logging" DataType="Object" DisplayName="Protokollierung" DisplayImage="documents_gear" >
+                <ConfigurationUnit.Description>Konfiguration der Protokollierung von Zustellungen und Ereignissen.</ConfigurationUnit.Description>
+
+                <ConfigurationUnit Id="LogPath" DataType="String" DisplayName="Verzeichnis" >
+                    <ConfigurationUnit.Description>Legt das Verzeichnis fest in dem die Log-Dateien abgelegt werden.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="LogCycle" DataType="Int16" DisplayName="Zyklus" Selection="ListOnly" ValueSource="Cycles" NamespaceProvider="test" >
+                    <ConfigurationUnit.Description>Legt den Zyklus fest, in dem neue Dateien angelegt werden.</ConfigurationUnit.Description>
+                    <ConfigurationUnit.DefaultValue>0</ConfigurationUnit.DefaultValue>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="LogSize" DataType="Int32" DisplayName="Maximalgröße" Unit="kB" >
+                    <ConfigurationUnit.Description>Gibt die maximale Größe (in Kilo-Bytes) an, die eine Datei erreichen kann. Bei Überschreiten gehen die ältesten Einträge verloren.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="Monitoring" DataType="Object" DisplayName="Überwachung" DisplayImage="flash_yellow" >
+                <ConfigurationUnit.Description>Einstellungen zur Systemüberwachung.</ConfigurationUnit.Description>
+
+                <ConfigurationUnit Id="SendSystemEvents" DataType="Boolean" DisplayName="Aktivieren" DefaultValue="false" >
+                    <ConfigurationUnit.Description>Aktiviert den Versand von Systemereignissen.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="SystemEventTargets" DataType="String" DisplayName="Empfänger" ValueSource="Targets" >
+                    <ConfigurationUnit.Description>Liste der Empfänger an die Ereignisse der Systemüberwachung gesendet werden.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+        </ConfigurationUnit>
+
+        <ConfigurationUnit Id="Provider" DataType="Object" DisplayName="Dienste" DisplayImage="cubes" >
+            <ConfigurationUnit.Description>Konfiguriert die Einstellungen der angegebenen Übertragungsdienste</ConfigurationUnit.Description>
+
+            <!--
+            <ConfigurationUnit Id="ProviderSmsGsm" DataType="Object" DisplayName="GSM Modem" >
+            </ConfigurationUnit>
+            -->
+
+            <ConfigurationUnit Id="ProviderSpeaker" DataType="Object" DisplayName="Lokaler Lautsprecher" DisplayImage="loudspeaker">
+                <ConfigurationUnit.Description>Ausgabe von Nachrichten über den lokalen Lautsprecher</ConfigurationUnit.Description>
+                <ConfigurationUnit Id="Active" DataType="Boolean" DisplayName="Aktivieren" DefaultValue="True" Category="Allgemein" >
+                    <ConfigurationUnit.Description>Aktiviert die verwendung des Dienstes (Neustart erforderlich).</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="TtsEngine" DataType="String" DisplayName="Stimme" Category="Extras" Selection="AvailableTtsEngines" DefaultValueDisplayText="Automatische Auswahl" >
+                    <ConfigurationUnit.Description>Die standardmäßig zu verwendende Text-to-speech Stimme für den lokalen Lautsprecher.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ProviderVoiceIsdn" DataType="Object" DisplayName="ISDN" DisplayImage="isdn">
+                <ConfigurationUnit.Description>Ausgabe von Nachrichten per Sprache über ISDN</ConfigurationUnit.Description>
+
+                <ConfigurationUnit Id="LineAccess" DataType="String" DisplayName="Amtsholung" Category="Telefonanschluss" DefaultValueDisplayText="ohne (direkte Amtsleitung)" >
+                    <ConfigurationUnit.Description>Ziffern die gewählt werden müssen um eine Amtsleitung zu bekommen.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+
+                <ConfigurationUnit Id="AreaCode" DataType="String" DisplayName="Vorwahl" Category="Telefonanschluss" >
+                    <ConfigurationUnit.Description>Angabe der Ortsnetzkennzahl.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+
+                <ConfigurationUnit Id="TtsEngine" DataType="String" DisplayName="Stimme" Category="Extras" Selection="AvailableTtsEngines" DefaultValueDisplayText="Automatische Auswahl" >
+                    <ConfigurationUnit.Description>Die standardmäßig zu verwendende Text-to-speech Stimme für ISDN.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ProviderEmailSmtp" DataType="Object" DisplayName="E-Mail (SMTP)" DisplayImage="mail" >
+                <ConfigurationUnit.Description>Senden von E-Mails über einen externen SMTP-Server</ConfigurationUnit.Description>
+                <ConfigurationUnit Id="Host" DataType="String" DisplayName="Server" Category="Mail-Server" >
+                    <ConfigurationUnit.Description>Name oder IP-Adresse des SMTP Mail-Servers.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="User" DataType="String" DisplayName="Anmeldung" Category="Mail-Server" >
+                    <ConfigurationUnit.Description>Benutzername zur Anmeldung am Mail-Server.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Password" DataType="String" DisplayName="Kennwort" Category="Mail-Server" >
+                    <ConfigurationUnit.Description>Kennwort das für die Anmeldung erforderlich ist.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Subject" DataType="String" DisplayName="Betreff" Category="Nachricht" DefaultValue="SCADA Informant" >
+                    <ConfigurationUnit.Description>Betreffzeile der Nachrichten.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Sender" DataType="String" DisplayName="Absender" Category="Nachricht" >
+                    <ConfigurationUnit.Description>Name des Absenders der Nachrichten.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ProviderFile" DataType="Object" DisplayName="Meldedatei" DisplayImage="document_notebook">
+                <ConfigurationUnit.Description>Ausgabe von Nachrichten in eine Textdatei.</ConfigurationUnit.Description>
+                <ConfigurationUnit Id="Encoding" DataType="String" DisplayName="Codierung" DefaultValue="iso-8859-1"  >
+                    <ConfigurationUnit.Description>Angabe der Codierung die für die Ausgabe verwendet werden soll.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ProviderTwilio" DataType="Object" DisplayName="Twilio" DisplayImage="element_up" Description="https://www.twilio.com">
+                <ConfigurationUnit DataType="String" Id="AccountSid" DisplayName="Account SID" Description="." Category="Zugangsdaten" />
+                <ConfigurationUnit DataType="String" Selection="EditPassword" Id="AuthToken" DisplayName="Auth Token" Description="." Category="Zugangsdaten" />
+                <ConfigurationUnit DataType="String" Id="FromNumber" DisplayName="Absendernummer" Description="Im internationalen Format (+49...)." Category="Zugangsdaten" />
+            </ConfigurationUnit>
+
+        </ConfigurationUnit>
+
+        <ConfigurationUnit Id="Channels" NamespaceProvider="usr" DataType="Object" DisplayName="Anschlüsse" DisplayImage="plug_usb" >
+            <ConfigurationUnit.Description>Konfiguriert die Anschlüsse zu externen Geräten (z.B. Modems)</ConfigurationUnit.Description>
+
+            <ConfigurationUnit Id="ChannelGsm" DataType="Empty" DisplayName="GSM Modem" DisplayImage="antenna" >
+                <ConfigurationUnit.Description>.</ConfigurationUnit.Description>
+                <ConfigurationUnit Id="Port" DataType="String" DisplayName="Schnittstelle" Category="Anschluss" DefaultValue="COM1" >
+                    <ConfigurationUnit.Description>Serielle Schnittstelle an der das Modem angeschlossen ist.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Baud" DataType="Int32" DisplayName="Baudrate" Category="Anschluss" DefaultValue="19200" >
+                    <ConfigurationUnit.Description>Übertragungsrate der seriellen Schnittstelle an der das Modem angeschlossen ist.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Number" DataType="String" DisplayName="Eigene Nummer" Category="Allgemein" >
+                    <ConfigurationUnit.Description>Rufnummer der SIM Karte.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="PIN" DataType="String" DisplayName="PIN" Category="Sicherheit" >
+                    <ConfigurationUnit.Description>PIN Nummer der SIM Karte.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="InitCommands" DataType="String" DisplayName="Initialisierung" Category="Extras" UserLevel="2" >
+                    <ConfigurationUnit.Description>Erlaubt besondere Einstellungen des Modems.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="SmsCenter" DataType="String" DisplayName="SMS-Kurzmitteilungszentrale" Category="Extras" UserLevel="2" >
+                    <ConfigurationUnit.Description>Bei manchen Anbietern gilt es zu beachten, dass es teilweise unterschiedlichen SMS Zentralen für einen Handyvertrag und Prepaid Karten gelten.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ChannelLteRouter" DataType="Empty" DisplayName="LTE Router" DisplayImage="modem_earth" >
+                <ConfigurationUnit DataType="String" Id="IpAddress" DisplayName="Router-Adresse" Description="Name oder IP-Adresse des LTE-Routers." Input="Mandatory" Category="LTE-Router" />
+                <ConfigurationUnit DataType="UInt16" Id="Port" DisplayName="IP-Port" Description="Diesen IP-Port für die Verbindung zum Router verwenden." Category="LTE-Router" DefaultValue="1432" />
+            </ConfigurationUnit>
+
+            <ConfigurationUnit Id="ChannelIsdn" DataType="Empty" DisplayName="ISDN Kanal" DisplayImage="isdn" >
+                <ConfigurationUnit Id="Controller" DataType="UInt16" DisplayName="ISDN-Karte" Category="Anschluss" DefaultValue="1" >
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Port" DataType="UInt16" DisplayName="Port" Category="Anschluss" DefaultValue="1" >
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Channel" DataType="UInt16" DisplayName="Kanal" Category="Anschluss" DefaultValue="1" >
+                </ConfigurationUnit>
+                <ConfigurationUnit Id="Number" DataType="String" DisplayName="Eigene Nummer" Category="Allgemein" >
+                    <ConfigurationUnit.Description>MSN des Anschlusses.</ConfigurationUnit.Description>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+
+        </ConfigurationUnit>
+
+        <ConfigurationUnit Id="Delivery" DataType="Object" DisplayName="Zustellung" DisplayImage="mail_forward_all" >
+            <ConfigurationUnit.Description>Einstellungen die den Ablauf der Zustellungsvorgänge regeln.</ConfigurationUnit.Description>
+
+            <ConfigurationUnit Id="DefaultTiming" DataType="Object" DisplayName="Zeiten" DisplayImage="stopwatch" >
+                <ConfigurationUnit.Description>Das Standardmäßige Zeitverhalten bei der Zustellung von Meldungen.</ConfigurationUnit.Description>
+
+                <ConfigurationUnit Id="Parallel" DataType="Object" DisplayName="Einstufig" DisplayImage="media_play" >
+                    <ConfigurationUnit.Description>Empfänger und Gruppen</ConfigurationUnit.Description>
+
+                    <ConfigurationUnit Id="SendTimeout" DataType="String" DisplayName="Sendezeit" Category="Sendevorgang" DefaultValue="00:10:00" >
+                        <ConfigurationUnit.Description>Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                    <ConfigurationUnit Id="SendRetryDelay" DataType="String" DisplayName="Pause zur Wiederholung" Category="Sendevorgang" DefaultValue="00:01:00" >
+                        <ConfigurationUnit.Description>Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+
+                    <ConfigurationUnit Id="AckTimeout" DataType="String" DisplayName="Quittierungszeit" Category="Quittierung" DefaultValue="01:00:00" >
+                        <ConfigurationUnit.Description>Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                    <ConfigurationUnit Id="AckRetryDelay" DataType="String" DisplayName="Sendewiederholung" Category="Quittierung" DefaultValue="00:10:00" >
+                        <ConfigurationUnit.Description>Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                </ConfigurationUnit>
+
+                <ConfigurationUnit Id="Sequence" DataType="Object" DisplayName="Eskalationen" DisplayImage="media_fast_forward" >
+                    <ConfigurationUnit.Description>Folgen und Schleifen</ConfigurationUnit.Description>
+
+                    <ConfigurationUnit Id="SequenceSendTimeout" DataType="String" DisplayName="Sendezeit" Category="Sendevorgang" DefaultValue="00:10:00" >
+                        <ConfigurationUnit.Description>Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                    <ConfigurationUnit Id="SequenceSendRetryDelay" DataType="String" DisplayName="Pause zur Wiederholung" Category="Sendevorgang" DefaultValue="00:01:00" >
+                        <ConfigurationUnit.Description>Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+
+                    <ConfigurationUnit Id="SequenceAckTimeout" DataType="String" DisplayName="Quittierungszeit" Category="Quittierung" DefaultValue="00:30:00" >
+                        <ConfigurationUnit.Description>Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                    <ConfigurationUnit Id="SequenceAckRetryDelay" DataType="String" DisplayName="Sendewiederholung" Category="Quittierung" DefaultValue="00:10:00" >
+                        <ConfigurationUnit.Description>Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.</ConfigurationUnit.Description>
+                    </ConfigurationUnit>
+                </ConfigurationUnit>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+
+        <ConfigurationUnit Id="Acknowledge" DataType="Object" DisplayName="Quittierung" DisplayImage="checks" >
+            <ConfigurationUnit.Description>Einstellungen die die Möglichkeiten der Quittierung von Meldungen regeln.</ConfigurationUnit.Description>
+
+            <ConfigurationUnit Id="GlobalAckCode" DataType="String" DisplayName="Globaler Quittungscode" >
+                <ConfigurationUnit.Description>Legt einen Quittungscode fest mit dem alle anstehenden Meldungen quittiert werden können.</ConfigurationUnit.Description>
+            </ConfigurationUnit>
+            <ConfigurationUnit Id="GlobalAbortCode" DataType="String" DisplayName="Globaler Abbruchcode" >
+                <ConfigurationUnit.Description>Legt einen Code fest über den alle anstehenden Rufe abgebrochen werden können.</ConfigurationUnit.Description>
+            </ConfigurationUnit>
+
+        </ConfigurationUnit>
+
+    </ConfigurationUnit>
+
+</ConfigurationUnit>
+
