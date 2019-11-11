@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8B58490C-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IctBaden.Config.Test", "IctBaden.Config.Test\IctBaden.Config.Test.csproj", "{70255E64-8918-4D6B-8E7A-D9EFD6B3E9A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IctBaden.Config.Converter", "IctBaden.Config.Converter\IctBaden.Config.Converter.csproj", "{56CCC3C8-36D7-4EFE-95D4-EFE589E2F961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{70255E64-8918-4D6B-8E7A-D9EFD6B3E9A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70255E64-8918-4D6B-8E7A-D9EFD6B3E9A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70255E64-8918-4D6B-8E7A-D9EFD6B3E9A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56CCC3C8-36D7-4EFE-95D4-EFE589E2F961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56CCC3C8-36D7-4EFE-95D4-EFE589E2F961}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56CCC3C8-36D7-4EFE-95D4-EFE589E2F961}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56CCC3C8-36D7-4EFE-95D4-EFE589E2F961}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

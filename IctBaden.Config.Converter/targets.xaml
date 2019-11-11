@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfigurationUnit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" DataType="Empty" Selection="None" Id="Root" xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config">
+    <ConfigurationUnit DataType="Object" Selection="ParentHierarchical" Id="Targets" DisplayName="Empfänger" NamespaceProvider="ini">
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetEmail" DisplayName="E-Mail">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Mail-Adresse" Input="Mandatory" Description="." Category="Adresse" ValidationRule=".+@.+\..+" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetSms" DisplayName="SMS">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Nummer" Input="Mandatory" Description="." Category="Adresse" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetXmlSms" DisplayName="PageSmart (XML SMS)">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Nummer" Input="Mandatory" Description="." Category="Adresse" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetFax" DisplayName="Fax">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Nummer" Input="Mandatory" Description="." Category="Adresse" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetVoice" DisplayName="Sprachausgabe">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Nummer" Input="Mandatory" Description="." Category="Adresse" />
+            <ConfigurationUnit DataType="String" Selection="AvailableTtsEngines" Id="TtsEngine" DisplayName="Stimme" Description="Die für diesen Teilnehmer zu verwendende Text-to-speech Stimme." Category="Extras" DefaultValueDisplayText="Automatische Auswahl">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetSpeaker" DisplayName="Lautsprecher">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="AckCode" DisplayName="Quittungscode" Description="Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann." Category="Bestätigung" />
+            <ConfigurationUnit DataType="String" Selection="AvailableTtsEngines" Id="TtsEngine" DisplayName="Stimme" Description="Die für diesen Teilnehmer zu verwendende Text-to-speech Stimme." Category="Extras" DefaultValueDisplayText="Automatische Auswahl">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                    <SelectionValue DisplayText="Automatische Auswahl" />
+                    <SelectionValue Value="Microsoft Hedda Desktop" DisplayText="Microsoft Hedda Desktop (de-DE)" />
+                    <SelectionValue Value="Microsoft Zira Desktop" DisplayText="Microsoft Zira Desktop (en-US)" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetFile" DisplayName="Meldedatei">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="Ausgabe der Meldung in eine Textdatei." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Id="Address" DisplayName="Dateiname" Input="Mandatory" Description="Dateiname der Meldungsausgabe mit voller Pfadangabe." Category="Adresse" />
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Mode" DisplayName="Modus" DefaultValue="0" Input="Mandatory" Description="Modus der zur Ausgabe der Meldung in die Datei verwendet wird." Category="Adresse">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Am Ende anhängen" />
+                    <SelectionValue Value="1" DisplayText="Am Anfang einfügen" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="Int32" Id="MaxSize" DisplayName="Maximale Dateigröße" Description="Begrenzt die Ausgabedatei auf die angegebene Größe." Category="Adresse" Unit="kB" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Standardpriorität an mit der Meldungen an diesen Teilnehmer gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetParallel" DisplayName="Gruppe" SortOrder="-3">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Selection="ReferenceList" Id="Address" DisplayName="Teilnehmer" Input="Mandatory" Category="Adressen" ValueSource="Targets" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Priorität an mit der Meldungen an die Teilnehmer dieser Gruppe gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+        <ConfigurationUnit DataType="Empty" Selection="None" Id="TargetSequence" DisplayName="Folge" SortOrder="-2">
+            <ConfigurationUnit DataType="Int16" Selection="ListOnly" Id="Presence" DisplayName="Präsenz" DefaultValue="1" Input="Mandatory">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Abwesend" />
+                    <SelectionValue Value="1" DisplayText="Bereit" />
+                    <SelectionValue Value="2" DisplayText="Beschäftigt" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+            <ConfigurationUnit DataType="String" Id="Description" DisplayName="Beschreibung" Description="." Category="Bezeichnung" />
+            <ConfigurationUnit DataType="String" Selection="ReferenceList" Id="Address" DisplayName="Teilnehmer" Input="Mandatory" Category="Adressen" ValueSource="Targets" />
+            <ConfigurationUnit DataType="Int16" Id="MaxLoopCount" DisplayName="Wiederholungen" DefaultValue="1" Description="Gibt die maximale Anzahl der Wiederholungen der Folge an bevor die Zustellung abgebrochen wird." Category="Extras" />
+            <ConfigurationUnit DataType="String" Selection="ListOnly" Id="Priority" DisplayName="Priorität" DefaultValue="0" Description="Gibt die Priorität an mit der Meldungen an die Teilnehmer dieser Folge gesendet werden." Category="Extras">
+                <ConfigurationUnit.ValueList>
+                    <SelectionValue Value="0" DisplayText="Standard" />
+                    <SelectionValue Value="1" DisplayText="Notruf" />
+                    <SelectionValue Value="2" DisplayText="Sehr sehr hoch" />
+                    <SelectionValue Value="3" DisplayText="Sehr hoch" />
+                    <SelectionValue Value="4" DisplayText="Hoch" />
+                    <SelectionValue Value="5" DisplayText="Normal" />
+                    <SelectionValue Value="6" DisplayText="Niedrig" />
+                    <SelectionValue Value="7" DisplayText="Sehr niedrig" />
+                    <SelectionValue Value="8" DisplayText="Sehr sehr niedrig" />
+                </ConfigurationUnit.ValueList>
+            </ConfigurationUnit>
+        </ConfigurationUnit>
+    </ConfigurationUnit>
+</ConfigurationUnit>

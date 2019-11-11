@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IctBaden.Config.Converter": {
+      "commandName": "Project",
+      "commandLineArgs": "targets.xaml"
+    }
+  }
+}

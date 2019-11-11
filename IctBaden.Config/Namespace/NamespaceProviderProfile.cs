@@ -8,21 +8,21 @@ namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderProfile : NamespaceProvider
     {
-        private readonly Profile profile;
+        private readonly Profile _profile;
 
-        public NamespaceProviderProfile(string specification)
+        public NamespaceProviderProfile(string profileName)
         {
-            profile = new Profile(specification);
+            _profile = new Profile(profileName);
         }
 
         public override IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
             //Children=2DFA8F569C574CB787C9ACE8587A7749;C6D9E7D346234B55B3179750C81E8989;12DF7A3A144446DFB472FC28C9742C3E
-            var childIds = profile[unit.FullId].Get("Children", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var childIds = _profile[unit.FullId].Get("Children", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var childId in childIds)
             {
-                var childSection = profile[childId];
+                var childSection = _profile[childId];
                 var childDisplayName = childSection.Get<string>("DisplayName");
                 var childClass = childSection.Get<string>("Class");
                 if (string.IsNullOrEmpty(childClass))
@@ -54,22 +54,22 @@ namespace IctBaden.Config.Namespace
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
-            return (from key in profile[unit.ValueSource].Keys select new SelectionValue { DisplayText = key.Name, Value = key.StringValue }).ToList();
+            return (from key in _profile[unit.ValueSource].Keys select new SelectionValue { DisplayText = key.Name, Value = key.StringValue }).ToList();
         }
 
         public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)
         {
-            var section = profile[unit.Parent.FullId];
+            var section = _profile[unit.Parent.FullId];
             if (section.IsUnnamedGlobalSection)
-                section = profile[ProfileSection.UnnamedGlobalSectionName];
+                section = _profile[ProfileSection.UnnamedGlobalSectionName];
             return section.Get(unit.Id, defaultValue);
         }
 
         public override void SetValue<T>(ConfigurationUnit unit, T newValue)
         {
-            var section = profile[unit.Parent.FullId];
+            var section = _profile[unit.Parent.FullId];
             if (section.IsUnnamedGlobalSection)
-                section = profile[ProfileSection.UnnamedGlobalSectionName];
+                section = _profile[ProfileSection.UnnamedGlobalSectionName];
             if (newValue == null)
             {
                 if (unit.DefaultValue == null)
@@ -77,13 +77,13 @@ namespace IctBaden.Config.Namespace
                     if (section.Contains(unit.Id))
                     {
                         section.Remove(unit.Id);
-                        profile.Save();
+                        _profile.Save();
                     }
                 }
                 else
                 {
                     section[unit.Id].ObjectValue = null;
-                    profile.Save();
+                    _profile.Save();
                 }
             }
             else if (newValue.ToString() == unit.DefaultValue)
@@ -91,13 +91,13 @@ namespace IctBaden.Config.Namespace
                 if (section.Contains(unit.Id))
                 {
                     section.Remove(unit.Id);
-                    profile.Save();
+                    _profile.Save();
                 }
             }
             else if (newValue.ToString() != section[unit.Id].StringValue)
             {
                 section[unit.Id].ObjectValue = newValue;
-                profile.Save();
+                _profile.Save();
             }
         }
 
@@ -119,7 +119,7 @@ namespace IctBaden.Config.Namespace
         {
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
             containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
-            profile[unit.FullId].Remove();
+            _profile[unit.FullId].Remove();
         }
     }
 }

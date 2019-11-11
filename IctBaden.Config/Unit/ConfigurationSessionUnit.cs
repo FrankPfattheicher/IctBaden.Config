@@ -3,18 +3,15 @@ using IctBaden.Config.Session;
 
 namespace IctBaden.Config.Unit
 {
-  public class ConfigurationSessionUnit : ConfigurationUnit
-  {
-    private ConfigurationSession session;
-
-    public override ConfigurationSession Session
-    { get { return session; } }
-
-    public ConfigurationSessionUnit(ConfigurationSession session)
+    public class ConfigurationSessionUnit : ConfigurationUnit
     {
-      this.session = session;
-      DataType = TypeCode.Object;
-      ChildrenLoaded = true;
+        public override ConfigurationSession Session { get; }
+
+        public ConfigurationSessionUnit(ConfigurationSession session)
+        {
+            Session = session;
+            DataType = TypeCode.Object;
+            ChildrenLoaded = true;
+        }
     }
-  }
 }

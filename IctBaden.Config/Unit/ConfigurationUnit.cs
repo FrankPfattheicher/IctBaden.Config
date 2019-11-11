@@ -472,6 +472,8 @@ namespace IctBaden.Config.Unit
         }
         public T GetValue<T>(T defaultValue)
         {
+            if (Session == null) return defaultValue;
+            
             var value = Session.GetValue(this, defaultValue);
             return (T)Convert.ChangeType(value, typeof(T));
         }
@@ -520,7 +522,9 @@ namespace IctBaden.Config.Unit
 
         public override string ToString()
         {
-            return DisplayName;
+            return !string.IsNullOrEmpty(DisplayName)
+                ? DisplayName
+                : "ID=" + FullId;
         }
 
         public ConfigurationUnit GetUnitById(string id)
