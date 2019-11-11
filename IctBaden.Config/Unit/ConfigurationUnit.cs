@@ -249,14 +249,30 @@ namespace IctBaden.Config.Unit
 
         public void AddChild(ConfigurationUnit newChild)
         {
-            newChild.Parent = this;
-            _children.Add(newChild);
+            AddChild(newChild, false);
         }
+        public void AddChild(ConfigurationUnit newChild, bool inFront)
+        {
+            newChild.Parent = this;
+            if (inFront)
+            {
+                _children.Insert(0, newChild);
+            }
+            else
+            {
+                _children.Add(newChild);
+            }
+        }
+
         public void AddChildren(IEnumerable<ConfigurationUnit> newChildren)
+        {
+            AddChildren(newChildren, false);
+        }
+        public void AddChildren(IEnumerable<ConfigurationUnit> newChildren, bool inFront)
         {
             foreach (var unit in newChildren)
             {
-                AddChild(unit);
+                AddChild(unit, inFront);
             }
         }
 
