@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Serialization;
 using System.ComponentModel;
 using IctBaden.Config.Session;
+using IctBaden.Framework.AppUtils;
 using IctBaden.Framework.PropertyProvider;
 using IctBaden.Framework.Types;
 using Newtonsoft.Json;
@@ -718,8 +719,15 @@ namespace IctBaden.Config.Unit
                 switch (_selection)
                 {
                     case SelectionType.AvailableComPorts:
-                        specialList.AddRange(SerialPort.GetPortNames()
-                            .Select(port => new SelectionValue {DisplayText = port, Value = port}));
+                        if(SystemInfo.Platform == Platform.Windows)
+                        {
+                            specialList.AddRange(SerialPort.GetPortNames()
+                                .Select(port => new SelectionValue {DisplayText = port, Value = port}));
+                        }
+                        else if (SystemInfo.Platform == Platform.Linux)
+                        {
+                            //TODO: add available serial ports
+                        }
                         break;
                     
                     case SelectionType.AvailableTtsEngines:
