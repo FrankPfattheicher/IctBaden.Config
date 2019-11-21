@@ -452,7 +452,7 @@ namespace IctBaden.Config.Unit
 
         public ConfigurationUnit CreateFolder(string displayName)
         {
-            var newFolder = Clone(displayName, false);
+            var newFolder = Session.Folder.Clone(displayName, false);
             newFolder.SetUserId(Session.GetNewUserId(this));
             newFolder.Description = Session.Folder.DisplayName;
             AddUserChild(newFolder);

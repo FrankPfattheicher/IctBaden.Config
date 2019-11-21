@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Unit;
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable EventNeverSubscribedTo.Global
+// ReSharper disable UnusedMember.Global
 
 namespace IctBaden.Config.Session
 {
@@ -48,6 +52,7 @@ namespace IctBaden.Config.Session
             namespaceProvider.Waiting += isWaiting => Waiting(isWaiting);
         }
 
+        // ReSharper disable once UnusedParameter.Global
         public bool Login(string user, string password)
         {
             CurrentUser = user;
