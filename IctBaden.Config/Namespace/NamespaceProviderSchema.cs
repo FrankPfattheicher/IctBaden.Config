@@ -22,6 +22,11 @@ namespace IctBaden.Config.Namespace
             }
         }
 
+        public override string GetPersistenceInfo()
+        {
+            return _schemaFileName;
+        }
+
         private void Save()
         {
             using (var wrt = new StreamWriter(_schemaFileName))

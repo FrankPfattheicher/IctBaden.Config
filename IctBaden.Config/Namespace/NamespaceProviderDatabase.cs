@@ -11,12 +11,19 @@ namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderDatabase : NamespaceProvider
     {
+        private readonly string _connectionString;
         private readonly SqlConnection _connection;
         private string _lastError;
 
         public NamespaceProviderDatabase(string connectionString)
         {
+            _connectionString = connectionString;
             _connection = new SqlConnection(connectionString);
+        }
+
+        public override string GetPersistenceInfo()
+        {
+            return _connectionString;
         }
 
         private bool Connect()
@@ -67,7 +74,7 @@ namespace IctBaden.Config.Namespace
             }
 
             var cmd = _connection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM " + table;
+            cmd.CommandText = $"SELECT * FROM {table}";
 
             if (!string.IsNullOrEmpty(template.ValueSource))
             {
@@ -107,7 +114,7 @@ namespace IctBaden.Config.Namespace
 
             var cmd = _connection.CreateCommand();
             cmd.Parameters.Add(new SqlParameter("@id", unit.Parent.Id));
-            cmd.CommandText = "SELECT * FROM " + table + " WHERE " + column + "=?";
+            cmd.CommandText = $"SELECT * FROM {table} WHERE {column}=?";
             var rdr = cmd.ExecuteReader();
             if (!rdr.Read())
                 return defaultValue;
@@ -179,7 +186,7 @@ namespace IctBaden.Config.Namespace
             var columnNames = string.Join(", ", namePlaceholders.ToArray());
             var columnParams = string.Join(", ", paramPlaceholders.ToArray());
 
-            cmd.CommandText = "INSERT INTO " + table + " ( " + columnNames + " ) VALUES ( " + columnParams + " ); SELECT SCOPE_IDENTITY()";
+            cmd.CommandText = $"INSERT INTO {table} ( {columnNames} ) VALUES ( {columnParams} ); SELECT SCOPE_IDENTITY()";
             var rdr = cmd.ExecuteReader();
             if (!rdr.Read())
                 return;
@@ -197,7 +204,7 @@ namespace IctBaden.Config.Namespace
             var column = unit.Parent.ValueSource ?? unit.ValueSource;
             var cmd = _connection.CreateCommand();
             cmd.Parameters.Add(new SqlParameter("@id", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
-            cmd.CommandText = "DELETE FROM " + table + " WHERE " + column + "=?";
+            cmd.CommandText = $"DELETE FROM {table} WHERE {column}=?";
             cmd.ExecuteNonQuery();
         }
 

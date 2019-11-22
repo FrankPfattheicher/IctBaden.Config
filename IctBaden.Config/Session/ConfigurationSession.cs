@@ -71,7 +71,7 @@ namespace IctBaden.Config.Session
             CurrentUserLevel = level;
         }
 
-        private NamespaceProvider GetNamespaceProvider(string namespaceProvider)
+        public NamespaceProvider GetNamespaceProvider(string namespaceProvider)
         {
             if ((namespaceProvider == null) || !_namespaceProviders.ContainsKey(namespaceProvider))
                 return null;
@@ -90,8 +90,7 @@ namespace IctBaden.Config.Session
 
         private void NotifyPropertyChanged(ConfigurationUnit unit)
         {
-            var handler = PropertyChanged;
-            handler?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
+            PropertyChanged?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
         }
 
         public T GetValue<T>(ConfigurationUnit unit, T defaultValue)

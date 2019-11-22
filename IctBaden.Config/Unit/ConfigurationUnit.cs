@@ -734,7 +734,7 @@ namespace IctBaden.Config.Unit
                         //TODO: IctBaden.Speech
                         //    var speechSynthesizer = new SpeechSynthesizer();
                         //    specialList.AddRange(from voice in speechSynthesizer.GetInstalledVoices()
-                        //                         orderby voice.VoiceInfo.Name
+                        //                         order by voice.VoiceInfo.Name
                         //                         select new SelectionValue { DisplayText = voice.VoiceInfo.Name + " (" + voice.VoiceInfo.Culture + ")", Value = voice.VoiceInfo.Name });
                         break;
                     case SelectionType.ListOnly:
