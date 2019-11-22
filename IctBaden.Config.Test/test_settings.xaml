@@ -24,6 +24,13 @@
                 <ConfigurationUnit Id="LogCycle" DataType="Int16" DisplayName="Zyklus" Selection="ListOnly" ValueSource="Cycles" NamespaceProvider="test" >
                     <ConfigurationUnit.Description>Legt den Zyklus fest, in dem neue Dateien angelegt werden.</ConfigurationUnit.Description>
                     <ConfigurationUnit.DefaultValue>0</ConfigurationUnit.DefaultValue>
+                    <ConfigurationUnit.ValueList>
+                        <SelectionValue Value="0" DisplayText="eine Datei" />
+                        <SelectionValue Value="1" DisplayText="täglich" />
+                        <SelectionValue Value="2" DisplayText="wöchentlich" />
+                        <SelectionValue Value="3" DisplayText="monatlich" />
+                        <SelectionValue Value="4" DisplayText="jährlich" />
+                    </ConfigurationUnit.ValueList>
                 </ConfigurationUnit>
                 <ConfigurationUnit Id="LogSize" DataType="Int32" DisplayName="Maximalgröße" Unit="kB" >
                     <ConfigurationUnit.Description>Gibt die maximale Größe (in Kilo-Bytes) an, die eine Datei erreichen kann. Bei Überschreiten gehen die ältesten Einträge verloren.</ConfigurationUnit.Description>

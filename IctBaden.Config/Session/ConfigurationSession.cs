@@ -18,7 +18,14 @@ namespace IctBaden.Config.Session
         public int CurrentUserLevel { get; private set; }
 
         private ConfigurationUnit _folder;
-        public ConfigurationUnit Folder => _folder ?? (_folder = new ConfigurationUnit { Id = "Folder", DisplayName = "Ordner" });
+        public ConfigurationUnit Folder => _folder 
+                                           ?? (_folder = new ConfigurationUnit
+                                           {
+                                               Id = "Folder", 
+                                               DisplayName = "Ordner", 
+                                               DataType = TypeCode.Object,
+                                               Selection = SelectionType.ParentHierarchical
+                                           });
 
         // ReSharper disable EventNeverInvoked
         public event Action<bool> Waiting = _ => { };

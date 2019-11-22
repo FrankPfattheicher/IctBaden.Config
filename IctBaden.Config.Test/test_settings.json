@@ -68,6 +68,28 @@
                   "Description": "Legt den Zyklus fest, in dem neue Dateien angelegt werden.",
                   "DataType": "Int16",
                   "Selection": "ListOnly",
+                                    "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "eine Datei"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "täglich"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "wöchentlich"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "monatlich"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "jährlich"
+                    }
+                  ],
                   "ValueSource": "Cycles",
                   "NamespaceProviderInternal": "test",
                   "Children": []

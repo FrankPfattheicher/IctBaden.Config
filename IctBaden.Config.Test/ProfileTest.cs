@@ -88,14 +88,14 @@ namespace IctBaden.Config.Test
         }
 
         [Fact]
-        public void SelectionValuesProfile()
+        public void SelectionValuesFromProfileShouldDeserializedFromString()
         {
             var session = CreateDefaultSessionSettings();
             var unit = session.Namespace.GetUnitById("LogCycle");
             unit.NamespaceProvider = "usr";
             var selValues = unit.ValueList;
             Assert.NotNull(selValues);
-            Assert.Equal(3, selValues.Count);
+            Assert.Equal(5, selValues.Count);
         }
 
         [Fact]
