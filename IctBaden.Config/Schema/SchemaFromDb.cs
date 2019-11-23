@@ -14,7 +14,7 @@ namespace IctBaden.Config.Schema
         DisplayName = tableName,
         DataType = TypeCode.Object,
         Description = tableName,
-        DisplayImage = "element"
+        DisplayImage = "far fa-square"
       };
 
       return root;

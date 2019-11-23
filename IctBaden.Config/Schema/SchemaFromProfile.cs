@@ -20,7 +20,7 @@ namespace IctBaden.Config.Schema
         DisplayName = Path.GetFileName(fileName),
         DataType = TypeCode.Object,
         Description = fileName,
-        DisplayImage = "IniFile"
+        DisplayImage = "far fa-file"
       };
 
       foreach (var section in iniFile.Sections)
@@ -31,7 +31,7 @@ namespace IctBaden.Config.Schema
           Id = section.Name,
           DisplayName = section.Name,
           DataType = TypeCode.Object,
-          DisplayImage = "IniSection"
+          DisplayImage = "far fa-file-alt"
         };
         root.Children.Add(sectionUnit);
 

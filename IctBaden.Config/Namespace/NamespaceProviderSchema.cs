@@ -65,7 +65,7 @@ namespace IctBaden.Config.Namespace
               {
                   Id = name,
                   DisplayName = name,
-                  DisplayImage = "bullet_ball_grey",
+                  DisplayImage = "fas fa-circle",
                   DataType = dataType,
                   Selection = selection
               };
@@ -230,7 +230,7 @@ namespace IctBaden.Config.Namespace
                 case "Item":
                     unit.DataType = TypeCode.Object;
                     unit.Selection = SelectionType.ParentFlat;
-                    unit.DisplayImage = "element";
+                    unit.DisplayImage = "far fa-square";
                     break;
                 case "Property":
                     unit.DataType = TypeCode.String;

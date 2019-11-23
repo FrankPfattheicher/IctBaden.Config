@@ -22,7 +22,8 @@ namespace IctBaden.Config.Session
                                            ?? (_folder = new ConfigurationUnit
                                            {
                                                Id = "Folder", 
-                                               DisplayName = "Ordner", 
+                                               DisplayName = "Ordner",
+                                               DisplayImage = "fa fa-folder",
                                                DataType = TypeCode.Object,
                                                Selection = SelectionType.ParentHierarchical
                                            });
