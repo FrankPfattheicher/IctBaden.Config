@@ -54,6 +54,8 @@ namespace IctBaden.Config.Unit
         [XmlAttribute]
         public string DisplayName { get; set; }
         [XmlAttribute]
+        public string DisplayNameSingular { get; set; }
+        [XmlAttribute]
         public string DisplayImage { get; set; }
 
         private string _description;
