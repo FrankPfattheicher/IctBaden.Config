@@ -10,7 +10,7 @@ using IctBaden.Config.Unit;
 
 namespace IctBaden.Config.Session
 {
-    public class ConfigurationSession : INotifyPropertyChanged
+    public class ConfigurationSession
     {
         private Dictionary<string, NamespaceProvider> _namespaceProviders;
         public ConfigurationSessionUnit Namespace { get; private set; }
@@ -89,7 +89,7 @@ namespace IctBaden.Config.Session
             return children;
         }
 
-        private void NotifyPropertyChanged(ConfigurationUnit unit)
+        private void SignalConfigurationUnitChanged(ConfigurationUnit unit)
         {
             PropertyChanged?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
         }
@@ -111,7 +111,7 @@ namespace IctBaden.Config.Session
                 return;
 
             provider.SetValue(unit, newValue);
-            NotifyPropertyChanged(unit);
+            SignalConfigurationUnitChanged(unit);
         }
 
         public void AddUserUnit(ConfigurationUnit unit)
@@ -121,7 +121,7 @@ namespace IctBaden.Config.Session
                 return;
 
             provider.AddUserUnit(unit);
-            NotifyPropertyChanged(unit);
+            SignalConfigurationUnitChanged(unit);
         }
 
         public void RemoveUserUnit(ConfigurationUnit unit)
@@ -131,7 +131,7 @@ namespace IctBaden.Config.Session
                 return;
 
             provider.RemoveUserUnit(unit);
-            NotifyPropertyChanged(unit);
+            SignalConfigurationUnitChanged(unit);
         }
 
         public List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)

@@ -16,8 +16,10 @@ namespace IctBaden.Config.Unit
 {
     //[ContentProperty("Children")]
     [XmlRoot(Namespace = "clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config")]
-    public class ConfigurationUnit : INotifyPropertyChanged
+    public class ConfigurationUnit
     {
+        public event Action<ConfigurationUnit> Changed;
+        
         // basic data
         [XmlAttribute]
         public string Id { get; set; }
@@ -234,21 +236,6 @@ namespace IctBaden.Config.Unit
         }
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void NotifyPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        protected void NotifyPropertiesChanged(string[] names)
-        {
-            foreach (var name in names)
-            {
-                NotifyPropertyChanged(name);
-            }
-        }
 
         public void AddChild(ConfigurationUnit newChild)
         {
@@ -283,7 +270,7 @@ namespace IctBaden.Config.Unit
         {
             AddChild(userChild);
             Session.AddUserUnit(userChild);
-            NotifyPropertiesChanged(new[] { "Children", "ChildItems" });
+            Changed?.Invoke(this);
         }
 
         private bool RemoveUserChild(ConfigurationUnit userChild)
@@ -292,7 +279,7 @@ namespace IctBaden.Config.Unit
             {
                 return false;
             }
-            NotifyPropertiesChanged(new[] { "Children", "ChildItems" });
+            Changed?.Invoke(this);
             return true;
         }
 
@@ -377,14 +364,14 @@ namespace IctBaden.Config.Unit
                 idProp.SetValue(newName);
 
                 Id = newName;
-                NotifyPropertiesChanged(new[] { "Id", "DisplayName", "BrowserName" });
+                Changed?.Invoke(this);
                 return;
             }
 
             DisplayName = newName;
             var cfgProp = GetProperty(this, "DisplayName");
             cfgProp.SetValue(newName);
-            NotifyPropertiesChanged(new[] { "DisplayName", "BrowserName" });
+            Changed?.Invoke(this);
 
             if (Template == null)
                 return;
@@ -406,7 +393,7 @@ namespace IctBaden.Config.Unit
 
             var newMe = Parent.CreateItem(me.Id, typeUnit, me.DisplayName);
             newMe.SetProperties(mySettings);
-            NotifyPropertiesChanged(new[] { "DisplayImage", "Properties" });
+            Changed?.Invoke(this);
             return newMe;
         }
 
