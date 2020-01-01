@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>(C) 2010-2019 ICT Baden GmbH</Copyright>
+    <Copyright>(C) 2010-2020 ICT Baden GmbH</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
