@@ -1,0 +1,955 @@
+{
+  "Selection": "None",
+  "NamespaceProviderInternal": "test",
+  "Children": [
+    {
+      "Id": "Folder",
+      "DisplayName": "Ordner",
+      "DisplayImage": "fa fa-folder",
+      "Description": "DescriptionAsAttribute",
+      "Selection": "None",
+      "Children": []
+    },
+    {
+      "Id": "Settings",
+      "DisplayName": "Einstellungen",
+      "DisplayImage": "fa fa-cogs",
+      "Description": "Wählen Sie ein Element aus dem Baum um dessen Einstellungen zu ändern.",
+      "DataType": "Object",
+      "Selection": "None",
+      "Children": [
+        {
+          "Id": "System",
+          "DisplayName": "System",
+          "DisplayImage": "fa fa-server",
+          "Description": "Allgemeine Systemkonfiguration.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Logging",
+              "DisplayName": "Protokollierung",
+              "DisplayImage": "fa fa-file-alt",
+              "Description": "Konfiguration der Protokollierung von Zustellungen und Ereignissen.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "LogPath",
+                  "DisplayName": "Verzeichnis",
+                  "Description": "Legt das Verzeichnis fest in dem die Logdateien abgelegt werden.",
+                  "DataType": "String",
+                  "Selection": "SelectFolder",
+                  "Children": []
+                },
+                {
+                  "Id": "LogCycle",
+                  "DisplayName": "Zyklus",
+                  "Description": "Legt den Zyklus fest, in dem neue Dateien angelegt werden.",
+                  "DataType": "Int16",
+                  "DefaultValue": "0",
+                  "Input": "Mandatory",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "eine Datei"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "täglich"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "wöchentlich"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "monatlich"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "jährlich"
+                    }
+                  ],
+                  "Children": []
+                },
+                {
+                  "Id": "LogSize",
+                  "DisplayName": "Maximalgröße",
+                  "Description": "Gibt die maximale Größe (in Kilo-Bytes) an, die eine Datei erreichen kann. Bei Überschreiten gehen die ältesten Einträge verloren.",
+                  "DataType": "Int32",
+                  "Unit": "kB",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "Monitoring",
+              "DisplayName": "Überwachung",
+              "DisplayImage": "fa fa-bolt",
+              "Description": "Einstellungen zur Systemüberwachung.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "SendSystemEvents",
+                  "DisplayName": "Aktivieren",
+                  "Description": "Aktiviert den Versand von Systemereignissen.",
+                  "DataType": "Boolean",
+                  "DefaultValue": "false",
+                  "Selection": "Boolean",
+                  "Children": []
+                },
+                {
+                  "Id": "SystemEventTargets",
+                  "DisplayName": "Empfänger",
+                  "Description": "Liste der Empfänger an die Ereignisse der Systemüberwachung gesendet werden.",
+                  "DataType": "String",
+                  "Selection": "ReferenceList",
+                  "ValueSource": "Targets",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Provider",
+          "DisplayName": "Dienste",
+          "DisplayImage": "fa fa-cubes",
+          "Description": "Konfiguriert die Einstellungen der angegebenen Übertragungsdienste",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "ProviderVoIP",
+              "DisplayName": "Sprachausgabe",
+              "DisplayImage": "fas fa-phone",
+              "Description": "Ausgabe von Nachrichten über Telefon",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "RepeatCount",
+                  "DisplayName": "Meldung wiedeholen",
+                  "Description": "Die Anzahl der Wiederholungen der Meldungsansage bevor die Verbindungb getrennt wird.",
+                  "DataType": "UInt16",
+                  "DefaultValue": "3"
+                },
+                {
+                  "Id": "ListenPartial",
+                  "DisplayName": "Meldung vorzeitig quittierbar",
+                  "Description": "Die Meldung muss nicht vollständig abgehört werden bevor die Quittierung möglich ist.",
+                  "DataType": "Boolean",
+                  "DefaultValue": "False",
+                  "Selection": "Boolean"
+                }
+              ]
+            },
+            {
+              "Id": "ProviderSpeaker",
+              "DisplayName": "Lokaler Lautsprecher",
+              "DisplayImage": "fa fa-volume-up",
+              "Description": "Ausgabe von Nachrichten über den lokalen Lautsprecher",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Active",
+                  "Category": "Allgemein",
+                  "DisplayName": "Aktivieren",
+                  "Description": "Aktiviert die verwendung des Dienstes (Neustart erforderlich).",
+                  "DataType": "Boolean",
+                  "DefaultValue": "True",
+                  "Selection": "Boolean",
+                  "Children": []
+                },
+                {
+                  "Id": "TtsEngine",
+                  "Category": "Extras",
+                  "DisplayName": "Stimme",
+                  "Description": "Die standardmäßig zu verwendende Text-to-speech Stimme für den lokalen Lautsprecher.",
+                  "DataType": "String",
+                  "DefaultValueDisplayText": "Automatische Auswahl",
+                  "Selection": "AvailableTtsEngines",
+                  "ValueList": [
+                    {
+                      "Value": "",
+                      "DisplayText": "Automatische Auswahl"
+                    },
+                    {
+                      "Value": "Microsoft Hedda Desktop",
+                      "DisplayText": "Microsoft Hedda Desktop (de-DE)"
+                    },
+                    {
+                      "Value": "Microsoft Zira Desktop",
+                      "DisplayText": "Microsoft Zira Desktop (en-US)"
+                    }
+                  ],
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderEmailSmtp",
+              "DisplayName": "E-Mail (SMTP)",
+              "DisplayImage": "fa fa-envelope",
+              "Description": "Senden von E-Mails über einen externen SMTP-Server",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Host",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Server",
+                  "Description": "Name oder IP-Adresse des SMTP Mail-Servers.",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "SSL",
+                  "Category": "Mail-Server",
+                  "DisplayName": "SSL verwenden",
+                  "Description": "Verwenden einer sicheren TLS/SSL-Verbindung zum Mail-Server.",
+                  "DataType": "Boolean",
+                  "DefaultValue": "true",
+                  "Selection": "Boolean",
+                  "Children": []
+                },
+                {
+                  "Id": "Port",
+                  "Category": "Mail-Server",
+                  "DisplayName": "IP-Port",
+                  "Description": "Diesen IP-Port für die Verbindung zum Mail-Server verwenden.",
+                  "DataType": "UInt16",
+                  "DefaultValue": "25",
+                  "Children": []
+                },
+                {
+                  "Id": "User",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Anmeldung",
+                  "Description": "Benutzername zur Anmeldung am Mail-Server.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "Password",
+                  "Category": "Mail-Server",
+                  "DisplayName": "Kennwort",
+                  "Description": "Kennwort das für die Anmeldung erforderlich ist.",
+                  "DataType": "String",
+                  "Selection": "EditPassword",
+                  "Children": []
+                },
+                {
+                  "Id": "Subject",
+                  "Category": "Nachricht",
+                  "DisplayName": "Betreff",
+                  "Description": "Betreffzeile der Nachrichten.",
+                  "DataType": "String",
+                  "DefaultValue": "Informant",
+                  "Children": []
+                },
+                {
+                  "Id": "Sender",
+                  "Category": "Nachricht",
+                  "DisplayName": "Absender",
+                  "Description": "Name des Absenders der Nachrichten.",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderEmailLteRouter",
+              "DisplayName": "E-Mail (LTE-Router)",
+              "DisplayImage": "fa fa-envelope",
+              "Description": "Senden von E-Mails über einen einen LTE-Router",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Subject",
+                  "Category": "Nachricht",
+                  "DisplayName": "Betreff",
+                  "Description": "Betreffzeile der Nachrichten.",
+                  "DataType": "String",
+                  "DefaultValue": "Informant",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderFile",
+              "DisplayName": "Meldedatei",
+              "DisplayImage": "fa fa-file",
+              "Description": "Ausgabe von Nachrichten in eine Textdatei.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Encoding",
+                  "DisplayName": "Codierung",
+                  "Description": "Angabe der Codierung die für die Ausgabe verwendet werden soll.",
+                  "DataType": "String",
+                  "DefaultValue": "iso-8859-1",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "iso-8859-1",
+                      "DisplayText": "ISO-8859-1 (Latin-1, ISO Western European)"
+                    },
+                    {
+                      "Value": "Windows-1252",
+                      "DisplayText": "Windows (Western European)"
+                    },
+                    {
+                      "Value": "ibm850",
+                      "DisplayText": "MS-DOS (Western European)"
+                    },
+                    {
+                      "Value": "utf-8",
+                      "DisplayText": "UTF 8"
+                    }
+                  ],
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderTwilio",
+              "DisplayName": "Twilio",
+              "DisplayImage": "fa fa-cloud-upload-alt",
+              "Description": "https://www.twilio.com",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "AccountSid",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Account SID",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "AuthToken",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Auth Token",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Selection": "EditPassword",
+                  "Children": []
+                },
+                {
+                  "Id": "FromNumber",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Absendernummer",
+                  "Description": "Im internationalen Format (+49...).",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ProviderSinch",
+              "DisplayName": "sinch",
+              "DisplayImage": "fa fa-cloud-upload-alt",
+              "Description": "https://www.sinch.com",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "ServicePlanId",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Service Plan ID",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "ApiToken",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "API Token",
+                  "Description": ".",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Selection": "EditPassword",
+                  "Children": []
+                },
+                {
+                  "Id": "FromNumber",
+                  "Category": "Zugangsdaten",
+                  "DisplayName": "Absendernummer",
+                  "Description": "Im internationalen Format ohne führendes '+' (49...).",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Channels",
+          "DisplayName": "Anschlüsse",
+          "DisplayNameSingular": "Anschluß",
+          "DisplayImage": "fa fa-plug",
+          "Description": "Konfiguriert die Anschlüsse zu externen Geräten (z.B. Modems)",
+          "DataType": "Object",
+          "Selection": "ParentFlat",
+          "Children": [
+            {
+              "Id": "ChannelGsm",
+              "DisplayName": "GSM Modem",
+              "DisplayImage": "fa fa-wifi",
+              "Description": ".",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Port",
+                  "Category": "Anschluss",
+                  "DisplayName": "Schnittstelle",
+                  "Description": "Serielle Schnittstelle an der das Modem angeschlossen ist.",
+                  "DataType": "String",
+                  "DefaultValue": "COM1",
+                  "Input": "Mandatory",
+                  "Selection": "AvailableComPorts",
+                  "ValueList": [
+                    {
+                      "Value": "COM1",
+                      "DisplayText": "COM1"
+                    },
+                    {
+                      "Value": "COM2",
+                      "DisplayText": "COM2"
+                    },
+                    {
+                      "Value": "COM3",
+                      "DisplayText": "COM3"
+                    }
+                  ],
+                  "Children": []
+                },
+                {
+                  "Id": "Baud",
+                  "Category": "Anschluss",
+                  "DisplayName": "Baudrate",
+                  "Description": "Übertragungsrate der seriellen Schnittstelle an der das Modem angeschlossen ist.",
+                  "DataType": "Int32",
+                  "DefaultValue": "19200",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "Number",
+                  "Category": "Allgemein",
+                  "DisplayName": "Eigene Nummer",
+                  "Description": "Rufnummer der SIM Karte.",
+                  "DataType": "String",
+                  "Children": []
+                },
+                {
+                  "Id": "PIN",
+                  "Category": "Sicherheit",
+                  "DisplayName": "PIN",
+                  "Description": "PIN Nummer der SIM Karte.",
+                  "DataType": "String",
+                  "Selection": "EditPassword",
+                  "Children": []
+                },
+                {
+                  "Id": "InitCommands",
+                  "Category": "Extras",
+                  "DisplayName": "Initialisierung",
+                  "Description": "Erlaubt besondere Einstellungen des Modems.",
+                  "DataType": "String",
+                  "UserLevel": 2,
+                  "Children": []
+                },
+                {
+                  "Id": "SmsCenter",
+                  "Category": "Extras",
+                  "DisplayName": "SMS-Kurzmitteilungszentrale",
+                  "Description": "Bei manchen Anbietern gilt es zu beachten, dass es teilweise unterschiedlichen SMS Zentralen für einen Handyvertrag und Prepaid Karten gelten.",
+                  "DataType": "String",
+                  "UserLevel": 2,
+                  "Children": []
+                }
+              ]
+            },
+            {
+              "Id": "ChannelVoIP",
+              "DisplayName": "VoIP Anschluss",
+              "DisplayImage": "fas fa-phone",
+              "Description": ".",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "SIPServer",
+                  "Category": "SIP Zugangsdaten",
+                  "DisplayName": "Server / Registrar",
+                  "Description": "Server bzw. Registrar bei dem der Anschluss registriert ist.",
+                  "DataType": "String",
+                  "Input": "Mandatory"
+                },
+                {
+                  "Id": "SIPUsername",
+                  "Category": "SIP Zugangsdaten",
+                  "DisplayName": "Benutzername / ID",
+                  "Description": "Name bzw. SIP-ID zur Anmeldung am Server.",
+                  "DataType": "String",
+                  "Input": "Mandatory"
+                },
+                {
+                  "Id": "SIPPassword",
+                  "Category": "SIP Zugangsdaten",
+                  "DisplayName": "Passwort",
+                  "Description": "Passwort, das zur Anmeldung notwendig ist.",
+                  "Selection": "EditPassword",
+                  "DataType": "String",
+                  "Input": "Mandatory"
+                },
+                {
+                  "Id": "Number",
+                  "Category": "Allgemein",
+                  "DisplayName": "Eigene Nummer",
+                  "Description": "Rufnummer des Anschlusses.",
+                  "DataType": "String"
+                },
+              ]
+            },
+            {
+              "Id": "ChannelLteRouter",
+              "DisplayName": "LTE Router",
+              "DisplayImage": "fa fa-window-minimize",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "IpAddress",
+                  "Category": "LTE-Router",
+                  "DisplayName": "Router-Adresse",
+                  "Description": "Name oder IP-Adresse des LTE-Routers.",
+                  "DataType": "String",
+                  "Input": "Mandatory",
+                  "Children": []
+                },
+                {
+                  "Id": "Port",
+                  "Category": "LTE-Router",
+                  "DisplayName": "IP-Port",
+                  "Description": "Diesen IP-Port für die Verbindung zum Router verwenden.",
+                  "DataType": "UInt16",
+                  "DefaultValue": "1432",
+                  "Children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Delivery",
+          "DisplayName": "Zustellung",
+          "DisplayImage": "fa fa-share-square",
+          "Description": "Einstellungen die den Ablauf der Zustellungsvorgänge regeln.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "DefaultTiming",
+              "DisplayName": "Zeiten",
+              "DisplayImage": "fa fa-stopwatch",
+              "Description": "Das Standardmäßige Zeitverhalten bei der Zustellung von Meldungen.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Parallel",
+                  "DisplayName": "Einstufig",
+                  "DisplayImage": "fa fa-play",
+                  "Description": "Empfänger und Gruppen",
+                  "DataType": "Object",
+                  "Selection": "None",
+                  "Children": [
+                    {
+                      "Id": "SendTimeout",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Sendezeit",
+                      "Description": "Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SendRetryDelay",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Pause zur Wiederholung",
+                      "Description": "Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:01:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "AckTimeout",
+                      "Category": "Quittierung",
+                      "DisplayName": "Quittierungszeit",
+                      "Description": "Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "01:00:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "AckRetryDelay",
+                      "Category": "Quittierung",
+                      "DisplayName": "Sendewiederholung",
+                      "Description": "Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    }
+                  ]
+                },
+                {
+                  "Id": "Sequence",
+                  "DisplayName": "Eskalationen",
+                  "DisplayImage": "fa fa-forward",
+                  "Description": "Folgen und Schleifen",
+                  "DataType": "Object",
+                  "Selection": "None",
+                  "Children": [
+                    {
+                      "Id": "SequenceSendTimeout",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Sendezeit",
+                      "Description": "Begrenzt die maximale Zeit die für den Sendevorgang einer Meldung verwendet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceSendRetryDelay",
+                      "Category": "Sendevorgang",
+                      "DisplayName": "Pause zur Wiederholung",
+                      "Description": "Legt die Pause fest, die zwischen zwei aufeinanderfolgenden Sendevorgängen gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:01:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceAckTimeout",
+                      "Category": "Quittierung",
+                      "DisplayName": "Quittierungszeit",
+                      "Description": "Begrenzt die maximale Zeit die nach dem Sendevorgang auf die quittierung einer Meldung gewartet wird.",
+                      "DataType": "String",
+                      "DefaultValue": "00:30:00",
+                      "Children": []
+                    },
+                    {
+                      "Id": "SequenceAckRetryDelay",
+                      "Category": "Quittierung",
+                      "DisplayName": "Sendewiederholung",
+                      "Description": "Legt fest nach welcher Wartezeit eine Meldung noch einmal gesendet wird wenn bis dahin noch keine Quittierung erfolgt ist.",
+                      "DataType": "String",
+                      "DefaultValue": "00:10:00",
+                      "Children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "Id": "DefaultPriorities",
+              "DisplayName": "Prioritäten",
+              "DisplayImage": "fas fa-exclamation",
+              "Description": "Die standardmäßig verwendeten Prioritäten.",
+              "DataType": "Object",
+              "Selection": "None",
+              "Children": [
+                {
+                  "Id": "Groups",
+                  "DisplayName": "Gruppen",
+                  "DataType": "String",
+                  "DefaultValue": "0",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "Standard"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "Notruf"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "Sehr sehr hoch"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "Sehr hoch"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "Hoch"
+                    },
+                    {
+                      "Value": "5",
+                      "DisplayText": "Normal"
+                    },
+                    {
+                      "Value": "6",
+                      "DisplayText": "Niedrig"
+                    },
+                    {
+                      "Value": "7",
+                      "DisplayText": "Sehr niedrig"
+                    },
+                    {
+                      "Value": "8",
+                      "DisplayText": "Sehr sehr niedrig"
+                    }
+                  ]
+                },
+                {
+                  "Id": "Targets",
+                  "DisplayName": "Empfänger",
+                  "DataType": "String",
+                  "DefaultValue": "0",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "Standard"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "Notruf"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "Sehr sehr hoch"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "Sehr hoch"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "Hoch"
+                    },
+                    {
+                      "Value": "5",
+                      "DisplayText": "Normal"
+                    },
+                    {
+                      "Value": "6",
+                      "DisplayText": "Niedrig"
+                    },
+                    {
+                      "Value": "7",
+                      "DisplayText": "Sehr niedrig"
+                    },
+                    {
+                      "Value": "8",
+                      "DisplayText": "Sehr sehr niedrig"
+                    }
+                  ]
+                },
+                {
+                  "Id": "Manual",
+                  "DisplayName": "Manuelle Rufe",
+                  "DataType": "String",
+                  "DefaultValue": "0",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "Standard"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "Notruf"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "Sehr sehr hoch"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "Sehr hoch"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "Hoch"
+                    },
+                    {
+                      "Value": "5",
+                      "DisplayText": "Normal"
+                    },
+                    {
+                      "Value": "6",
+                      "DisplayText": "Niedrig"
+                    },
+                    {
+                      "Value": "7",
+                      "DisplayText": "Sehr niedrig"
+                    },
+                    {
+                      "Value": "8",
+                      "DisplayText": "Sehr sehr niedrig"
+                    }
+                  ]
+                },
+                {
+                  "Id": "Automatic",
+                  "DisplayName": "Automatische Rufe",
+                  "DataType": "String",
+                  "DefaultValue": "0",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "Standard"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "Notruf"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "Sehr sehr hoch"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "Sehr hoch"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "Hoch"
+                    },
+                    {
+                      "Value": "5",
+                      "DisplayText": "Normal"
+                    },
+                    {
+                      "Value": "6",
+                      "DisplayText": "Niedrig"
+                    },
+                    {
+                      "Value": "7",
+                      "DisplayText": "Sehr niedrig"
+                    },
+                    {
+                      "Value": "8",
+                      "DisplayText": "Sehr sehr niedrig"
+                    }
+                  ]
+                },
+                {
+                  "Id": "Default",
+                  "DisplayName": "Standard",
+                  "DataType": "String",
+                  "DefaultValue": "5",
+                  "Selection": "ListOnly",
+                  "ValueList": [
+                    {
+                      "Value": "0",
+                      "DisplayText": "Standard"
+                    },
+                    {
+                      "Value": "1",
+                      "DisplayText": "Notruf"
+                    },
+                    {
+                      "Value": "2",
+                      "DisplayText": "Sehr sehr hoch"
+                    },
+                    {
+                      "Value": "3",
+                      "DisplayText": "Sehr hoch"
+                    },
+                    {
+                      "Value": "4",
+                      "DisplayText": "Hoch"
+                    },
+                    {
+                      "Value": "5",
+                      "DisplayText": "Normal"
+                    },
+                    {
+                      "Value": "6",
+                      "DisplayText": "Niedrig"
+                    },
+                    {
+                      "Value": "7",
+                      "DisplayText": "Sehr niedrig"
+                    },
+                    {
+                      "Value": "8",
+                      "DisplayText": "Sehr sehr niedrig"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Acknowledge",
+          "DisplayName": "Quittierung",
+          "DisplayImage": "fa fa-check-circle",
+          "Description": "Einstellungen die die Möglichkeiten der Quittierung von Meldungen regeln.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "GlobalCodes",
+              "DisplayName": "Globale Codes",
+              "DisplayImage": "fas fa-globe",
+              "Description": "Legt global gültige Quittungscodes fest die nicht an einen bestimmten Empfänger gebunden sind.",
+              "DataType": "Object",
+              "Children": [
+                {
+                  "Id": "GlobalAckCode",
+                  "DisplayName": "Globaler Quittungscode",
+                  "Description": "Legt einen Quittungscode fest mit dem alle anstehenden Meldungen quittiert werden können.",
+                  "DataType": "String"
+                },
+                {
+                  "Id": "GlobalAbortCode",
+                  "DisplayName": "Globaler Abbruchcode",
+                  "Description": "Legt einen Code fest über den alle anstehenden Rufe abgebrochen werden können.",
+                  "DataType": "String"
+                }
+              ]
+            },
+            {
+              "Id": "AddMsgAckCode",
+              "DisplayName": "Quittungscode pro Meldung hinzufügen",
+              "Description": "Bei Aktivierung dieser Option wird jeder quittierpflichtigen Meldung ein dreistelliger Code zugeordnet, der bei der Quittierung nach dem Empfängerabhängigen Quittungscode angegeben werden muss.",
+              "DataType": "Boolean",
+              "DefaultValue": "false",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "AcknowledgeDelUnsent",
+              "DisplayName": "Mit Quittierung auch bis dahin noch nicht gesendete Meldungen löschen",
+              "Description": "Die Quittierung löscht mit dieser Option auch Meldungen, die den Empfänger noch nicht erreicht haben. Achtung: Durch diese Option können Meldungen verloren gehen, die noch keinen Empfänger erreicht haben.",
+              "DataType": "Boolean",
+              "DefaultValue": "false",
+              "Selection": "Boolean"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

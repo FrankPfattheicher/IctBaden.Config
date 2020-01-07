@@ -3,13 +3,13 @@ using IctBaden.Config.Unit;
 
 namespace IctBaden.Config.Schema
 {
-  public class SchemaFromDb
+  public class SchemaFromSql
   {
     public static ConfigurationUnit Create(string dbConnectionString, string tableName)
     {
       var root = new ConfigurationUnit
       {
-        NamespaceProvider = "db://" + dbConnectionString,
+        NamespaceProvider = "sql://" + dbConnectionString,
         Id = tableName,
         DisplayName = tableName,
         DataType = TypeCode.Object,

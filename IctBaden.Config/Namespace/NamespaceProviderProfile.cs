@@ -25,6 +25,7 @@ namespace IctBaden.Config.Namespace
             //Children=2DFA8F569C574CB787C9ACE8587A7749;C6D9E7D346234B55B3179750C81E8989;12DF7A3A144446DFB472FC28C9742C3E
             var childIds = _profile[unit.FullId].Get("Children", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
+            var children = new List<ConfigurationUnit>();
             foreach (var childId in childIds)
             {
                 var childSection = _profile[childId];
@@ -36,7 +37,7 @@ namespace IctBaden.Config.Namespace
                     var newFolder = unit.Clone(childDisplayName, false);
                     newFolder.SetUserId(childId);
                     newFolder.Description = unit.Session.Folder.DisplayName;
-                    unit.AddChild(newFolder);
+                    children.Add(newFolder);
                 }
                 else
                 {
@@ -48,13 +49,13 @@ namespace IctBaden.Config.Namespace
                         newItem.Class = childClass;
                         newItem.Description = type.DisplayName;
                         newItem.DataType = TypeCode.Object;
-                        unit.AddChild(newItem);
+                        children.Add(newItem);
                     }
                 }
             }
 
             //TODO: Das KANN nicht sein - Test machen !!!
-            return new List<ConfigurationUnit>();
+            return children;
         }
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)

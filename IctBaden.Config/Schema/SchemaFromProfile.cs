@@ -7,7 +7,7 @@ using IctBaden.Framework.IniFile;
 
 namespace IctBaden.Config.Schema
 {
-    public class SchemaFromProfile
+    public static class SchemaFromProfile
     {
         public static ConfigurationUnit Create(string fileName)
         {

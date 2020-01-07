@@ -81,11 +81,10 @@ namespace IctBaden.Config.Session
 
         public IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
-            //if(string.IsNullOrEmpty(currentUser))
-            //  throw new UnauthorizedAccessException("No user logged in");
-
             var provider = GetNamespaceProvider(unit.NamespaceProvider);
-            var children = (provider == null) ? new List<ConfigurationUnit>() : provider.GetChildren(unit);
+            var children = (provider == null) 
+                ? new List<ConfigurationUnit>() 
+                : provider.GetChildren(unit);
             return children;
         }
 

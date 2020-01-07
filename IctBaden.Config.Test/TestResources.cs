@@ -1,4 +1,5 @@
 using System.IO;
+// ReSharper disable ConvertToUsingDeclaration
 
 namespace IctBaden.Config.Test
 {

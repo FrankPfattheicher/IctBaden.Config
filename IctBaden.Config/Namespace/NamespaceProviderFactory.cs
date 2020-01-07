@@ -2,7 +2,7 @@
 
 namespace IctBaden.Config.Namespace
 {
-    public class NamespaceProviderFactory
+    public static class NamespaceProviderFactory
     {
         //TODO: reflect classes
 
@@ -17,8 +17,10 @@ namespace IctBaden.Config.Namespace
 
             switch (scheme)
             {
-                case "db":
-                    return new NamespaceProviderDatabase(specification);
+                case "sql":
+                    return new NamespaceProviderSqlServer(specification);
+                case "mongo":
+                    return new NamespaceProviderMongoDb(specification);
                 case "file":
                     return new NamespaceProviderProfile(specification);
                 case "memory":

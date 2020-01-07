@@ -40,11 +40,19 @@ namespace IctBaden.Config.Test
         }
 
         [Fact]
-        public void DbSpecification()
+        public void SqlServerSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("db://Data Source=localhost\\SQLEXPRESS;Integrated Security=SSPI;");
+            var provider = NamespaceProviderFactory.Create("sql://Data Source=localhost\\SQLEXPRESS;Integrated Security=SSPI;");
             Assert.NotNull(provider);
-            Assert.Equal(typeof(NamespaceProviderDatabase), provider.GetType());
+            Assert.Equal(typeof(NamespaceProviderSqlServer), provider.GetType());
+        }
+
+        [Fact]
+        public void MongoDbSpecification()
+        {
+            var provider = NamespaceProviderFactory.Create("mongo://mongodb:27017");
+            Assert.NotNull(provider);
+            Assert.Equal(typeof(NamespaceProviderMongoDb), provider.GetType());
         }
 
         [Fact]

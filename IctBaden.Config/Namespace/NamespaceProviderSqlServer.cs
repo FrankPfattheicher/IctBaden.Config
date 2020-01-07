@@ -9,13 +9,13 @@ using IctBaden.Framework.Types;
 
 namespace IctBaden.Config.Namespace
 {
-    public class NamespaceProviderDatabase : NamespaceProvider
+    public class NamespaceProviderSqlServer : NamespaceProvider
     {
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
         private string _lastError;
 
-        public NamespaceProviderDatabase(string connectionString)
+        public NamespaceProviderSqlServer(string connectionString)
         {
             _connectionString = connectionString;
             _connection = new SqlConnection(connectionString);

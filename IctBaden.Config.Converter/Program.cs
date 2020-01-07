@@ -1,14 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using IctBaden.Config.Namespace;
-using IctBaden.Config.Unit;
 
 namespace IctBaden.Config.Converter
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("Config Converter");
 
@@ -28,7 +26,7 @@ namespace IctBaden.Config.Converter
             var fromXaml = srcFileName.Contains("xaml", StringComparison.InvariantCultureIgnoreCase);
             var toXaml = !fromXaml;
 
-            string Format(bool isXaml) => isXaml ? "XAML" : "JSON";
+            static string Format(bool isXaml) => isXaml ? "XAML" : "JSON";
 
             var dstFileName = srcFileName.Replace(Format(fromXaml), Format(toXaml).ToLower(), StringComparison.InvariantCultureIgnoreCase);
 

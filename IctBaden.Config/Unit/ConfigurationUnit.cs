@@ -230,7 +230,9 @@ namespace IctBaden.Config.Unit
                     ChildrenLoaded = true;
                     AddChildren(Session.GetChildren(this));
                 }
-                return (Session == null) ? _children : _children.Where(ch => ch.UserLevel <= Session.CurrentUserLevel).ToList();
+                return (Session == null) 
+                    ? _children 
+                    : _children.Where(ch => ch.UserLevel <= Session.CurrentUserLevel).ToList();
             }
             set => _children = value;
         }

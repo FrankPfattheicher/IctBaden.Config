@@ -50,7 +50,7 @@ namespace IctBaden.Config.Namespace
                     var newFolder = unit.Clone(childDisplayName, false);
                     newFolder.SetUserId(childId);
                     newFolder.Description = unit.Session.Folder.DisplayName;
-                    unit.AddChild(newFolder);
+                    children.Add(newFolder);
                 }
                 else
                 {
@@ -63,7 +63,7 @@ namespace IctBaden.Config.Namespace
                         newItem.Class = childClass;
                         newItem.Description = type.DisplayName;
                         newItem.DataType = TypeCode.Object;
-                        unit.AddChild(newItem);
+                        children.Add(newItem);
                     }
                 }
             }
