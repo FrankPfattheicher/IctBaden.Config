@@ -219,6 +219,11 @@ namespace IctBaden.Config.Unit
         private List<ConfigurationUnit> _children;
         protected bool ChildrenLoaded;
 
+        public void InvalidateChildren()
+        {
+            ChildrenLoaded = false;
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [XmlElement("ConfigurationUnit")]
         public List<ConfigurationUnit> Children
