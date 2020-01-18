@@ -87,8 +87,10 @@ namespace IctBaden.Config.Unit
         [JsonConverter(typeof(StringEnumConverter))]
         public TypeCode DataType { get; set; }
         [XmlAttribute]
+        // ReSharper disable once InconsistentNaming
         public string DefaultValue { get; set; }
         [XmlAttribute]
+        // ReSharper disable once InconsistentNaming
         public string DefaultValueDisplayText { get; set; }
         [XmlAttribute]
         public string Unit { get; set; }
