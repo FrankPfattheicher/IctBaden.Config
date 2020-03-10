@@ -500,13 +500,19 @@ namespace IctBaden.Config.Unit
             {
                 var text = GetValue<string>();
 
+                if (Selection == SelectionType.ReferenceList)
+                {
+                    var assigned = BaseUnitForReferenceUnits.GetUnitList(text).ToArray();
+                    return ConfigurationUnit.GetUnitListDisplayText(assigned);
+                }
+
                 switch (DataType)
                 {
                     case TypeCode.DateTime:
                         text = text.Replace(" 00:00:00", "");
                         break;
                 }
-
+                
                 return text;
             }
         }
