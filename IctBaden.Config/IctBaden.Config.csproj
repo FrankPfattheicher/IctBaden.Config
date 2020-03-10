@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IctBaden.Framework" Version="1.0.16" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\IctBaden.Framework\IctBaden.Framework\IctBaden.Framework.csproj" />
   </ItemGroup>
 
 </Project>
