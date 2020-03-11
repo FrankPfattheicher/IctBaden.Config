@@ -11,10 +11,27 @@ namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderSqlServer : NamespaceProvider
     {
+        // table
+        // parentId    unitId    value
+        private readonly string _tableName = "CfgData";
+        private bool _tableExists;
+
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
         private string _lastError;
 
+        private const string CreateTable = 
+            @"CREATE TABLE [dbo].[CfgData](
+	            [ParentId] [nvarchar](50) NOT NULL,
+	            [UnitId] [nvarchar](50) NOT NULL,
+	            [Value] [nvarchar](max) NULL,
+             CONSTRAINT [PK_CfgData] PRIMARY KEY CLUSTERED 
+                (
+	                [ParentId] ASC,
+	                [UnitId] ASC
+                )
+             WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
+        
         public NamespaceProviderSqlServer(string connectionString)
         {
             _connectionString = connectionString;
@@ -40,6 +57,12 @@ namespace IctBaden.Config.Namespace
                 {
                     _connection.Open();
                 }
+
+                if (!_tableExists)
+                {
+                    CreateCfgDataTableIfNotExists();
+                }
+                
             }
             catch (Exception ex)
             {
@@ -51,6 +74,58 @@ namespace IctBaden.Config.Namespace
             return _connection.State == ConnectionState.Open;
         }
 
+        private void CreateCfgDataTableIfNotExists()
+        {
+            if (_connection.State != ConnectionState.Open) return;
+
+            SqlCommand cmd;
+            try
+            {
+                using(cmd = _connection.CreateCommand())
+                {
+                    cmd.CommandText = $"SELECT * FROM {_tableName}";
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        rdr.Close();
+                    }
+                }
+                _tableExists = true;
+            }
+            catch (SqlException)
+            {
+                // ignore and create table
+            }
+            
+            using(cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = CreateTable
+                    .Replace("CfgData]", _tableName + "]");
+
+                var count = cmd.ExecuteNonQuery();
+                if (count != 0)
+                {
+                    _tableExists = true;
+                }
+            }
+        }
+
+        private string GetValue(string parentId, string unitId)
+        {
+            using(var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = $"SELECT Value FROM {_tableName} WHERE ParentId=@pid AND UnitId=@uid";
+                cmd.Parameters.Add(new SqlParameter("@pid", parentId));
+                cmd.Parameters.Add(new SqlParameter("@uid", unitId));
+
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    if (!rdr.Read()) return null;
+                    if (!(rdr[0] is string value)) return null;
+                    return value;
+                }
+            }
+        }
+        
         public override IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
             var children = new List<ConfigurationUnit>();
@@ -59,46 +134,44 @@ namespace IctBaden.Config.Namespace
             if (template == null)
                 return children;
 
-            var table = template.Id;
-            var idColumn = template.DefaultValue;
-            var displayColumn = template.DisplayName;
-            if (string.IsNullOrEmpty(table) || string.IsNullOrEmpty(idColumn) || string.IsNullOrEmpty(displayColumn))
-            {
-                return children;
-            }
-
             if (!Connect())
             {
                 children.Add(new ConfigurationUnit { DataType = TypeCode.Object, DisplayName = _lastError, DisplayImage = "error" });
                 return children;
             }
+            
+            var parentId = unit.Id ?? "";
+            var childIdList = GetValue(parentId, "Children");
+            if (string.IsNullOrEmpty(childIdList)) return children;
 
-            var cmd = _connection.CreateCommand();
-            cmd.CommandText = $"SELECT * FROM {table}";
-
-            if (!string.IsNullOrEmpty(template.ValueSource))
+            var childIds = childIdList.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var childId in childIds)
             {
-                // ReSharper disable once StringLiteralTypo
-                cmd.Parameters.Add(new SqlParameter("@parentid", template.ParentClass.Id));
-                var where = " WHERE " + template.ValueSource + "=?";
-                var join = " INNER JOIN " + template.ParentClass.Class + " ON " + table + "." + template.ValueSource + " = " + template.ParentClass.Class + "." + template.ParentClass.DefaultValue;
-                cmd.CommandText += join + where;
+                var childDisplayName = GetValue(childId,"DisplayName");
+                var childClass = GetValue(childId, "Class");
+                if (string.IsNullOrEmpty(childClass))
+                {
+                    // folder
+                    var newFolder = unit.Clone(childDisplayName, false);
+                    newFolder.SetUserId(childId);
+                    newFolder.Description = unit.Session.Folder.DisplayName;
+                    children.Add(newFolder);
+                }
+                else
+                {
+                    var type = unit.Session.Namespace.GetUnitById(childClass);
+                    if (!type.IsEmpty)
+                    {
+                        var newItem = type.Clone(childDisplayName, true);
+                        newItem.SetUserId(childId);
+                        newItem.Class = childClass;
+                        newItem.Description = type.DisplayName;
+                        newItem.DataType = TypeCode.Object;
+                        children.Add(newItem);
+                    }
+                }
             }
 
-            var rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                var id = rdr[idColumn].ToString();
-                var name = rdr[displayColumn].ToString();
-
-                var newItem = template.Clone(name, true);
-                newItem.SetUserId(id);
-                newItem.Parent = unit;
-                newItem.Class = table;
-                newItem.ValueSource = idColumn;
-                newItem.DataType = TypeCode.Object;
-                children.Add(newItem);
-            }
             return children;
         }
 
@@ -107,19 +180,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return defaultValue;
 
-            var table = unit.Parent.Class;
-            var column = unit.Parent.ValueSource;
-            if ((table == null) || (column == null))
-                return defaultValue;
-
-            var cmd = _connection.CreateCommand();
-            cmd.Parameters.Add(new SqlParameter("@id", unit.Parent.Id));
-            cmd.CommandText = $"SELECT * FROM {table} WHERE {column}=?";
-            var rdr = cmd.ExecuteReader();
-            if (!rdr.Read())
-                return defaultValue;
-
-            var value = rdr[unit.Id];
+            var value = GetValue(unit.Parent.Id ?? "", unit.Id);
             return UniversalConverter.ConvertTo<T>(value);
         }
 
@@ -128,24 +189,24 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            var table = unit.Parent.Class;
-            var idColumn = unit.Parent.ValueSource;
-            if ((table == null) || (idColumn == null))
-                return;
-
-            var valueColumn = unit.Id;
-            var template = unit.Parent.Parent?.Children.FirstOrDefault(ch => ch.IsTemplate);
-            if (template != null && (valueColumn == "DisplayName"))
+            using (var cmd = _connection.CreateCommand())
             {
-                valueColumn = template.DisplayName;
-            }
+                cmd.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
+                cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                var result = cmd.ExecuteNonQuery();
 
-            var cmd = _connection.CreateCommand();
-            // ReSharper disable once StringLiteralTypo
-            cmd.Parameters.Add(new SqlParameter("@newval", newValue));
-            cmd.Parameters.Add(new SqlParameter("@id", unit.Parent.Id));
-            cmd.CommandText = "UPDATE " + table + " SET " + valueColumn + "=? WHERE " + idColumn + "=?";
-            cmd.ExecuteNonQuery();
+                if (result != 0) return;
+            }
+            using(var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
+                cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public override void AddUserUnit(ConfigurationUnit unit)
@@ -153,46 +214,12 @@ namespace IctBaden.Config.Namespace
             if ((unit.Class == null) || !Connect())
                 return;
 
-            var template = unit.Parent.Children.FirstOrDefault(ch => ch.IsTemplate);
-            if (template == null)
-                return;
-
-            var table = unit.Class;
-            var idColumn = template.DefaultValue;
-
-            var columnProperties = unit.Properties.Where(p => p.Input == InputType.Mandatory).Select(p => p).ToList();
-            if (columnProperties.Count == 0)
-            {
-                columnProperties.Add(unit.Properties.First());
-            }
-            var namePlaceholders = columnProperties.Select(p => p.Id).ToList();
-            var paramPlaceholders = new List<string>();
-
-            var cmd = _connection.CreateCommand();
-
-            foreach (var property in columnProperties)
-            {
-                cmd.Parameters.Add(new SqlParameter("@" + property.Id, property.DefaultValue ?? string.Empty));
-                paramPlaceholders.Add("?");
-            }
-
-            if (!string.IsNullOrEmpty(template.ValueSource))
-            {
-                namePlaceholders.Add(template.ValueSource);
-                cmd.Parameters.Add(new SqlParameter("@" + template.ValueSource, unit.ParentClass.Id));
-                paramPlaceholders.Add("?");
-            }
-
-            var columnNames = string.Join(", ", namePlaceholders.ToArray());
-            var columnParams = string.Join(", ", paramPlaceholders.ToArray());
-
-            cmd.CommandText = $"INSERT INTO {table} ( {columnNames} ) VALUES ( {columnParams} ); SELECT SCOPE_IDENTITY()";
-            var rdr = cmd.ExecuteReader();
-            if (!rdr.Read())
-                return;
-
-            unit.Id = rdr[0].ToString();
-            unit.ValueSource = idColumn;
+            var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
+            itemClass.SetValue(unit.Class);
+            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
+            itemDisplayName.SetValue(unit.DisplayName);
         }
 
         public override void RemoveUserUnit(ConfigurationUnit unit)
@@ -200,12 +227,12 @@ namespace IctBaden.Config.Namespace
             if ((unit.Class == null) || !Connect())
                 return;
 
-            var table = unit.Parent.Class ?? unit.Class;
-            var column = unit.Parent.ValueSource ?? unit.ValueSource;
-            var cmd = _connection.CreateCommand();
-            cmd.Parameters.Add(new SqlParameter("@id", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
-            cmd.CommandText = $"DELETE FROM {table} WHERE {column}=?";
-            cmd.ExecuteNonQuery();
+            using(var cmd = _connection.CreateCommand())
+            {
+                cmd.CommandText = $"DELETE FROM {_tableName} WHERE ParentId=@pid";
+                cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
+                cmd.ExecuteNonQuery();
+            }
         }
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
@@ -215,18 +242,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
-            var cmd = _connection.CreateCommand();
-            cmd.CommandText = unit.ValueSource;
-
-            var rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                var value = rdr[0].ToString();
-                var displayText = rdr[1].ToString();
-
-                list.Add(new SelectionValue { Value = value, DisplayText = displayText });
-            }
-            return list;
+            throw new NotImplementedException();
         }
 
     }

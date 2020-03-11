@@ -5,14 +5,17 @@ using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using static System.Web.HttpUtility;
 
 namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderMongoDb : NamespaceProvider
     {
-        private const string DbName = "Configuration";
-        private const string CollectionName = "Units";
+        private readonly string _dbName = "Configuration";
+        private readonly string _collectionName = "CfgData";
 
+        // DB key = unit.Parent.FullId + "/" + unit.Id;
+        
         private readonly string _connectionString;
         private readonly MongoClient _client;
         private IMongoDatabase _db;
@@ -24,6 +27,13 @@ namespace IctBaden.Config.Namespace
         {
             _connectionString = "mongodb://" + connectionString;
             _client = new MongoClient(_connectionString);
+
+            var queryString = new Uri(_connectionString).Query;
+            var queryDictionary = ParseQueryString(queryString);
+            var dbName = queryDictionary["dbName"];
+            if (dbName != null) _dbName = dbName;
+            var collectionName = queryDictionary["collectionName"];
+            if (collectionName != null) _collectionName = collectionName;
         }
 
         public override string GetPersistenceInfo()
@@ -37,13 +47,13 @@ namespace IctBaden.Config.Namespace
 
             try
             {
-                _db = _client.GetDatabase(DbName);
+                _db = _client.GetDatabase(_dbName);
 
-                _collection = _db.GetCollection<BsonDocument>(CollectionName);
+                _collection = _db.GetCollection<BsonDocument>(_collectionName);
                 if (_collection == null)
                 {
-                    _db.CreateCollection(CollectionName);
-                    _collection = _db.GetCollection<BsonDocument>(CollectionName);
+                    _db.CreateCollection(_collectionName);
+                    _collection = _db.GetCollection<BsonDocument>(_collectionName);
                 }
             }
             catch (Exception ex)
