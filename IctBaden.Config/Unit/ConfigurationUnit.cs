@@ -45,8 +45,10 @@ namespace IctBaden.Config.Unit
                 return ContextId + "/" + Id;
             }
         }
+        
+        /// should be case insensitive
         [XmlAttribute]
-        public string Class { get; set; }
+        public string Class { get; set; }    
 
         // description
         [XmlAttribute]
@@ -192,29 +194,20 @@ namespace IctBaden.Config.Unit
         public string BrowserName => (IsSchemaItem && !string.IsNullOrEmpty(Id)) ? Id : DisplayName;
 
         [XmlIgnore][JsonIgnore]
-        public ConfigurationUnit Template
-        {
-            get
-            {
-                return Parent?.Children.FirstOrDefault(t => t.IsTemplate && (t.Id == Class));
-            }
-        }
+        public ConfigurationUnit Template => Parent?.Children
+                    .FirstOrDefault(t => t.IsTemplate && string.Compare(t.Id, Class, StringComparison.InvariantCultureIgnoreCase) == 0);
+
         [XmlIgnore][JsonIgnore]
-        public bool HasTemplates
-        {
-            get
-            {
-                return Children.Any(t => t.IsTemplate);
-            }
-        }
+        public bool HasTemplates => Children.Any(t => t.IsTemplate);
+
         [XmlIgnore][JsonIgnore]
         public IEnumerable<ConfigurationUnit> Templates
         {
             get
             {
-                if (HasTemplates)
-                    return Children.Where(t => t.IsTemplate).Select(t => t);
-                return Parent?.Templates;
+                return HasTemplates 
+                    ? Children.Where(t => t.IsTemplate).Select(t => t) 
+                    : Parent?.Templates;
             }
         }
 
@@ -550,7 +543,7 @@ namespace IctBaden.Config.Unit
 
         public ConfigurationUnit GetUnitById(string id)
         {
-            if (Id == id)
+            if (string.Compare(Id, id, StringComparison.InvariantCultureIgnoreCase) == 0)
                 return this;
 
             var path = id.Split('/').ToList();
@@ -560,7 +553,7 @@ namespace IctBaden.Config.Unit
                 if (!unit.IsEmpty)
                     return unit;
 
-                if ((path.Count == 0) || (child.Id != path[0]))
+                if ((path.Count == 0) || string.Compare(child.Id, path[0], StringComparison.InvariantCultureIgnoreCase) != 0)
                     continue;
 
                 return child.GetUnitById(string.Join("/", path.Skip(1).ToArray()));
@@ -644,7 +637,7 @@ namespace IctBaden.Config.Unit
                 }
                 else if (child.IsUserUnit)
                 {
-                    if (string.IsNullOrEmpty(unitClass) || (child.Class == unitClass))
+                    if (string.IsNullOrEmpty(unitClass) || string.Compare(child.Class, unitClass, StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
                         userUnits.Add(child);
                     }
