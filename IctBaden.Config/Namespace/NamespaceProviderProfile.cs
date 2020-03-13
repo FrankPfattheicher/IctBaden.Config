@@ -54,7 +54,6 @@ namespace IctBaden.Config.Namespace
                 }
             }
 
-            //TODO: Das KANN nicht sein - Test machen !!!
             return children;
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
 
@@ -130,10 +129,6 @@ namespace IctBaden.Config.Namespace
         {
             var children = new List<ConfigurationUnit>();
 
-            var template = unit.Children.FirstOrDefault(ch => ch.IsTemplate);
-            if (template == null)
-                return children;
-
             if (!Connect())
             {
                 children.Add(new ConfigurationUnit { DataType = TypeCode.Object, DisplayName = _lastError, DisplayImage = "error" });
@@ -148,6 +143,8 @@ namespace IctBaden.Config.Namespace
             foreach (var childId in childIds)
             {
                 var childDisplayName = GetValue(childId,"DisplayName");
+                if (string.IsNullOrEmpty(childDisplayName)) continue;
+
                 var childClass = GetValue(childId, "Class");
                 if (string.IsNullOrEmpty(childClass))
                 {
@@ -181,7 +178,9 @@ namespace IctBaden.Config.Namespace
                 return defaultValue;
 
             var value = GetValue(unit.Parent.Id ?? "", unit.Id);
-            return UniversalConverter.ConvertTo<T>(value);
+            return value != null
+                ? UniversalConverter.ConvertTo<T>(value)
+                : defaultValue;
         }
 
         public override void SetValue<T>(ConfigurationUnit unit, T newValue)
@@ -211,11 +210,14 @@ namespace IctBaden.Config.Namespace
 
         public override void AddUserUnit(ConfigurationUnit unit)
         {
-            if ((unit.Class == null) || !Connect())
+            if (!Connect())
                 return;
 
-            var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
-            itemClass.SetValue(unit.Class);
+            if(unit.Class != null)
+            {
+                var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
+                itemClass.SetValue(unit.Class);
+            }
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
             containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");

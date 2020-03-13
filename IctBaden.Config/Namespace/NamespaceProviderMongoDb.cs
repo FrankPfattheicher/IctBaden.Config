@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
 using MongoDB.Bson;
@@ -70,10 +69,6 @@ namespace IctBaden.Config.Namespace
         public override IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
             var children = new List<ConfigurationUnit>();
-
-            var template = unit.Children.FirstOrDefault(ch => ch.IsTemplate);
-            if (template == null)
-                return children;
 
             if (!Connect())
             {
@@ -161,11 +156,14 @@ namespace IctBaden.Config.Namespace
 
         public override void AddUserUnit(ConfigurationUnit unit)
         {
-            if ((unit.Class == null) || !Connect())
+            if (!Connect())
                 return;
 
-            var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
-            itemClass.SetValue(unit.Class);
+            if(unit.Class != null)
+            {
+                var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
+                itemClass.SetValue(unit.Class);
+            }
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
             containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
