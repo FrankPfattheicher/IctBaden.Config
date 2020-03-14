@@ -491,9 +491,10 @@ namespace IctBaden.Config.Unit
         {
             get
             {
-                var text = GetValue<string>();
+                var text = GetValue<string>() ?? "";
 
-                if (Selection == SelectionType.ReferenceList)
+                if (Selection == SelectionType.Reference 
+                    || Selection == SelectionType.ReferenceList)
                 {
                     var assigned = BaseUnitForReferenceUnits.GetUnitList(text).ToArray();
                     return ConfigurationUnit.GetUnitListDisplayText(assigned);

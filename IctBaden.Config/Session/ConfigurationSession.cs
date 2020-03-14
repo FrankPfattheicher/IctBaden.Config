@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Unit;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable EventNeverSubscribedTo.Global
@@ -18,15 +19,26 @@ namespace IctBaden.Config.Session
         public int CurrentUserLevel { get; private set; }
 
         private ConfigurationUnit _folder;
-        public ConfigurationUnit Folder => _folder 
-                                           ?? (_folder = new ConfigurationUnit
-                                           {
-                                               Id = "Folder", 
-                                               DisplayName = "Ordner",
-                                               DisplayImage = "fa fa-folder",
-                                               DataType = TypeCode.Object,
-                                               Selection = SelectionType.ParentHierarchical
-                                           });
+
+        public ConfigurationUnit Folder
+        {
+            get
+            {
+                if (_folder != null) return _folder;
+
+                _folder = Namespace.GetUnitById("Folder")
+                          ?? new ConfigurationUnit
+                          {
+                              Id = "Folder",
+                              DisplayName = "Ordner",
+                              DisplayImage = "fa fa-folder",
+                              Description = "Ordner zur Organisation von Elementen",
+                              DataType = TypeCode.Object,
+                              Selection = SelectionType.ParentHierarchical
+                          };
+                return _folder;
+            }
+        }
 
         // ReSharper disable EventNeverInvoked
         public event Action<bool> Waiting = _ => { };
@@ -43,7 +55,7 @@ namespace IctBaden.Config.Session
 
         public ConfigurationSession Clone()
         {
-            return new ConfigurationSession { _namespaceProviders = _namespaceProviders, Namespace = Namespace };
+            return new ConfigurationSession {_namespaceProviders = _namespaceProviders, Namespace = Namespace};
         }
 
         public void RegisterNamespaceProvider(string name, NamespaceProvider namespaceProvider)
@@ -82,8 +94,8 @@ namespace IctBaden.Config.Session
         public IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
             var provider = GetNamespaceProvider(unit.NamespaceProvider);
-            var children = (provider == null) 
-                ? new List<ConfigurationUnit>() 
+            var children = (provider == null)
+                ? new List<ConfigurationUnit>()
                 : provider.GetChildren(unit);
             return children;
         }
@@ -144,7 +156,5 @@ namespace IctBaden.Config.Session
             var provider = GetNamespaceProvider(unit.NamespaceProvider);
             return (provider == null) ? Guid.NewGuid().ToString("N").ToUpper() : provider.GetNewUserId();
         }
-
-
     }
 }
