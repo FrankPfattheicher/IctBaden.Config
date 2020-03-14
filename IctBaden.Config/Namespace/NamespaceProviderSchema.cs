@@ -134,7 +134,8 @@ namespace IctBaden.Config.Namespace
             schemaUnit.AddChild(selectionType);
 
             schemaUnit.AddChild(CreateSchemaProperty("ValueList"));
-            schemaUnit.AddChild(CreateSchemaProperty("ValueSource"));
+            schemaUnit.AddChild(CreateSchemaProperty("ValueSourceUnitId"));
+            schemaUnit.AddChild(CreateSchemaProperty("ValueSourceClass"));
             schemaUnit.AddChild(CreateSchemaProperty("ValidationRule"));
             schemaUnit.AddChild(CreateSchemaProperty("UserLevel", TypeCode.Int32));
 

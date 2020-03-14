@@ -128,8 +128,19 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public bool ValueListSpecified => (ValueList.Count > 0);
 
+        /// <summary>
+        /// Id of base configuration unit
+        /// for referenced user units
+        /// </summary>
         [XmlAttribute]
-        public string ValueSource { get; set; }
+        public string ValueSourceUnitId { get; set; }
+
+        /// <summary>
+        /// Configuration unit class
+        /// for referenced user units
+        /// </summary>
+        [XmlAttribute]
+        public string ValueSourceClass { get; set; }
         [XmlAttribute]
         public string ValidationRule { get; set; }
         [XmlAttribute, DefaultValue(0)]
@@ -415,7 +426,8 @@ namespace IctBaden.Config.Unit
             destination.Input = source.Input;
             destination.Selection = source.Selection;
             destination.ValueList = source.ValueList;
-            destination.ValueSource = source.ValueSource;
+            destination.ValueSourceUnitId = source.ValueSourceUnitId;
+            destination.ValueSourceClass = source.ValueSourceClass;
             destination.ValidationRule = source.ValidationRule;
             destination.UserLevel = source.UserLevel;
 
@@ -600,10 +612,10 @@ namespace IctBaden.Config.Unit
         {
             get
             {
-                var source = Session.Namespace.GetUnitById(ValueSource);
+                var source = Session.Namespace.GetUnitById(ValueSourceUnitId);
                 if (source == null)
                 {
-                    throw new ArgumentException("Invalid schema: ValueSource=" + ValueSource);
+                    throw new ArgumentException("Invalid schema: ValueSourceUnitId=" + ValueSourceUnitId);
                 }
                 while (source.IsTemplate)
                 {
@@ -736,7 +748,7 @@ namespace IctBaden.Config.Unit
                         //                         select new SelectionValue { DisplayText = voice.VoiceInfo.Name + " (" + voice.VoiceInfo.Culture + ")", Value = voice.VoiceInfo.Name });
                         break;
                     case SelectionType.ListOnly:
-                        if (!string.IsNullOrEmpty(ValueSource) && (Session != null))
+                        if (!string.IsNullOrEmpty(ValueSourceUnitId) && (Session != null))
                         {
                             specialList.AddRange(Session.GetSelectionValues(this));
                         }

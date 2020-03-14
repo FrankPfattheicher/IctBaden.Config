@@ -59,7 +59,7 @@ namespace IctBaden.Config.Namespace
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
-            return (from key in _profile[unit.ValueSource].Keys select new SelectionValue { DisplayText = key.Name, Value = key.StringValue }).ToList();
+            return (from key in _profile[unit.ValueSourceUnitId].Keys select new SelectionValue { DisplayText = key.Name, Value = key.StringValue }).ToList();
         }
 
         public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)

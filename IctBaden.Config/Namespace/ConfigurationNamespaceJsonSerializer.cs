@@ -33,6 +33,7 @@ namespace IctBaden.Config.Namespace
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static void Save(ConfigurationUnit rootUnit, TextWriter writer)
         {
             var settings = new JsonSerializerSettings
