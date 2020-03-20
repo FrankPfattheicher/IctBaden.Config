@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
+using MongoDB.Libmongocrypt;
 
 namespace IctBaden.Config.Namespace
 {
@@ -48,20 +49,21 @@ namespace IctBaden.Config.Namespace
 
             try
             {
-                if (_connection.State == ConnectionState.Broken)
+                lock (_connection)
                 {
-                    _connection.Close();
+                    if (_connection.State == ConnectionState.Broken)
+                    {
+                        _connection.Close();
+                    }
+                    if (_connection.State == ConnectionState.Closed)
+                    {
+                        _connection.Open();
+                    }
+                    if (!_tableExists)
+                    {
+                        CreateCfgDataTableIfNotExists();
+                    }
                 }
-                if (_connection.State == ConnectionState.Closed)
-                {
-                    _connection.Open();
-                }
-
-                if (!_tableExists)
-                {
-                    CreateCfgDataTableIfNotExists();
-                }
-                
             }
             catch (Exception ex)
             {
@@ -80,47 +82,73 @@ namespace IctBaden.Config.Namespace
             SqlCommand cmd;
             try
             {
-                using(cmd = _connection.CreateCommand())
+                lock (_connection)
                 {
-                    cmd.CommandText = $"SELECT * FROM {_tableName}";
-                    using (var rdr = cmd.ExecuteReader())
+                    using(cmd = _connection.CreateCommand())
                     {
-                        rdr.Close();
+                        cmd.CommandText = $"SELECT * FROM {_tableName}";
+                        using (var rdr = cmd.ExecuteReader())
+                        {
+                            rdr.Close();
+                        }
                     }
+                    _tableExists = true;
                 }
-                _tableExists = true;
             }
             catch (SqlException)
             {
                 // ignore and create table
             }
-            
-            using(cmd = _connection.CreateCommand())
-            {
-                cmd.CommandText = CreateTable
-                    .Replace("CfgData]", _tableName + "]");
 
-                var count = cmd.ExecuteNonQuery();
-                if (count != 0)
+            lock (_connection)
+            {
+                using(cmd = _connection.CreateCommand())
                 {
-                    _tableExists = true;
+                    cmd.CommandText = CreateTable
+                        .Replace("CfgData]", _tableName + "]");
+
+                    var count = cmd.ExecuteNonQuery();
+                    if (count != 0)
+                    {
+                        _tableExists = true;
+                    }
                 }
             }
         }
 
         private string GetValue(string parentId, string unitId)
         {
-            using(var cmd = _connection.CreateCommand())
+            lock (_connection)
             {
-                cmd.CommandText = $"SELECT Value FROM {_tableName} WHERE ParentId=@pid AND UnitId=@uid";
-                cmd.Parameters.Add(new SqlParameter("@pid", parentId));
-                cmd.Parameters.Add(new SqlParameter("@uid", unitId));
-
-                using (var rdr = cmd.ExecuteReader())
+                using(var cmd = _connection.CreateCommand())
                 {
-                    if (!rdr.Read()) return null;
-                    if (!(rdr[0] is string value)) return null;
-                    return value;
+                    cmd.CommandText = $"SELECT Value FROM {_tableName} WHERE ParentId=@pid AND UnitId=@uid";
+                    cmd.Parameters.Add(new SqlParameter("@pid", parentId));
+                    cmd.Parameters.Add(new SqlParameter("@uid", unitId));
+
+                    using (var rdr = cmd.ExecuteReader())
+                    {
+                        try
+                        {
+                            if (!rdr.Read())
+                            {
+                                return null;
+                            }
+                            if (rdr[0] is string value)
+                            {
+                                return value;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
+                        finally
+                        {
+                            rdr.Close();
+                        }
+                        return null;
+                    }
                 }
             }
         }
@@ -188,23 +216,26 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            using (var cmd = _connection.CreateCommand())
+            lock (_connection)
             {
-                cmd.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
-                cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
-                cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                cmd.Parameters.Add(new SqlParameter("@val", newValue));
-                var result = cmd.ExecuteNonQuery();
+                using (var cmd = _connection.CreateCommand())
+                {
+                    cmd.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
+                    cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                    cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                    var result = cmd.ExecuteNonQuery();
 
-                if (result != 0) return;
-            }
-            using(var cmd = _connection.CreateCommand())
-            {
-                cmd.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
-                cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
-                cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                cmd.Parameters.Add(new SqlParameter("@val", newValue));
-                cmd.ExecuteNonQuery();
+                    if (result != 0) return;
+                }
+                using(var cmd = _connection.CreateCommand())
+                {
+                    cmd.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
+                    cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                    cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -229,11 +260,14 @@ namespace IctBaden.Config.Namespace
             if ((unit.Class == null) || !Connect())
                 return;
 
-            using(var cmd = _connection.CreateCommand())
+            lock (_connection)
             {
-                cmd.CommandText = $"DELETE FROM {_tableName} WHERE ParentId=@pid";
-                cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
-                cmd.ExecuteNonQuery();
+                using(var cmd = _connection.CreateCommand())
+                {
+                    cmd.CommandText = $"DELETE FROM {_tableName} WHERE ParentId=@pid";
+                    cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
