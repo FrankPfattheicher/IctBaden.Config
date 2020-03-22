@@ -30,7 +30,7 @@ namespace IctBaden.Config.Namespace
         {
             //Children=2DFA8F569C574CB787C9ACE8587A7749;C6D9E7D346234B55B3179750C81E8989;12DF7A3A144446DFB472FC28C9742C3E
             var children = new List<ConfigurationUnit>();
-            if (!_data.ContainsKey(unit.FullId))
+            if (unit.FullId == null || !_data.ContainsKey(unit.FullId))
                 return children;
 
             var keys = _data[unit.FullId];
