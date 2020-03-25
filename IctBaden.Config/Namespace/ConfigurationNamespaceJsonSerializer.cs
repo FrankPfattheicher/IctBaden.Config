@@ -1,40 +1,40 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using IctBaden.Config.Session;
 using IctBaden.Config.Unit;
 using Newtonsoft.Json;
 
 namespace IctBaden.Config.Namespace
 {
-    public static class ConfigurationNamespaceJsonSerializer
+    public class ConfigurationNamespaceJsonSerializer : IConfigurationNamespaceSerializer
     {
-        public static ConfigurationUnit Load(TextReader reader)
+        private readonly ConfigurationSession _session;
+
+        public ConfigurationNamespaceJsonSerializer(ConfigurationSession session)
+        {
+            _session = session;
+        }
+        public ConfigurationUnit Load(TextReader reader)
         {
             ConfigurationUnit root;
+            var json = "";
             try
             {
-                var json = reader.ReadToEnd();
+                json = reader.ReadToEnd();
                 root = JsonConvert.DeserializeObject<ConfigurationUnit>(json);
-                if (root != null)
-                    ResolveParents(root);
+                _session.ResolveUnitTypesAndParents(root);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new FormatException("Invalid JSON schema definition: " + e.Message);
+                throw new FormatException("Invalid JSON schema definition: " + ex.Message);
             }
             return root;
         }
 
-        private static void ResolveParents(ConfigurationUnit item)
-        {
-            foreach (var i in item.Children)
-            {
-                i.Parent = item;
-                ResolveParents(i);
-            }
-        }
-
         // ReSharper disable once UnusedMember.Global
-        public static void Save(ConfigurationUnit rootUnit, TextWriter writer)
+        public void Save(ConfigurationUnit rootUnit, TextWriter writer)
         {
             var settings = new JsonSerializerSettings
             {

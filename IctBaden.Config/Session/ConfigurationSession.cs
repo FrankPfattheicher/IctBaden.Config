@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Unit;
 
@@ -14,6 +15,7 @@ namespace IctBaden.Config.Session
     public class ConfigurationSession
     {
         private Dictionary<string, NamespaceProvider> _namespaceProviders;
+        public ConfigurationSessionUnit UnitTypes { get; private set; }
         public ConfigurationSessionUnit Namespace { get; private set; }
         public string CurrentUser { get; private set; }
         public int CurrentUserLevel { get; private set; }
@@ -49,14 +51,45 @@ namespace IctBaden.Config.Session
         public ConfigurationSession()
         {
             _namespaceProviders = new Dictionary<string, NamespaceProvider>();
+            UnitTypes = new ConfigurationSessionUnit(this);
             Namespace = new ConfigurationSessionUnit(this);
             CurrentUserLevel = 99;
         }
 
         public ConfigurationSession Clone()
         {
-            return new ConfigurationSession {_namespaceProviders = _namespaceProviders, Namespace = Namespace};
+            return new ConfigurationSession
+            {
+                _namespaceProviders = _namespaceProviders,
+                UnitTypes = UnitTypes,
+                Namespace = Namespace
+            };
         }
+
+        
+        internal void ResolveUnitTypesAndParents(ConfigurationUnit item)
+        {
+            if (!string.IsNullOrEmpty(item.UnitTypeId))
+            {
+                var unitType = UnitTypes.GetUnitById(item.UnitTypeId);
+                if (unitType != null)
+                {
+                    var typeItem = unitType.Clone(unitType.DisplayName, true);
+                    typeItem.Id = item.Id;
+
+                    item.Parent.Children = item.Parent.Children
+                        .Select(c => c == item ? typeItem : c)
+                        .ToList();
+                }
+            }
+
+            foreach (var i in item.Children)
+            {
+                i.Parent = item;
+                ResolveUnitTypesAndParents(i);
+            }
+        }
+
 
         public void RegisterNamespaceProvider(string name, NamespaceProvider namespaceProvider)
         {

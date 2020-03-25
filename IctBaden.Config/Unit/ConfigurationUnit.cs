@@ -23,6 +23,12 @@ namespace IctBaden.Config.Unit
         // basic data
         [XmlAttribute]
         public string Id { get; set; }
+        
+        /// <summary>
+        /// Given a unit type id all properties
+        /// for this unit are copied from the given unit
+        /// </summary>
+        public string UnitTypeId { get; set; }
 
         [XmlIgnore][JsonIgnore]
         public string ContextId

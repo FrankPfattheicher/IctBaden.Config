@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
-using MongoDB.Libmongocrypt;
 
 namespace IctBaden.Config.Namespace
 {

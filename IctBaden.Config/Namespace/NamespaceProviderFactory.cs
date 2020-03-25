@@ -25,8 +25,6 @@ namespace IctBaden.Config.Namespace
                     return new NamespaceProviderProfile(specification);
                 case "memory":
                     return new NamespaceProviderMemory(specification);
-                case "schema":
-                    return new NamespaceProviderSchema(specification);
             }
             throw new ArgumentException("Unknown NamespaceProvider scheme: " + scheme);
         }

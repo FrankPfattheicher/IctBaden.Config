@@ -2,13 +2,20 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using IctBaden.Config.Session;
 using IctBaden.Config.Unit;
 
 namespace IctBaden.Config.Namespace
 {
-    public static class ConfigurationNamespaceXmlSerializer
+    public class ConfigurationNamespaceXmlSerializer : IConfigurationNamespaceSerializer
     {
-        public static ConfigurationUnit Load(TextReader reader)
+        private readonly ConfigurationSession _session;
+
+        public ConfigurationNamespaceXmlSerializer(ConfigurationSession session)
+        {
+            _session = session;
+        }
+        public ConfigurationUnit Load(TextReader reader)
         {
             ConfigurationUnit root;
             try
@@ -18,8 +25,7 @@ namespace IctBaden.Config.Namespace
                     root = (ConfigurationUnit)new XmlSerializer(typeof(ConfigurationUnit)).Deserialize(rdr);
                     rdr.Close();
                 }
-                if (root != null)
-                    ResolveParents(root);
+                _session.ResolveUnitTypesAndParents(root);
             }
             catch (Exception e)
             {
@@ -28,16 +34,7 @@ namespace IctBaden.Config.Namespace
             return root;
         }
 
-        private static void ResolveParents(ConfigurationUnit item)
-        {
-            foreach (var i in item.Children)
-            {
-                i.Parent = item;
-                ResolveParents(i);
-            }
-        }
-
-        public static void Save(ConfigurationUnit rootUnit, TextWriter writer)
+        public void Save(ConfigurationUnit rootUnit, TextWriter writer)
         {
             var serializer = new XmlSerializer(typeof(ConfigurationUnit));
             serializer.Serialize(writer, rootUnit);
