@@ -63,8 +63,16 @@ namespace IctBaden.Config.Unit
         public int SortOrder { get; set; }
         [XmlAttribute]
         public string DisplayName { get; set; }
+
+        
+        private string _displayNameSingular;
         [XmlAttribute]
-        public string DisplayNameSingular { get; set; }
+        public string DisplayNameSingular
+        {
+            get => _displayNameSingular ?? DisplayName;
+            set => _displayNameSingular = value;
+        }
+
         [XmlAttribute]
         public string DisplayImage { get; set; }
 
@@ -345,6 +353,7 @@ namespace IctBaden.Config.Unit
         public bool IsSchemaItem => (NamespaceProvider != null) && NamespaceProvider.StartsWith("schema:");
 
         private bool _isExpanded;
+
         [XmlIgnore][JsonIgnore]
         public bool IsExpanded
         {
