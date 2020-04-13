@@ -75,6 +75,8 @@ namespace IctBaden.Config.Namespace
             var section = _profile[unit.Parent.FullId];
             if (section.IsUnnamedGlobalSection)
                 section = _profile[ProfileSection.UnnamedGlobalSectionName];
+
+            var newValueString = newValue?.ToString();
             if (newValue == null)
             {
                 if (unit.DefaultValue == null)
@@ -91,7 +93,7 @@ namespace IctBaden.Config.Namespace
                     _profile.Save();
                 }
             }
-            else if (newValue.ToString() == unit.DefaultValue)
+            else if (newValueString == unit.DefaultValue)
             {
                 if (section.Contains(unit.Id))
                 {
@@ -99,9 +101,9 @@ namespace IctBaden.Config.Namespace
                     _profile.Save();
                 }
             }
-            else if (newValue.ToString() != section[unit.Id].StringValue)
+            else if (newValueString != section[unit.Id].StringValue)
             {
-                section[unit.Id].ObjectValue = newValue;
+                section[unit.Id].StringValue = newValueString;
                 _profile.Save();
             }
         }
