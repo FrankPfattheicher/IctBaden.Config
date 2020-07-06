@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.IniFile;
@@ -13,6 +14,14 @@ namespace IctBaden.Config.Namespace
         public NamespaceProviderProfile(string profileName)
         {
             _profile = new Profile(profileName);
+        }
+
+        public override bool Connect()
+        {
+            if (File.Exists(_profile.FileName)) return true;
+            
+            File.WriteAllText(_profile.FileName, "");
+            return _profile.Load();
         }
 
         public override string GetPersistenceInfo()

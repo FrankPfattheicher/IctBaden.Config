@@ -39,10 +39,15 @@ namespace IctBaden.Config.Namespace
 
         public override string GetPersistenceInfo()
         {
-            return _connectionString;
+            var info = _connectionString;
+            if (!string.IsNullOrEmpty(_lastError))
+            {
+                info += ": " + _lastError;
+            }
+            return info;
         }
 
-        private bool Connect()
+        public override bool Connect()
         {
             SignalWaiting(true);
 

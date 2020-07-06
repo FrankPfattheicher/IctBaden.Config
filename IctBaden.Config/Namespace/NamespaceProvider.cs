@@ -7,6 +7,7 @@ namespace IctBaden.Config.Namespace
     public abstract class NamespaceProvider
     {
         public abstract string GetPersistenceInfo();
+        public abstract bool Connect();
 
         // ReSharper disable once VirtualMemberNeverOverridden.Global
         public virtual string GetNewUserId()

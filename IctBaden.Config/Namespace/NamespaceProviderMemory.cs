@@ -21,6 +21,11 @@ namespace IctBaden.Config.Namespace
             _data = new Dictionary<string, Dictionary<string, object>>();
         }
 
+        public override bool Connect()
+        {
+            return true;
+        }
+
         public override string GetPersistenceInfo()
         {
             return "InMemory";
