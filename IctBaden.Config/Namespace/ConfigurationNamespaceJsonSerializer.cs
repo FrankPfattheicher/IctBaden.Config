@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using IctBaden.Config.Session;
 using IctBaden.Config.Unit;
 using Newtonsoft.Json;
@@ -19,10 +17,9 @@ namespace IctBaden.Config.Namespace
         public ConfigurationUnit Load(TextReader reader)
         {
             ConfigurationUnit root;
-            var json = "";
             try
             {
-                json = reader.ReadToEnd();
+                var json = reader.ReadToEnd();
                 root = JsonConvert.DeserializeObject<ConfigurationUnit>(json);
                 _session.ResolveUnitTypesAndParents(root);
             }
