@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using IctBaden.Config.Namespace;
+using IctBaden.Config.Session;
 using Xunit;
 
 namespace IctBaden.Config.Test
@@ -13,14 +14,18 @@ namespace IctBaden.Config.Test
         [Fact]
         public void Load()
         {
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = serializer.Load(new StringReader(_testSettings));
             Assert.NotNull(root);
         }
 
         [Fact]
         public void DescriptionShouldBeLoadedFromAttributeAndEmbeddedElement()
         {
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = serializer.Load(new StringReader(_testSettings));
             Assert.Equal("DescriptionAsAttribute", root.Children[0].Description);
             Assert.Equal("DescriptionAsEmbedded", root.Children[1].Description);
         }
@@ -32,7 +37,9 @@ namespace IctBaden.Config.Test
             var caught = false;
             try
             {
-                var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(invalid));
+                var session = new ConfigurationSession();
+                var serializer = new ConfigurationNamespaceXamlSerializer(session);
+                var root = serializer.Load(new StringReader(invalid));
                 Assert.Null(root);
                 Assert.True(false, "Missing FormatException");
             }
@@ -51,15 +58,17 @@ namespace IctBaden.Config.Test
                 File.Delete(SchemaName);
             }
 
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettings));
+            var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = serializer.Load(new StringReader(_testSettings));
             using (var wrt = new StreamWriter(SchemaName))
             {
-                ConfigurationNamespaceXmlSerializer.Save(root, wrt);
+                serializer.Save(root, wrt);
             }
 
             Assert.True(File.Exists(SchemaName));
             var xml = File.ReadAllText(SchemaName);
-            Assert.StartsWith("<?xml version=", xml);
+            Assert.StartsWith("<ConfigurationUnit ", xml);
         }
     }
 }

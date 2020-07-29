@@ -24,11 +24,12 @@ namespace IctBaden.Config.TestApp
                     json = reader.ReadToEnd();
                 }
             }
-            var schema = ConfigurationNamespaceJsonSerializer.Load(new StringReader(json));
-            
-            var provider = NamespaceProviderFactory.Create("mongo://mongodb:27017");
-            //var provider = NamespaceProviderFactory.Create("file://C:\\Temp\\Config.cfg");
             var session = new ConfigurationSession();
+            var jsonSerializer = new ConfigurationNamespaceJsonSerializer(session);
+            var schema = jsonSerializer.Load(new StringReader(json));
+            
+            //var provider = NamespaceProviderFactory.Create("mongo://mongodb:27017");
+            var provider = NamespaceProviderFactory.Create("file://C:\\Temp\\Config.cfg");
             session.Namespace.AddChild(schema);
             session.RegisterNamespaceProvider("test", provider);
             

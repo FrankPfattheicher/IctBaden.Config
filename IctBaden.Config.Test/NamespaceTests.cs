@@ -1,7 +1,7 @@
 ﻿using System;
-using System.IO;
 using IctBaden.Config.Namespace;
 using Xunit;
+// ReSharper disable StringLiteralTypo
 
 namespace IctBaden.Config.Test
 {
@@ -70,16 +70,5 @@ namespace IctBaden.Config.Test
             Assert.NotNull(provider);
             Assert.Equal(typeof(NamespaceProviderMemory), provider.GetType());
         }
-
-        private static readonly string SchemaName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Test.schema");
-
-        [Fact]
-        public void SchemaSpecification()
-        {
-            var provider = NamespaceProviderFactory.Create("schema://" + SchemaName);
-            Assert.NotNull(provider);
-            Assert.Equal(typeof(NamespaceProviderSchema), provider.GetType());
-        }
-
     }
 }

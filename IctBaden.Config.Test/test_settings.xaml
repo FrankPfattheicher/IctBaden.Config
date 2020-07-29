@@ -1,5 +1,7 @@
 ﻿<ConfigurationUnit xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config">
-
+    <!-- ReSharper disable MarkupAttributeTypo -->
+    <!-- ReSharper disable MarkupTextTypo -->
+ 
     <ConfigurationUnit Id="Folder" DataType="Empty" DisplayName="Ordner" Description="DescriptionAsAttribute" />
 
     <ConfigurationUnit Id="License" NamespaceProvider="usr" DataType="Empty" >
@@ -21,7 +23,7 @@
                 <ConfigurationUnit Id="LogPath" DataType="String" DisplayName="Verzeichnis" >
                     <ConfigurationUnit.Description>Legt das Verzeichnis fest in dem die Log-Dateien abgelegt werden.</ConfigurationUnit.Description>
                 </ConfigurationUnit>
-                <ConfigurationUnit Id="LogCycle" DataType="Int16" DisplayName="Zyklus" Selection="ListOnly" ValueSource="Cycles" NamespaceProvider="test" >
+                <ConfigurationUnit Id="LogCycle" DataType="Int16" DisplayName="Zyklus" Selection="ListOnly" ValueSourceClass="Cycles" NamespaceProvider="test" >
                     <ConfigurationUnit.Description>Legt den Zyklus fest, in dem neue Dateien angelegt werden.</ConfigurationUnit.Description>
                     <ConfigurationUnit.DefaultValue>0</ConfigurationUnit.DefaultValue>
                     <ConfigurationUnit.ValueList>
@@ -43,7 +45,7 @@
                 <ConfigurationUnit Id="SendSystemEvents" DataType="Boolean" DisplayName="Aktivieren" DefaultValue="false" >
                     <ConfigurationUnit.Description>Aktiviert den Versand von Systemereignissen.</ConfigurationUnit.Description>
                 </ConfigurationUnit>
-                <ConfigurationUnit Id="SystemEventTargets" DataType="String" DisplayName="Empfänger" ValueSource="Targets" >
+                <ConfigurationUnit Id="SystemEventTargets" DataType="String" DisplayName="Empfänger" ValueSourceClass="Targets" >
                     <ConfigurationUnit.Description>Liste der Empfänger an die Ereignisse der Systemüberwachung gesendet werden.</ConfigurationUnit.Description>
                 </ConfigurationUnit>
             </ConfigurationUnit>

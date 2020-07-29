@@ -14,4 +14,8 @@
       <EmbeddedResource Include="schema.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Portable.Xaml" Version="0.25.0" />
+    </ItemGroup>
+
 </Project>

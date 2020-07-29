@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using IctBaden.Config.Namespace;
+using IctBaden.Config.Session;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -15,7 +16,9 @@ namespace IctBaden.Config.Test
         [Fact]
         public void Load()
         {
-            var root = ConfigurationNamespaceJsonSerializer.Load(new StringReader(_testSettingsJson));
+            var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceJsonSerializer(session);
+            var root = serializer.Load(new StringReader(_testSettingsJson));
             Assert.NotNull(root);
         }
 
@@ -26,7 +29,9 @@ namespace IctBaden.Config.Test
             var caught = false;
             try
             {
-                var root = ConfigurationNamespaceJsonSerializer.Load(new StringReader(invalid));
+                var session = new ConfigurationSession();
+                var serializer = new ConfigurationNamespaceJsonSerializer(session);
+                var root = serializer.Load(new StringReader(invalid));
                 Assert.Null(root);
                 Assert.True(false, "Missing FormatException");
             }
@@ -45,10 +50,13 @@ namespace IctBaden.Config.Test
                 File.Delete(SchemaName);
             }
 
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettingsXml));
+            var session = new ConfigurationSession();
+            var jsonSerializer = new ConfigurationNamespaceJsonSerializer(session);
+            var xmlSerializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = xmlSerializer.Load(new StringReader(_testSettingsXml));
             using (var wrt = new StreamWriter(SchemaName))
             {
-                ConfigurationNamespaceJsonSerializer.Save(root, wrt);
+                jsonSerializer.Save(root, wrt);
             }
 
             Assert.True(File.Exists(SchemaName));
@@ -59,11 +67,15 @@ namespace IctBaden.Config.Test
         [Fact]
         public void FromXmlAndFromJsonShouldBeEqual()
         {
-            var fromXml = ConfigurationNamespaceXmlSerializer.Load(new StringReader(_testSettingsXml));
-            var fromJson = ConfigurationNamespaceJsonSerializer.Load(new StringReader(_testSettingsJson));
+            var session = new ConfigurationSession();
+            var jsonSerializer = new ConfigurationNamespaceJsonSerializer(session);
+            var xmlSerializer = new ConfigurationNamespaceXamlSerializer(session);
+            var fromXml = xmlSerializer.Load(new StringReader(_testSettingsXml));
+            var fromJson = jsonSerializer.Load(new StringReader(_testSettingsJson));
 
-            var jsonFromXml = JsonConvert.SerializeObject(fromXml);
-            var jsonFromJson = JsonConvert.SerializeObject(fromJson);
+            var settings = new JsonSerializerSettings{ Formatting = Formatting.Indented };
+            var jsonFromXml = JsonConvert.SerializeObject(fromXml, settings);
+            var jsonFromJson = JsonConvert.SerializeObject(fromJson, settings);
             Assert.Equal(jsonFromXml, jsonFromJson);
         }
 

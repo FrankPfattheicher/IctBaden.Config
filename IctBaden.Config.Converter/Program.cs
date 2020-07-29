@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using IctBaden.Config.Namespace;
+using IctBaden.Config.Session;
 
 namespace IctBaden.Config.Converter
 {
@@ -37,16 +38,19 @@ namespace IctBaden.Config.Converter
 
             var srcText = File.ReadAllText(srcFileName);
 
+            var session = new ConfigurationSession();
+            var jsonSerializer = new ConfigurationNamespaceJsonSerializer(session);
+            var xmlSerializer = new ConfigurationNamespaceXamlSerializer(session);
             var root = fromXaml
-                ? ConfigurationNamespaceXmlSerializer.Load(new StringReader(srcText))
-                : ConfigurationNamespaceJsonSerializer.Load(new StringReader(srcText));
+                ? xmlSerializer.Load(new StringReader(srcText))
+                : jsonSerializer.Load(new StringReader(srcText));
 
             using (var wrt = new StreamWriter(dstFileName))
             {
                 if (toXaml)
-                    ConfigurationNamespaceXmlSerializer.Save(root, wrt);
+                    xmlSerializer.Save(root, wrt);
                 else
-                    ConfigurationNamespaceJsonSerializer.Save(root, wrt);
+                    jsonSerializer.Save(root, wrt);
             }
 
             Console.WriteLine("done.");

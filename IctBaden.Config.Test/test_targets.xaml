@@ -1,4 +1,6 @@
 ﻿<ConfigurationUnit xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config" >
+    <!-- ReSharper disable MarkupAttributeTypo -->
+    <!-- ReSharper disable MarkupTextTypo -->
 
     <ConfigurationUnit Id="Targets" NamespaceProvider="usr" DataType="Object" DisplayName="Empfänger" Selection="ParentHierarchical">
 
@@ -276,7 +278,7 @@
                 <ConfigurationUnit.Description>.</ConfigurationUnit.Description>
             </ConfigurationUnit>
 
-            <ConfigurationUnit Id="Address" DataType="String" DisplayName="Teilnehmer" Category="Adressen" Selection="ReferenceList" ValueSource="Targets" Input="Mandatory" >
+            <ConfigurationUnit Id="Address" DataType="String" DisplayName="Teilnehmer" Category="Adressen" Selection="ReferenceList" ValueSourceClass="Targets" Input="Mandatory" >
             </ConfigurationUnit>
             <ConfigurationUnit Id="Priority" DataType="String" DisplayName="Priorität" Category="Extras" DefaultValue="0" Selection="ListOnly">
                 <ConfigurationUnit.Description>Gibt die Priorität an mit der Meldungen an die Teilnehmer dieser Gruppe gesendet werden.</ConfigurationUnit.Description>
@@ -306,7 +308,7 @@
                 <ConfigurationUnit.Description>.</ConfigurationUnit.Description>
             </ConfigurationUnit>
 
-            <ConfigurationUnit Id="Address" DataType="String" DisplayName="Teilnehmer" Category="Adressen" Selection="ReferenceList" ValueSource="Targets" Input="Mandatory" >
+            <ConfigurationUnit Id="Address" DataType="String" DisplayName="Teilnehmer" Category="Adressen" Selection="ReferenceList" ValueSourceClass="Targets" Input="Mandatory" >
             </ConfigurationUnit>
             <ConfigurationUnit Id="MaxLoopCount" DataType="Int16" DisplayName="Wiederholungen" Category="Extras" DefaultValue="1" >
                 <ConfigurationUnit.Description>Gibt die maximale Anzahl der Wiederholungen der Folge an bevor die Zustellung abgebrochen wird.</ConfigurationUnit.Description>

@@ -68,7 +68,8 @@
                   "Description": "Legt den Zyklus fest, in dem neue Dateien angelegt werden.",
                   "DataType": "Int16",
                   "Selection": "ListOnly",
-                                    "ValueList": [
+                  "DefaultValue": "0",
+                  "ValueList": [
                     {
                       "Value": "0",
                       "DisplayText": "eine Datei"
@@ -90,7 +91,7 @@
                       "DisplayText": "jährlich"
                     }
                   ],
-                  "ValueSource": "Cycles",
+                  "ValueSourceClass": "Cycles",
                   "NamespaceProviderInternal": "test",
                   "Children": []
                 },
@@ -125,7 +126,7 @@
                   "DisplayName": "Empfänger",
                   "Description": "Liste der Empfänger an die Ereignisse der Systemüberwachung gesendet werden.",
                   "DataType": "String",
-                  "ValueSource": "Targets",
+                  "ValueSourceClass": "Targets",
                   "Children": []
                 }
               ]

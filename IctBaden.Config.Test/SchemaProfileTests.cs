@@ -7,7 +7,8 @@ namespace IctBaden.Config.Test
 {
     public class SchemaProfileTests
     {
-        private static readonly string ProfileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SchemaProfile.cfg");
+        private static readonly string ProfileName = 
+            Path.Combine(Path.GetDirectoryName(typeof(SchemaProfileTests).Assembly.Location)!, "SchemaProfile.cfg");
 
         [Fact]
         public void Create()

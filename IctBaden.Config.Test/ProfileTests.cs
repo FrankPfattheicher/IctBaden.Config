@@ -5,15 +5,17 @@ using IctBaden.Config.Namespace;
 using IctBaden.Config.Session;
 using IctBaden.Config.Unit;
 using Xunit;
+// ReSharper disable StringLiteralTypo
 
 namespace IctBaden.Config.Test
 {
-    public class ProfileTest : IDisposable
+    public class ProfileTests : IDisposable
     {
         private static readonly string ProfileCfg = TestResources.LoadResourceString("Profile.cfg");
-        private static readonly string ProfileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TempProfile.cfg");
+        private static readonly string ProfileName = 
+            Path.Combine(Path.GetDirectoryName(typeof(ProfileTests).Assembly.Location)!, "TempProfile.cfg");
 
-        public ProfileTest()
+        public ProfileTests()
         {
             Dispose();
             File.WriteAllText(ProfileName, ProfileCfg);
@@ -42,8 +44,9 @@ namespace IctBaden.Config.Test
         [Fact]
         public void LoadNamespace()
         {
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(TestResources.LoadResourceString("test_settings.xaml")));
             var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = serializer.Load(new StringReader(TestResources.LoadResourceString("test_settings.xaml")));
             Assert.NotNull(session.Namespace);
             session.Namespace.AddChild(root);
         }
@@ -58,8 +61,9 @@ namespace IctBaden.Config.Test
         }
         private static ConfigurationSession CreateDefaultSession(string definition)
         {
-            var root = ConfigurationNamespaceXmlSerializer.Load(new StringReader(definition));
             var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceXamlSerializer(session);
+            var root = serializer.Load(new StringReader(definition));
             session.Namespace.AddChildren(root.Children);
 
             Assert.True(File.Exists(ProfileName), "Test data file not deployed");

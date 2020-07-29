@@ -28,16 +28,19 @@ namespace IctBaden.Config.Session
             {
                 if (_folder != null) return _folder;
 
-                _folder = Namespace.GetUnitById("Folder")
-                          ?? new ConfigurationUnit
-                          {
-                              Id = "Folder",
-                              DisplayName = "Ordner",
-                              DisplayImage = "fa fa-folder",
-                              Description = "Ordner zur Organisation von Elementen",
-                              DataType = TypeCode.Object,
-                              Selection = SelectionType.ParentHierarchical
-                          };
+                _folder = Namespace.GetUnitById("Folder");
+                if(_folder.IsEmpty)
+                {
+                    _folder = new ConfigurationUnit
+                           {
+                               Id = "Folder",
+                               DisplayName = "Ordner",
+                               DisplayImage = "fa fa-folder",
+                               Description = "Ordner zur Organisation von Elementen",
+                               DataType = TypeCode.Object,
+                               Selection = SelectionType.ParentHierarchical
+                           };
+                }
                 return _folder;
             }
         }

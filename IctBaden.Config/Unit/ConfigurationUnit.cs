@@ -11,10 +11,11 @@ using IctBaden.Framework.PropertyProvider;
 using IctBaden.Framework.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Portable.Xaml.Markup;
 
 namespace IctBaden.Config.Unit
 {
-    //[ContentProperty("Children")]
+    [ContentProperty("Children")]
     [XmlRoot(Namespace = "clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config")]
     public class ConfigurationUnit
     {
@@ -195,12 +196,7 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public string NamespaceProvider
         {
-            get
-            {
-                if (!String.IsNullOrEmpty(NamespaceProviderInternal))
-                    return NamespaceProviderInternal;
-                return Parent?.NamespaceProvider;
-            }
+            get => !string.IsNullOrEmpty(NamespaceProviderInternal) ? NamespaceProviderInternal : Parent?.NamespaceProvider;
             set => NamespaceProviderInternal = value;
         }
         [XmlIgnore][JsonIgnore]
@@ -341,7 +337,7 @@ namespace IctBaden.Config.Unit
         public bool IsProperty => (DataType != TypeCode.Empty) && (DataType != TypeCode.Object);
 
         [XmlIgnore][JsonIgnore]
-        public bool IsEmpty => DataType == TypeCode.Empty && String.IsNullOrEmpty(Id);
+        public bool IsEmpty => DataType == TypeCode.Empty && string.IsNullOrEmpty(Id);
 
         [XmlIgnore][JsonIgnore]
         public bool IsMandatory => Input == InputType.Mandatory;
