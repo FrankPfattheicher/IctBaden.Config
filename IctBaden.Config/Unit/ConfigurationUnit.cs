@@ -235,11 +235,6 @@ namespace IctBaden.Config.Unit
         private List<ConfigurationUnit> _children;
         protected bool ChildrenLoaded;
 
-        public void InvalidateChildren()
-        {
-            ChildrenLoaded = false;
-        }
-
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         [XmlElement("ConfigurationUnit")]
         public List<ConfigurationUnit> Children
@@ -255,10 +250,15 @@ namespace IctBaden.Config.Unit
                     ? _children 
                     : _children.Where(ch => ch.UserLevel <= Session.CurrentUserLevel).ToList();
             }
-            set => _children = value;
+            set => _children = value.ToList();
         }
 
 
+        public void ClearChildren()
+        {
+            ChildrenLoaded = false;
+            _children.Clear();
+        }
 
         public void AddChild(ConfigurationUnit newChild)
         {

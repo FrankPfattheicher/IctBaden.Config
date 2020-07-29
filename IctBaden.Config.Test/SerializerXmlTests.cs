@@ -26,8 +26,8 @@ namespace IctBaden.Config.Test
             var session = new ConfigurationSession();
             var serializer = new ConfigurationNamespaceXamlSerializer(session);
             var root = serializer.Load(new StringReader(_testSettings));
-            Assert.Equal("DescriptionAsAttribute", root.Children[0].Description);
-            Assert.Equal("DescriptionAsEmbedded", root.Children[1].Description);
+            Assert.Equal("DescriptionAsAttribute", root.Children.ToArray()[0].Description);
+            Assert.Equal("DescriptionAsEmbedded", root.Children.ToArray()[1].Description);
         }
 
         [Fact]

@@ -7,8 +7,10 @@ using IctBaden.Framework.IniFile;
 
 namespace IctBaden.Config.Schema
 {
+    // ReSharper disable once UnusedType.Global
     public static class SchemaFromProfile
     {
+        // ReSharper disable once UnusedMember.Global
         public static ConfigurationUnit Create(string fileName)
         {
             var iniFile = new Profile(fileName);
@@ -33,7 +35,7 @@ namespace IctBaden.Config.Schema
                     DataType = TypeCode.Object,
                     DisplayImage = "far fa-file-alt"
                 };
-                root.Children.Add(sectionUnit);
+                root.AddChild(sectionUnit);
 
                 foreach (var keyUnit in section.Keys.Select(key => new ConfigurationUnit
                 {
@@ -43,7 +45,7 @@ namespace IctBaden.Config.Schema
                     DataType = DetectTypeFromValue(key.StringValue)
                 }))
                 {
-                    sectionUnit.Children.Add(keyUnit);
+                    sectionUnit.AddChild(keyUnit);
                 }
             }
 
