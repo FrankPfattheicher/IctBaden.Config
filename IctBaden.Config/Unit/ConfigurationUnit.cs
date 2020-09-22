@@ -144,11 +144,12 @@ namespace IctBaden.Config.Unit
         public bool ValueListSpecified => (ValueList.Count > 0);
 
         /// <summary>
-        /// Id of base configuration unit
-        /// for referenced user units
+        /// List of base configuration unit ids
+        /// (separated with ';')
+        /// for referenced user units.
         /// </summary>
         [XmlAttribute]
-        public string ValueSourceUnitId { get; set; }
+        public string ValueSourceUnitIds { get; set; }
 
         /// <summary>
         /// Configuration unit class
@@ -437,7 +438,7 @@ namespace IctBaden.Config.Unit
             destination.Input = source.Input;
             destination.Selection = source.Selection;
             destination.ValueList = source.ValueList;
-            destination.ValueSourceUnitId = source.ValueSourceUnitId;
+            destination.ValueSourceUnitIds = source.ValueSourceUnitIds;
             destination.ValueSourceClass = source.ValueSourceClass;
             destination.ValidationRule = source.ValidationRule;
             destination.UserLevel = source.UserLevel;
@@ -516,11 +517,14 @@ namespace IctBaden.Config.Unit
             {
                 var text = GetValue<string>() ?? "";
 
-                if (Selection == SelectionType.Reference 
-                    || Selection == SelectionType.ReferenceList)
+                if (Selection == SelectionType.Reference || Selection == SelectionType.ReferenceList)
                 {
-                    var assigned = BaseUnitForReferenceUnits.GetUnitList(text).ToArray();
-                    return ConfigurationUnit.GetUnitListDisplayText(assigned);
+                    var ids = text.Split(';');
+                    var assigned = ids
+                        .Select(id => BaseUnitsForReferenceUnits.SelectMany(baseUnit => baseUnit.GetUnitList(id)).FirstOrDefault())
+                        .Where(unit => unit != null)
+                        .ToList();
+                    return GetUnitListDisplayText(assigned);
                 }
 
                 switch (DataType)
@@ -619,20 +623,29 @@ namespace IctBaden.Config.Unit
         }
 
         [XmlIgnore][JsonIgnore]
-        public ConfigurationUnit BaseUnitForReferenceUnits
+        public List<ConfigurationUnit> BaseUnitsForReferenceUnits
         {
             get
             {
-                var source = Session.Namespace.GetUnitById(ValueSourceUnitId);
-                if (source == null)
+                ConfigurationUnit GetNonTemplateParent(ConfigurationUnit source)
                 {
-                    throw new ArgumentException("Invalid schema: ValueSourceUnitId=" + ValueSourceUnitId);
+                    while (source != null && source.IsTemplate)
+                    {
+                        source = source.Parent;
+                    }
+                    return source;
                 }
-                while (source.IsTemplate)
+                var sourceUnits = ValueSourceUnitIds?.Split(';') ?? new string[0];
+                var sources = sourceUnits
+                    .Select(su => Session.Namespace.GetUnitById(su))
+                    .Select(GetNonTemplateParent)
+                    .Where(su => su != null)
+                    .ToList();
+                if (!string.IsNullOrEmpty(ValueSourceUnitIds) && !sources.Any())
                 {
-                    source = source.Parent;
+                    throw new ArgumentException("Invalid schema: ValueSourceUnitIds=" + ValueSourceUnitIds);
                 }
-                return source;
+                return sources;
             }
         }
 
@@ -643,7 +656,9 @@ namespace IctBaden.Config.Unit
             {
                 var baseUnit = this;
                 while (!baseUnit.HasTemplates && (baseUnit.Parent != null))
+                {
                     baseUnit = baseUnit.Parent;
+                }
                 return baseUnit;
             }
         }
@@ -759,7 +774,7 @@ namespace IctBaden.Config.Unit
                         //                         select new SelectionValue { DisplayText = voice.VoiceInfo.Name + " (" + voice.VoiceInfo.Culture + ")", Value = voice.VoiceInfo.Name });
                         break;
                     case SelectionType.ListOnly:
-                        if (!string.IsNullOrEmpty(ValueSourceUnitId) && (Session != null))
+                        if (!string.IsNullOrEmpty(ValueSourceUnitIds) && (Session != null))
                         {
                             specialList.AddRange(Session.GetSelectionValues(this));
                         }

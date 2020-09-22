@@ -68,7 +68,14 @@ namespace IctBaden.Config.Namespace
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
-            return (from key in _profile[unit.ValueSourceUnitId].Keys select new SelectionValue { DisplayText = key.Name, Value = key.StringValue }).ToList();
+            var sourceUnits = unit.ValueSourceUnitIds
+                .Split(';');
+            var sections = sourceUnits
+                .Select(su => _profile[su])
+                .ToList();
+            return sections
+                .SelectMany(sect => sect.Keys.Select(key => new SelectionValue {DisplayText = key.Name, Value = key.StringValue}))
+                .ToList();
         }
 
         public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)

@@ -1,0 +1,219 @@
+{
+  "Selection": "None",
+  "NamespaceProviderInternal": "persistence",
+  "Children": [
+    {
+      "Id": "Targets",
+      "DisplayName": "Empfänger",
+      "DataType": "Object",
+      "Selection": "ParentHierarchical",
+      "DisplayImage": "fa fa-folder",
+      "Children": [
+        {
+          "Id": "mailto",
+          "DisplayName": "E-Mail (allgemein)",
+          "DisplayImage": "far fa-envelope",
+          "Description": "E-Mail mit automatischer Auswahl des Versandweges",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Mail-Adresse",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "ValidationRule": ".+@.+\\..+"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "sms",
+          "DisplayName": "SMS (allgemein)",
+          "DisplayImage": "fas fa-sms",
+          "Description": "SMS mit automatischer Auswahl des Versandweges",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        }
+      ]
+    },
+    
+    {
+      "Id": "MessageFilters",
+      "DisplayName": "Filter",
+      "Description": "Meldungen können wahlweise direkt an einen Empfänger oder einen Filter weitergeleitet werden. Filter können dann die jeweilige Meldung in Abhängigkeit des Inhalts an unterschiedliche Empfänger verteilt werden.",
+      "DataType": "Object",
+      "Selection": "ParentHierarchical",
+      "DisplayImage": "fas fa-filter",
+      "NamespaceProviderInternal": "persistence",
+      "Children": [
+        {
+          "Id": "MessageFilterText",
+          "DisplayName": "Text-Filter",
+          "Description": "Meldungen werden nach enthaltenem Text gefiltert.",
+          "DisplayImage": "fas fa-filter",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "DisplayName": "Beschreibung",
+              "Description": "Weitere Angaben zum Zweck dieses Filters.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Active",
+              "Category": "Freigabe",
+              "DisplayName": "Aktiv",
+              "DataType": "Boolean",
+              "Input": "Mandatory",
+              "DefaultValue": "False",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "Type",
+              "Category": "Erkennung",
+              "DisplayName": "Art",
+              "Description": "Art der Filterung die verwendet werden soll.",
+              "DataType": "String",
+              "DefaultValue": "ContainsText",
+              "Input": "Mandatory",
+              "Selection": "ListOnly",
+              "ValueList": [
+                {
+                  "Value": "ContainsText",
+                  "DisplayText": "Meldung enthält Text"
+                },
+                {
+                  "Value": "StartsWithText",
+                  "DisplayText": "Meldung startet mit Text"
+                },
+                {
+                  "Value": "RegularExpression",
+                  "DisplayText": "Meldung entspricht regulärem Ausdruck"
+                }
+              ]
+            },
+            {
+              "Id": "Filter",
+              "Category": "Erkennung",
+              "DisplayName": "Filter",
+              "Description": "Text oder Ausdruck des Filters.",
+              "DataType": "String"
+            },
+            {
+              "Id": "MatchCase",
+              "Category": "Erkennung",
+              "DisplayName": "Groß-/Kleinschreibung beachten",
+              "Description": "Bei der Prüfung werden Groß- und Kleinbuchstaben unterschieden.",
+              "DataType": "Boolean",
+              "DefaultValue": "false",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "ContinueChecking",
+              "Category": "Optionen",
+              "DisplayName": "Weitere Filter prüfen",
+              "Description": "Auch wenn dieser Filter passt, werden weitere Filter geprüft. Damit können Meldungen an mehrere Empfänger verteilt werden.",
+              "DataType": "Boolean",
+              "DefaultValue": "false",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "Target",
+              "Category": "Meldung",
+              "DisplayName": "Empfänger",
+              "Description": "Empfänger, an den passende Meldungen weitergeleitet werden sollen.",
+              "DataType": "String",
+              "Selection": "Reference",
+              "ValueSourceUnitIds": "Targets"
+            },
+            {
+              "Id": "MessageText",
+              "Category": "Meldung",
+              "DisplayName": "Meldetext",
+              "Description": "Ohne Angabe wird der Originaltext weitergeleitet werden. Hier kann eine andere Meldung angegeben werden die statt dessen weitergeleitet wird.",
+              "DataType": "String"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

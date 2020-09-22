@@ -35,6 +35,8 @@
     <EmbeddedResource Include="test_targets.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
+    <None Remove="ConfigTestUnits.json" />
+    <EmbeddedResource Include="ConfigTestUnits.json" />
   </ItemGroup>
 
   <ItemGroup>
