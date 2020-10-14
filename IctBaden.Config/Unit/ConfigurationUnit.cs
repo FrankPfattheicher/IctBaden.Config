@@ -589,14 +589,18 @@ namespace IctBaden.Config.Unit
             return new ConfigurationUnit();
         }
 
-        public ConfigurationUnit GetUnitByName(string name, bool includeFolders = false)
+        public ConfigurationUnit GetUnitByName(string name, bool includeFolders, bool matchCase)
         {
-            if ((includeFolders || !IsFolder) && (DisplayName == name))
+            var matchName = matchCase
+                ? DisplayName == name
+                : string.Equals(DisplayName, name, StringComparison.CurrentCultureIgnoreCase);
+            
+            if ((includeFolders || !IsFolder) && matchName)
                 return this;
 
             foreach (var child in Children.Where(child => (!child.IsFolder && !child.IsTemplate && !child.IsProperty)))
             {
-                var unit = child.GetUnitByName(name, includeFolders);
+                var unit = child.GetUnitByName(name, includeFolders, matchCase);
                 if (!unit.IsEmpty)
                     return unit;
             }
@@ -604,14 +608,14 @@ namespace IctBaden.Config.Unit
             var path = name.Split('/').ToList();
             foreach (var child in Children.Where(child => child.IsFolder && !child.IsTemplate))
             {
-                var unit = child.GetUnitByName(name, includeFolders);
+                var unit = child.GetUnitByName(name, includeFolders, matchCase);
                 if (!unit.IsEmpty)
                     return unit;
 
                 if ((path.Count == 0) || (child.DisplayName != path[0]))
                     continue;
 
-                return child.GetUnitByName(string.Join("/", path.Skip(1).ToArray()), includeFolders);
+                return child.GetUnitByName(string.Join("/", path.Skip(1).ToArray()), includeFolders, matchCase);
             }
             return new ConfigurationUnit();
         }
