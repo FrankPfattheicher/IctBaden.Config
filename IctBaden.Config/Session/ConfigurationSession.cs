@@ -49,6 +49,8 @@ namespace IctBaden.Config.Session
         public event Action<bool> Waiting = _ => { };
         // ReSharper restore EventNeverInvoked
 
+        public event Action<ConfigurationUnit> Changed;
+        [Obsolete("Use Changed event instead")]
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ConfigurationSession()
@@ -138,6 +140,7 @@ namespace IctBaden.Config.Session
 
         private void SignalConfigurationUnitChanged(ConfigurationUnit unit)
         {
+            Changed?.Invoke(unit);
             PropertyChanged?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
         }
 
