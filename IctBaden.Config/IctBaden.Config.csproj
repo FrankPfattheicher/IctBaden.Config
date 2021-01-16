@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>(C) 2010-2020 ICT Baden GmbH</Copyright>
+    <Copyright>(C) 2010-2021 ICT Baden GmbH</Copyright>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
 
