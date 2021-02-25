@@ -141,7 +141,9 @@ namespace IctBaden.Config.Session
         private void SignalConfigurationUnitChanged(ConfigurationUnit unit)
         {
             Changed?.Invoke(unit);
+#pragma warning disable 618
             PropertyChanged?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
+#pragma warning restore 618
         }
 
         public T GetValue<T>(ConfigurationUnit unit, T defaultValue)
