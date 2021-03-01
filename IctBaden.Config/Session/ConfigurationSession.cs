@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Unit;
+// ReSharper disable StringLiteralTypo
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -82,6 +83,9 @@ namespace IctBaden.Config.Session
                     var typeItem = unitType.Clone(unitType.DisplayName, true);
                     typeItem.Id = item.Id;
                     typeItem.Parent = item.Parent;
+                    typeItem.Category ??= item.Category;
+                    typeItem.DisplayName ??= item.DisplayName;
+                    typeItem.Description ??= item.Description;
 
                     item.Parent.Children = item.Parent.Children
                         .Select(c => c == item ? typeItem : c)
