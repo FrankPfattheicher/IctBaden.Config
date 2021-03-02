@@ -83,9 +83,9 @@ namespace IctBaden.Config.Session
                     var typeItem = unitType.Clone(unitType.DisplayName, true);
                     typeItem.Id = item.Id;
                     typeItem.Parent = item.Parent;
-                    typeItem.Category ??= item.Category;
-                    typeItem.DisplayName ??= item.DisplayName;
-                    typeItem.Description ??= item.Description;
+                    if(item.Category != null) typeItem.Category = item.Category;
+                    if(item.DisplayName != null) typeItem.DisplayName = item.DisplayName;
+                    if(item.Description != null) typeItem.Description = item.Description;
 
                     item.Parent.Children = item.Parent.Children
                         .Select(c => c == item ? typeItem : c)
