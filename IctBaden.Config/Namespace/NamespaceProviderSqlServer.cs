@@ -227,7 +227,7 @@ namespace IctBaden.Config.Namespace
                     cmd.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
                     cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
                     cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                    cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                    cmd.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
                     var result = cmd.ExecuteNonQuery();
 
                     if (result != 0) return;
@@ -237,7 +237,7 @@ namespace IctBaden.Config.Namespace
                     cmd.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
                     cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
                     cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                    cmd.Parameters.Add(new SqlParameter("@val", newValue));
+                    cmd.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
                     cmd.ExecuteNonQuery();
                 }
             }
