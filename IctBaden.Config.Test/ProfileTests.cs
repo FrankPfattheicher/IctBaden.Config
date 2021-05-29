@@ -59,6 +59,20 @@ namespace IctBaden.Config.Test
         {
             return CreateDefaultSession(TestResources.LoadResourceString("test_targets.xaml"));
         }
+        private static ConfigurationSession CreateDefaultSessionConfigTest()
+        {
+            var definition = TestResources.LoadResourceString("ConfigTestUnits.json");
+            var session = new ConfigurationSession();
+            var serializer = new ConfigurationNamespaceJsonSerializer(session);
+            var root = serializer.Load(new StringReader(definition));
+            session.Namespace.AddChildren(root.Children);
+
+            Assert.True(File.Exists(ProfileName), "Test data file not deployed");
+
+            var ini = new NamespaceProviderProfile(ProfileName);
+            session.RegisterNamespaceProvider("persistence", ini);
+            return session;
+        }
         private static ConfigurationSession CreateDefaultSession(string definition)
         {
             var session = new ConfigurationSession();
@@ -223,11 +237,11 @@ namespace IctBaden.Config.Test
         {
             var session = CreateDefaultSessionTargets();
             var targets = session.Namespace.GetUnitById("Targets");
-            var folder = targets.GetUnitByName("Test", true);
+            var folder = targets.GetUnitByName("Test", true, false);
             Assert.False(folder.IsEmpty, "Folder could not be created");
             Assert.True(folder.IsFolder, "Folder could be a folder");
 
-            var folder2 = session.Namespace.GetUnitByName("Empfänger/Test", true);
+            var folder2 = session.Namespace.GetUnitByName("Empfänger/Test", true, false);
             Assert.True(folder2.IsFolder);
         }
 
@@ -235,7 +249,7 @@ namespace IctBaden.Config.Test
         public void FindUserItem()
         {
             var session = CreateDefaultSessionTargets();
-            var target = session.Namespace.GetUnitByName("Smarty");
+            var target = session.Namespace.GetUnitByName("Smarty", false, false);
             Assert.True(target.IsItem);
         }
 
@@ -243,7 +257,7 @@ namespace IctBaden.Config.Test
         public void FindUserItemInFolder()
         {
             var session = CreateDefaultSessionTargets();
-            var target = session.Namespace.GetUnitByName("DieGruppe");
+            var target = session.Namespace.GetUnitByName("DieGruppe", false, false);
             Assert.True(target.IsItem);
         }
 
@@ -251,7 +265,7 @@ namespace IctBaden.Config.Test
         public void FindUserItemInNamedFolder()
         {
             var session = CreateDefaultSessionTargets();
-            var target = session.Namespace.GetUnitByName("Test/DieGruppe");
+            var target = session.Namespace.GetUnitByName("Test/DieGruppe", false, false);
             Assert.True(target.IsItem);
         }
 
@@ -265,7 +279,7 @@ namespace IctBaden.Config.Test
             Assert.True(newFolder.IsFolder);
 
             var session2 = CreateDefaultSessionTargets();
-            var folder = session2.Namespace.GetUnitByName("CreateFolder", true);
+            var folder = session2.Namespace.GetUnitByName("CreateFolder", true, false);
             Assert.False(folder.IsEmpty, "folder does not exist");
             Assert.True(folder.IsUserUnit);
             Assert.True(folder.IsFolder);
@@ -278,7 +292,7 @@ namespace IctBaden.Config.Test
         {
             var session = CreateDefaultSessionTargets();
             var targets = session.Namespace.GetUnitById("Targets");
-            var folder = targets.GetUnitByName("EinOrdner", true);
+            var folder = targets.GetUnitByName("EinOrdner", true, false);
             Assert.True(folder.IsUserUnit);
             Assert.True(folder.IsFolder);
             Assert.True(folder.Class == null);
@@ -286,7 +300,7 @@ namespace IctBaden.Config.Test
             folder.Delete();
 
             var session2 = CreateDefaultSessionTargets();
-            var folder2 = session2.Namespace.GetUnitByName("EinOrdner", true);
+            var folder2 = session2.Namespace.GetUnitByName("EinOrdner", true, false);
             Assert.True(folder2.IsEmpty);
         }
 
@@ -300,7 +314,7 @@ namespace IctBaden.Config.Test
             Assert.True(newItem.IsItem);
 
             var session2 = CreateDefaultSessionTargets();
-            var target = session2.Namespace.GetUnitByName("CreateUserItem");
+            var target = session2.Namespace.GetUnitByName("CreateUserItem", false, false);
             Assert.True(target.IsItem);
             Assert.True(target.IsUserUnit);
             Assert.True(target.Class == "TargetSms");
@@ -319,7 +333,7 @@ namespace IctBaden.Config.Test
             newItem.Delete();
 
             var session2 = CreateDefaultSessionTargets();
-            var target = session2.Namespace.GetUnitByName("DeleteUserItem");
+            var target = session2.Namespace.GetUnitByName("DeleteUserItem", false, false);
             Assert.True(target.IsEmpty);
         }
 
@@ -327,15 +341,15 @@ namespace IctBaden.Config.Test
         public void RenameUserItem()
         {
             var session = CreateDefaultSessionTargets();
-            var target1 = session.Namespace.GetUnitByName("DieFolge");
+            var target1 = session.Namespace.GetUnitByName("DieFolge", false, false);
             Assert.True(target1.IsItem);
 
             target1.Rename("DasTier");
 
             var session2 = CreateDefaultSessionTargets();
-            var target2 = session2.Namespace.GetUnitByName("DieFolge");
+            var target2 = session2.Namespace.GetUnitByName("DieFolge", false, false);
             Assert.True(target2.IsEmpty, "old item not deleted");
-            var target3 = session2.Namespace.GetUnitByName("DasTier");
+            var target3 = session2.Namespace.GetUnitByName("DasTier", false, false);
             Assert.False(target3.IsEmpty, "new name not found");
         }
 
@@ -343,7 +357,7 @@ namespace IctBaden.Config.Test
         public void UserItemChangeClass()
         {
             var session = CreateDefaultSessionTargets();
-            var target1 = session.Namespace.GetUnitByName("Alex");
+            var target1 = session.Namespace.GetUnitByName("Alex", false, false);
             Assert.True(target1.IsItem);
             Assert.Equal("TargetSms", target1.Class);
 
@@ -352,7 +366,7 @@ namespace IctBaden.Config.Test
             target1.ChangeClass(template);
 
             var session2 = CreateDefaultSessionTargets();
-            var target2 = session2.Namespace.GetUnitByName("Alex");
+            var target2 = session2.Namespace.GetUnitByName("Alex", false, false);
             Assert.True(target2.IsItem);
             Assert.Equal("TargetSpeaker", target2.Class);
         }
@@ -383,6 +397,32 @@ namespace IctBaden.Config.Test
             }
         }
 
+
+        private enum FilterType
+        {
+            ContainsText, StartsWithText, RegularExpression
+        }
+        
+        
+        [Fact]
+        public void SetEnumShouldGetSameValue()
+        {
+            const string name = "Filter1";
+            const FilterType prop = FilterType.RegularExpression;
+            
+            var session = CreateDefaultSessionConfigTest();
+            var filters = session.Namespace.GetUnitById("MessageFilters");
+            var template = filters.GetUnitById("MessageFilterText");
+            var filter1 = filters.CreateItem(template, name);
+            
+            filter1.SetPropertyValue("Type", prop);
+
+            var userFilter = filters.GetUnitByName(name, false, true);
+            Assert.NotNull(userFilter);
+
+            var propValue = userFilter.GetPropertyValue<FilterType>("Type", FilterType.ContainsText);
+            Assert.Equal(prop, propValue);
+        }
 
     }
 }
