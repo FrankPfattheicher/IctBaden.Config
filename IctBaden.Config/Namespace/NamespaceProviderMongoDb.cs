@@ -15,7 +15,7 @@ namespace IctBaden.Config.Namespace
         private readonly string _collectionName = "CfgData";
 
         // DB key = unit.Parent.FullId + "/" + unit.Id;
-        
+
         private readonly string _connectionString;
         private readonly MongoClient _client;
         private IMongoDatabase _db;
@@ -43,6 +43,7 @@ namespace IctBaden.Config.Namespace
             {
                 info += ": " + _lastError;
             }
+
             return info;
         }
 
@@ -82,7 +83,7 @@ namespace IctBaden.Config.Namespace
                 {
                     DataType = TypeCode.Object,
                     Id = "error",
-                    DisplayName = _lastError, 
+                    DisplayName = _lastError,
                     DisplayImage = "fas fa-bomb"
                 });
                 return children;
@@ -148,14 +149,9 @@ namespace IctBaden.Config.Namespace
                 return;
 
             var key = unit.Parent.FullId + "/" + unit.Id;
-            var value = newValue  == null 
-                        ? "" : newValue.ToString();             
-
-            var document = new BsonDocument
-            {
-                {"_id", key},
-                {"value", value}
-            };
+            var document = newValue == null
+                ? new BsonDocument { {"_id", key} } 
+                : new BsonDocument { {"_id", key}, {"value", newValue.ToString()} };
 
             _collection.ReplaceOne(
                 filter: new BsonDocument("_id", key),
@@ -168,11 +164,12 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            if(unit.Class != null)
+            if (unit.Class != null)
             {
                 var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
                 itemClass.SetValue(unit.Class);
             }
+
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
             containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
@@ -195,9 +192,9 @@ namespace IctBaden.Config.Namespace
                 return;
 
             var deleteFilter = Builders<BsonDocument>.Filter.Regex("_id", unit.Id + ".*");
-            _collection.DeleteMany(deleteFilter);   
+            _collection.DeleteMany(deleteFilter);
         }
-        
+
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
             var list = new List<SelectionValue>();
