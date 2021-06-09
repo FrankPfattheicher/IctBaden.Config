@@ -43,8 +43,9 @@ namespace IctBaden.Config.Namespace
             if (!keys.ContainsKey("Children"))
                 return children;
 
-            var childIds = keys["Children"].ToString().Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-
+            var childIds = keys["Children"].ToString()?.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            if (childIds == null) return children;
+            
             foreach (var childId in childIds)
             {
                 var childSection = _data[childId];
