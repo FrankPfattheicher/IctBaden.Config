@@ -354,6 +354,70 @@ namespace IctBaden.Config.Test
         }
 
         [Fact]
+        public void MoveUserItemToFolder()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var count = targets.Children.Count;
+
+            // create folder in "Targets"
+            const string folderName = "TargetFolder";
+            var newFolder = targets.CreateFolder(folderName);
+            var folderId = newFolder.Id;
+            // create "TargetSms" in "Targets"
+            var template = targets.GetUnitById("TargetSms");
+            var newItem = targets.CreateItem(template, "CreateUserItem");
+
+            targets = session.Namespace.GetUnitById("Targets");
+            Assert.Equal(count + 2, targets.Children.Count);  // folder AND item in Targets
+            Assert.Empty(newFolder.Children);   // no item in folder
+            
+            // move newItem to newFolder
+            var moved = newItem.MoveToFolder(newFolder);
+            Assert.True(moved);
+
+            var session2 = CreateDefaultSessionTargets();
+            var targets2 = session2.Namespace.GetUnitById("Targets");
+            Assert.Equal(count + 1, targets2.Children.Count);
+            var folder2 = targets2.GetUnitById(folderId);
+            Assert.Single(folder2.Children);
+            var folder3 = session2.Namespace.GetUnitByName(folderName, true, false);
+            Assert.Single(folder3.Children);
+        }
+
+        [Fact]
+        public void MoveFolderToFolderShouldIncludeFolderContents()
+        {
+            MoveUserItemToFolder();
+            
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var count = targets.Children.Count;
+
+            // create folder 2 in "Targets"
+            const string folderName = "TargetFolder";
+            const string folderName2 = "TargetFolder2";
+            var newFolder2 = targets.CreateFolder(folderName2);
+            
+            // get first folder
+            var firstFolder = session.Namespace.GetUnitByName(folderName, true, false);
+            Assert.Single(firstFolder.Children);
+            
+            // move firstFolder to newFolder2
+            var moved = firstFolder.MoveToFolder(newFolder2);
+            Assert.True(moved);
+            
+            var session2 = CreateDefaultSessionTargets();
+            var targets2 = session2.Namespace.GetUnitById("Targets");
+            Assert.Equal(count, targets2.Children.Count);
+            
+            var folder1 = session.Namespace.GetUnitByName(folderName, true, false);
+            Assert.Single(folder1.Children);
+            var folder2 = session.Namespace.GetUnitByName(folderName2, true, false);
+            Assert.Single(folder2.Children);
+        }
+
+        [Fact]
         public void UserItemChangeClass()
         {
             var session = CreateDefaultSessionTargets();
@@ -400,6 +464,7 @@ namespace IctBaden.Config.Test
 
         private enum FilterType
         {
+            // ReSharper disable once UnusedMember.Local
             ContainsText, StartsWithText, RegularExpression
         }
         
@@ -420,8 +485,64 @@ namespace IctBaden.Config.Test
             var userFilter = filters.GetUnitByName(name, false, true);
             Assert.NotNull(userFilter);
 
-            var propValue = userFilter.GetPropertyValue<FilterType>("Type", FilterType.ContainsText);
+            var propValue = userFilter.GetPropertyValue("Type", FilterType.ContainsText);
             Assert.Equal(prop, propValue);
+        }
+
+
+        [Fact]
+        public void TargetInFolderShouldBeHierarchicalChildOf()
+        {
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var template = targets.GetUnitById("TargetSms");
+            
+            // Targets
+            //  +-Folder1
+            //     +-Folder2
+            //        +-Target1
+            
+            var folder1 = targets.CreateFolder("Folder1");
+            var folder2 = folder1.CreateFolder("Folder2");
+            var target1 = folder2.CreateItem(template, "Target1");
+
+            Assert.True(folder1.IsHierarchicalChildOf(targets));
+
+            Assert.True(folder2.IsHierarchicalChildOf(targets));
+            Assert.True(folder2.IsHierarchicalChildOf(folder1));
+            
+            Assert.True(target1.IsHierarchicalChildOf(targets));
+            Assert.True(target1.IsHierarchicalChildOf(folder1));
+            Assert.True(target1.IsHierarchicalChildOf(folder2));
+
+            Assert.False(folder1.IsHierarchicalChildOf(folder2));
+            Assert.False(folder1.IsHierarchicalChildOf(target1));
+            
+            Assert.False(folder2.IsHierarchicalChildOf(target1));
+        }
+
+        [Fact]
+        public void MoveFolderToFolderShouldFailIfTargetIsChildOfSource()
+        {
+            MoveUserItemToFolder();
+            
+            var session = CreateDefaultSessionTargets();
+            var targets = session.Namespace.GetUnitById("Targets");
+            var template = targets.GetUnitById("TargetSms");
+
+            // create folder 2 in "Targets"
+            // Targets
+            //  +-Folder1
+            //     +-Folder2
+            //        +-Target1
+
+            var folder1 = targets.CreateFolder("Folder1");
+            var folder2 = folder1.CreateFolder("Folder2");
+            folder2.CreateItem(template, "Target1");
+            
+            // move Folder1 to Folder2
+            var moved = folder1.MoveToFolder(folder2);
+            Assert.False(moved);
         }
 
     }

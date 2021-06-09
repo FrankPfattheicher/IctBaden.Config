@@ -141,8 +141,14 @@ namespace IctBaden.Config.Namespace
         public override void RemoveUserUnit(ConfigurationUnit unit)
         {
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
-            _profile[unit.FullId].Remove();
+            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+        }
+
+        public override void DeleteUserUnit(ConfigurationUnit unit)
+        {
+            _profile[unit.Id].Remove();
+            _profile.Save();
         }
     }
 }

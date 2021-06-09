@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
 using MongoDB.Bson;
@@ -147,10 +148,13 @@ namespace IctBaden.Config.Namespace
                 return;
 
             var key = unit.Parent.FullId + "/" + unit.Id;
+            var value = newValue  == null 
+                        ? "" : newValue.ToString();             
+
             var document = new BsonDocument
             {
                 {"_id", key},
-                {"value", newValue.ToString()}
+                {"value", value}
             };
 
             _collection.ReplaceOne(
@@ -177,13 +181,23 @@ namespace IctBaden.Config.Namespace
 
         public override void RemoveUserUnit(ConfigurationUnit unit)
         {
+            if (!Connect())
+                return;
+
+            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+        }
+
+        public override void DeleteUserUnit(ConfigurationUnit unit)
+        {
             if ((unit.Class == null) || !Connect())
                 return;
 
             var deleteFilter = Builders<BsonDocument>.Filter.Regex("_id", unit.Id + ".*");
-            _collection.DeleteMany(deleteFilter);
+            _collection.DeleteMany(deleteFilter);   
         }
-
+        
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
             var list = new List<SelectionValue>();

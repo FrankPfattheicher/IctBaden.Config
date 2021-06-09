@@ -191,6 +191,16 @@ namespace IctBaden.Config.Session
             SignalConfigurationUnitChanged(unit);
         }
 
+        public void DeleteUserUnit(ConfigurationUnit unit)
+        {
+            var provider = GetNamespaceProvider(unit.NamespaceProvider);
+            if (provider == null)
+                return;
+
+            provider.DeleteUserUnit(unit);
+            SignalConfigurationUnitChanged(unit);
+        }
+
         public List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
             var provider = GetNamespaceProvider(unit.NamespaceProvider);

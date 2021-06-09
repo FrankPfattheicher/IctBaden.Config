@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
 
@@ -71,7 +72,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Trace.TraceError($"NamespaceProviderSqlServer: Connect FAILED: {ex.Message}");
                 _lastError = ex.Message;
             }
 
@@ -88,15 +89,15 @@ namespace IctBaden.Config.Namespace
             {
                 lock (_connection)
                 {
-                    using(cmd = _connection.CreateCommand())
+                    using var command = cmd = _connection.CreateCommand();
+                    cmd.CommandText = $"SELECT * FROM {_tableName}";
+                    using (var rdr = cmd.ExecuteReader())
                     {
-                        cmd.CommandText = $"SELECT * FROM {_tableName}";
-                        using (var rdr = cmd.ExecuteReader())
-                        {
-                            rdr.Close();
-                        }
+                        rdr.Close();
                     }
+
                     _tableExists = true;
+                    return;
                 }
             }
             catch (SqlException)
@@ -104,10 +105,11 @@ namespace IctBaden.Config.Namespace
                 // ignore and create table
             }
 
-            lock (_connection)
+            try
             {
-                using(cmd = _connection.CreateCommand())
+                lock (_connection)
                 {
+                    using var command = cmd = _connection.CreateCommand();
                     cmd.CommandText = CreateTable
                         .Replace("CfgData]", _tableName + "]");
 
@@ -118,42 +120,42 @@ namespace IctBaden.Config.Namespace
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"NamespaceProviderSqlServer: Create DB: {ex.Message}");
+            }
         }
 
         private string GetValue(string parentId, string unitId)
         {
             lock (_connection)
             {
-                using(var cmd = _connection.CreateCommand())
-                {
-                    cmd.CommandText = $"SELECT Value FROM {_tableName} WHERE ParentId=@pid AND UnitId=@uid";
-                    cmd.Parameters.Add(new SqlParameter("@pid", parentId));
-                    cmd.Parameters.Add(new SqlParameter("@uid", unitId));
+                using var cmd = _connection.CreateCommand();
+                cmd.CommandText = $"SELECT Value FROM {_tableName} WHERE ParentId=@pid AND UnitId=@uid";
+                cmd.Parameters.Add(new SqlParameter("@pid", parentId));
+                cmd.Parameters.Add(new SqlParameter("@uid", unitId));
 
-                    using (var rdr = cmd.ExecuteReader())
+                using var rdr = cmd.ExecuteReader();
+                try
+                {
+                    if (!rdr.Read())
                     {
-                        try
-                        {
-                            if (!rdr.Read())
-                            {
-                                return null;
-                            }
-                            if (rdr[0] is string value)
-                            {
-                                return value;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine(ex.Message);
-                        }
-                        finally
-                        {
-                            rdr.Close();
-                        }
                         return null;
                     }
+                    if (rdr[0] is string value)
+                    {
+                        return value;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Trace.TraceError($"NamespaceProviderSqlServer: GetValue: {ex.Message}");
+                }
+                finally
+                {
+                    rdr.Close();
+                }
+                return null;
             }
         }
         
@@ -220,26 +222,29 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            lock (_connection)
+            try
             {
-                using (var cmd = _connection.CreateCommand())
+                lock (_connection)
                 {
-                    cmd.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
-                    cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
-                    cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                    cmd.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
-                    var result = cmd.ExecuteNonQuery();
+                    using var cmd1 = _connection.CreateCommand();
+                    cmd1.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
+                    cmd1.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd1.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                    cmd1.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
+                    var result = cmd1.ExecuteNonQuery();
 
                     if (result != 0) return;
+                    using var cmd2 = _connection.CreateCommand();
+                    cmd2.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
+                    cmd2.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd2.Parameters.Add(new SqlParameter("@uid", unit.Id));
+                    cmd2.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
+                    cmd2.ExecuteNonQuery();
                 }
-                using(var cmd = _connection.CreateCommand())
-                {
-                    cmd.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
-                    cmd.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
-                    cmd.Parameters.Add(new SqlParameter("@uid", unit.Id));
-                    cmd.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
-                    cmd.ExecuteNonQuery();
-                }
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"NamespaceProviderSqlServer: SetValue: {ex.Message}");
             }
         }
 
@@ -261,17 +266,32 @@ namespace IctBaden.Config.Namespace
 
         public override void RemoveUserUnit(ConfigurationUnit unit)
         {
-            if ((unit.Class == null) || !Connect())
+            if (!Connect())
+                return;
+            
+            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+        }
+
+        public override void DeleteUserUnit(ConfigurationUnit unit)
+        {
+            if (!Connect())
                 return;
 
-            lock (_connection)
+            try
             {
-                using(var cmd = _connection.CreateCommand())
+                lock (_connection)
                 {
+                    using var cmd = _connection.CreateCommand();
                     cmd.CommandText = $"DELETE FROM {_tableName} WHERE ParentId=@pid";
                     cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
                     cmd.ExecuteNonQuery();
                 }
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"NamespaceProviderSqlServer: DeleteUserUnit: {ex.Message}");
             }
         }
 
@@ -282,6 +302,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
+            Trace.TraceError($"NamespaceProviderSqlServer: GetSelectionValues: NOT IMPLEMENTED");
             throw new NotImplementedException();
         }
 

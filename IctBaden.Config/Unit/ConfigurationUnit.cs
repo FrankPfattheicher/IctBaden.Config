@@ -37,9 +37,9 @@ namespace IctBaden.Config.Unit
             get
             {
                 var unit = Parent;
-                while ((unit != null) && !unit.IsUserUnit)
+                while (unit is {IsUserUnit: false})
                     unit = unit.Parent;
-                return ((unit != null) && unit.IsUserUnit) ? unit.Id : null;
+                return (unit is {IsUserUnit: true}) ? unit.Id : null;
             }
         }
         [XmlIgnore][JsonIgnore]
@@ -173,7 +173,7 @@ namespace IctBaden.Config.Unit
                 return new List<ConfigurationUnit>();
 
             var ids = idList.Split(';');
-            return from id in ids let unit = baseUnit.GetUnitById(id) where (unit != null) && !unit.IsEmpty select unit;
+            return from id in ids let unit = baseUnit.GetUnitById(id) where unit is {IsEmpty: false} select unit;
         }
 
         public static string GetUnitListIdList(IEnumerable<ConfigurationUnit> units)
@@ -303,6 +303,7 @@ namespace IctBaden.Config.Unit
             {
                 return false;
             }
+            Session.RemoveUserUnit(userChild);
             Changed?.Invoke(this);
             return true;
         }
@@ -361,6 +362,12 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public bool IsSelected { get; set; }
 
+        public bool IsHierarchicalChildOf(ConfigurationUnit unit)
+        {
+            var childUnits = unit._children.Where(u => u.IsUserUnit).ToArray();
+            return childUnits.Contains(this) || 
+                   childUnits.Any(IsHierarchicalChildOf);
+        }
 
         public virtual ConfigurationSession Session => Parent?.Session;
 
@@ -461,14 +468,27 @@ namespace IctBaden.Config.Unit
             newUnit.DisplayName = displayName;
             return newUnit;
         }
+        
+        public bool MoveToFolder(ConfigurationUnit folder)
+        {
+            if (!folder.IsFolder ||
+                folder.IsHierarchicalChildOf(this))return false;
+            
+            Parent.RemoveUserChild(this);
+            folder.AddUserChild(this);
+            return true;
+        }
+        
 
         [XmlIgnore][JsonIgnore]
         public bool CanCreateFolder => (_selection == SelectionType.ParentHierarchical) && !IsSchemaItem;
 
-        public ConfigurationUnit CreateFolder(string displayName)
+        public ConfigurationUnit CreateFolder(string displayName) => CreateFolder(Session.GetNewUserId(this), displayName);
+
+        public ConfigurationUnit CreateFolder(string id, string displayName)
         {
             var newFolder = Session.Folder.Clone(displayName, false);
-            newFolder.SetUserId(Session.GetNewUserId(this));
+            newFolder.SetUserId(id);
             newFolder.Description = Session.Folder.DisplayName;
             AddUserChild(newFolder);
             return newFolder;
@@ -481,7 +501,7 @@ namespace IctBaden.Config.Unit
         {
             return CreateItem(Session.GetNewUserId(this), type, displayName);
         }
-        private ConfigurationUnit CreateItem(string id, ConfigurationUnit type, string displayName)
+        public ConfigurationUnit CreateItem(string id, ConfigurationUnit type, string displayName)
         {
             var newItem = type.Clone("~" + displayName, true);
             newItem.SetUserId(id);
@@ -552,13 +572,13 @@ namespace IctBaden.Config.Unit
 
         public bool Delete()
         {
-            foreach (var child in Children.ToArray())
+            foreach (var child in Children.Where(c => c.IsUserUnit).ToArray())
             {
                 child.Delete();
             }
             Debug.Assert(Parent != null);
             Parent.RemoveUserChild(this);
-            Session.RemoveUserUnit(this);
+            Session.DeleteUserUnit(this);
             return true;
         }
 

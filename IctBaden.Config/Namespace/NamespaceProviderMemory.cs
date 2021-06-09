@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using IctBaden.Config.Unit;
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -128,6 +129,15 @@ namespace IctBaden.Config.Namespace
         }
 
         public override void RemoveUserUnit(ConfigurationUnit unit)
+        {
+            if (!_data.ContainsKey(unit.Parent.FullId))
+                return;
+            var parentUnit = _data[unit.Parent.FullId];
+            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+            parentUnit["Children"] = ConfigurationUnit.GetUnitListIdList(newChildren);
+        }
+
+        public override void DeleteUserUnit(ConfigurationUnit unit)
         {
             if (!_data.ContainsKey(unit.Parent.FullId))
                 return;

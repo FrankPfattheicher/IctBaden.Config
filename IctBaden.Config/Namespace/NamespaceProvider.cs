@@ -23,6 +23,13 @@ namespace IctBaden.Config.Namespace
         public abstract void AddUserUnit(ConfigurationUnit unit);
         public abstract void RemoveUserUnit(ConfigurationUnit unit);
 
+        /// <summary>
+        /// Finally delete item data in repository
+        /// </summary>
+        /// <param name="unit"></param>
+        public abstract void DeleteUserUnit(ConfigurationUnit unit);
+        
+
         public virtual List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
             return new List<SelectionValue>();
