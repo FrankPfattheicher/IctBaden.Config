@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
+using Microsoft.Extensions.Logging;
+// ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace IctBaden.Config.Namespace
 {
@@ -16,6 +17,7 @@ namespace IctBaden.Config.Namespace
         private readonly string _tableName = "CfgData";
         private bool _tableExists;
 
+        private readonly ILogger _logger;
         private readonly string _connectionString;
         private readonly SqlConnection _connection;
         private string _lastError;
@@ -32,8 +34,9 @@ namespace IctBaden.Config.Namespace
                 )
              WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
         
-        public NamespaceProviderSqlServer(string connectionString)
+        public NamespaceProviderSqlServer(ILogger logger, string connectionString)
         {
+            _logger = logger;
             _connectionString = connectionString;
             _connection = new SqlConnection(connectionString);
         }
@@ -72,7 +75,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"NamespaceProviderSqlServer: Connect FAILED: {ex.Message}");
+                _logger?.LogError($"NamespaceProviderSqlServer: Connect FAILED: {ex.Message}");
                 _lastError = ex.Message;
             }
 
@@ -122,7 +125,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"NamespaceProviderSqlServer: Create DB: {ex.Message}");
+                _logger?.LogError($"NamespaceProviderSqlServer: Create DB: {ex.Message}");
             }
         }
 
@@ -149,7 +152,7 @@ namespace IctBaden.Config.Namespace
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError($"NamespaceProviderSqlServer: GetValue: {ex.Message}");
+                    _logger?.LogError($"NamespaceProviderSqlServer: GetValue: {ex.Message}");
                 }
                 finally
                 {
@@ -244,7 +247,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"NamespaceProviderSqlServer: SetValue: {ex.Message}");
+                _logger?.LogError($"NamespaceProviderSqlServer: SetValue: {ex.Message}");
             }
         }
 
@@ -291,7 +294,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"NamespaceProviderSqlServer: DeleteUserUnit: {ex.Message}");
+                _logger?.LogError($"NamespaceProviderSqlServer: DeleteUserUnit: {ex.Message}");
             }
         }
 
@@ -302,7 +305,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
-            Trace.TraceError($"NamespaceProviderSqlServer: GetSelectionValues: NOT IMPLEMENTED");
+            _logger?.LogCritical($"NamespaceProviderSqlServer: GetSelectionValues: NOT IMPLEMENTED");
             throw new NotImplementedException();
         }
 

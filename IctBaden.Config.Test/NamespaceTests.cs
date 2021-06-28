@@ -10,14 +10,14 @@ namespace IctBaden.Config.Test
         [Fact]
         public void NoSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("");
+            var provider = NamespaceProviderFactory.Create(null, "");
             Assert.Null(provider);
         }
 
         [Fact]
         public void InvalidSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("file:");
+            var provider = NamespaceProviderFactory.Create(null, "file:");
             Assert.Null(provider);
         }
 
@@ -27,7 +27,7 @@ namespace IctBaden.Config.Test
             var caught = false;
             try
             {
-                var provider = NamespaceProviderFactory.Create("nothing://spec");
+                var provider = NamespaceProviderFactory.Create(null, "nothing://spec");
                 Assert.Null(provider);
                 Assert.True(false, "Missing ArgumentException");
             }
@@ -42,7 +42,7 @@ namespace IctBaden.Config.Test
         [Fact]
         public void SqlServerSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("sql://Data Source=localhost\\SQLEXPRESS;Integrated Security=SSPI;");
+            var provider = NamespaceProviderFactory.Create(null, "sql://Data Source=localhost\\SQLEXPRESS;Integrated Security=SSPI;");
             Assert.NotNull(provider);
             Assert.Equal(typeof(NamespaceProviderSqlServer), provider.GetType());
         }
@@ -50,7 +50,7 @@ namespace IctBaden.Config.Test
         [Fact]
         public void MongoDbSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("mongo://mongodb:27017");
+            var provider = NamespaceProviderFactory.Create(null, "mongo://mongodb:27017");
             Assert.NotNull(provider);
             Assert.Equal(typeof(NamespaceProviderMongoDb), provider.GetType());
         }
@@ -58,7 +58,7 @@ namespace IctBaden.Config.Test
         [Fact]
         public void ProfileSpecification()
         {
-            var provider = NamespaceProviderFactory.Create("file://Test.ini");
+            var provider = NamespaceProviderFactory.Create(null, "file://Test.ini");
             Assert.NotNull(provider);
             Assert.Equal(typeof(NamespaceProviderProfile), provider.GetType());
         }
@@ -66,7 +66,7 @@ namespace IctBaden.Config.Test
         [Fact]
         public void MemorySpecification()
         {
-            var provider = NamespaceProviderFactory.Create("memory://");
+            var provider = NamespaceProviderFactory.Create(null, "memory://");
             Assert.NotNull(provider);
             Assert.Equal(typeof(NamespaceProviderMemory), provider.GetType());
         }

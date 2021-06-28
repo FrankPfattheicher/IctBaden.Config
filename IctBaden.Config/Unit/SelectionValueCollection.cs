@@ -6,10 +6,15 @@ namespace IctBaden.Config.Unit
 {
     public class SelectionValueCollection : List<SelectionValue>
     {
-        public SelectionValue this[string value]
+        //TODO: aggregate instead of derivate
+        private readonly List<SelectionValue> _values;
+
+        public SelectionValueCollection()
         {
-            get { return this.FirstOrDefault(v => v.Value == value); }
+            _values = this;
         }
+
+        public SelectionValue this[string value] => _values.FirstOrDefault(v => v.Value == value);
 
         public static explicit operator SelectionValueCollection(string selValStr)
         {
@@ -22,6 +27,8 @@ namespace IctBaden.Config.Unit
             return coll;
         }
 
+        public new int Count => _values.Count;
+
         public static explicit operator string(SelectionValueCollection selValCol)
         {
             return selValCol.ToString();
@@ -31,7 +38,7 @@ namespace IctBaden.Config.Unit
         {
             var text = new List<string>();
 
-            foreach (var selectionValue in this)
+            foreach (var selectionValue in _values)
             {
                 text.Add(selectionValue.Value);
                 text.Add(selectionValue.DisplayText);
@@ -39,5 +46,20 @@ namespace IctBaden.Config.Unit
 
             return string.Join(";", text.ToArray());
         }
+
+        internal new void Add(SelectionValue selectionValue)
+        {
+            _values.Add(selectionValue);
+        }
+
+        internal new void AddRange(IEnumerable<SelectionValue> selectionValues)
+        {
+            foreach (var selectionValue in selectionValues)
+            {
+                if(_values.Any(sv => sv.Value == selectionValue.Value)) continue;
+                Add(selectionValue);
+            }
+        }
+        
     }
 }

@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Unit;
+using IctBaden.Config.ValueLists;
+using Microsoft.Extensions.Logging;
+
 // ReSharper disable StringLiteralTypo
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -15,7 +18,9 @@ namespace IctBaden.Config.Session
 {
     public class ConfigurationSession
     {
-        private Dictionary<string, NamespaceProvider> _namespaceProviders;
+        private ILogger _logger;
+        private readonly Dictionary<string, NamespaceProvider> _namespaceProviders;
+        private readonly Dictionary<string, IValueListProvider> _valueListProviders;
         public ConfigurationSessionUnit UnitTypes { get; private set; }
         public ConfigurationSessionUnit Namespace { get; private set; }
         public string CurrentUser { get; private set; }
@@ -23,6 +28,13 @@ namespace IctBaden.Config.Session
 
         private ConfigurationUnit _folder;
 
+        /// <summary>
+        /// This is the folder unit used to group
+        /// user items into hierarchical folders.
+        /// If there is a unit in the current namespace
+        /// with Id="Folder", that is used.
+        /// Otherwise a default unit is returned. 
+        /// </summary>
         public ConfigurationUnit Folder
         {
             get
@@ -54,9 +66,15 @@ namespace IctBaden.Config.Session
         [Obsolete("Use Changed event instead")]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ConfigurationSession()
+        public ConfigurationSession() : this(null) // no logging
         {
+        }
+            
+        public ConfigurationSession(ILogger logger)
+        {
+            _logger = logger;
             _namespaceProviders = new Dictionary<string, NamespaceProvider>();
+            _valueListProviders = new Dictionary<string, IValueListProvider>();
             UnitTypes = new ConfigurationSessionUnit(this);
             Namespace = new ConfigurationSessionUnit(this);
             CurrentUserLevel = 99;
@@ -64,12 +82,22 @@ namespace IctBaden.Config.Session
 
         public ConfigurationSession Clone()
         {
-            return new ConfigurationSession
+            var clone = new ConfigurationSession
             {
-                _namespaceProviders = _namespaceProviders,
-                UnitTypes = UnitTypes,
-                Namespace = Namespace
+                _logger = _logger,
+                UnitTypes = UnitTypes, 
+                Namespace = Namespace,
+                CurrentUserLevel = CurrentUserLevel
             };
+            foreach (var (key, value) in _namespaceProviders)
+            {
+                clone._namespaceProviders.Add(key, value);
+            }
+            foreach (var (key, value) in _valueListProviders)
+            {
+                clone._valueListProviders.Add(key, value);
+            }
+            return clone;
         }
 
         
@@ -115,6 +143,18 @@ namespace IctBaden.Config.Session
             namespaceProvider.Waiting += isWaiting => Waiting(isWaiting);
         }
 
+        public void RegisterValueListProvider(string name, IValueListProvider valueListProvider)
+        {
+            if (_valueListProviders.ContainsKey(name))
+            {
+                _valueListProviders[name] = valueListProvider;
+            }
+            else
+            {
+                _valueListProviders.Add(name, valueListProvider);
+            }
+        }
+        
         // ReSharper disable once UnusedParameter.Global
         public bool Login(string user, string password)
         {
@@ -203,6 +243,12 @@ namespace IctBaden.Config.Session
 
         public List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
+            var source = unit.ValueSourceId;
+            if (_valueListProviders.ContainsKey(source))
+            {
+                return _valueListProviders[source].GetSelectionValues();
+            }
+            
             var provider = GetNamespaceProvider(unit.NamespaceProvider);
             return (provider == null) ? new List<SelectionValue>() : provider.GetSelectionValues(unit);
         }

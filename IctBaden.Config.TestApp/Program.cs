@@ -29,7 +29,7 @@ namespace IctBaden.Config.TestApp
             var schema = jsonSerializer.Load(new StringReader(json));
             
             //var provider = NamespaceProviderFactory.Create("mongo://mongodb:27017");
-            var provider = NamespaceProviderFactory.Create("file://C:\\Temp\\Config.cfg");
+            var provider = NamespaceProviderFactory.Create(null, "file://C:\\Temp\\Config.cfg");
             session.Namespace.AddChild(schema);
             session.RegisterNamespaceProvider("test", provider);
             

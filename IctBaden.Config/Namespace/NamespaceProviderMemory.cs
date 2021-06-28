@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IctBaden.Config.Unit;
+using Microsoft.Extensions.Logging;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
@@ -10,14 +12,17 @@ namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderMemory : NamespaceProvider
     {
+        // ReSharper disable once NotAccessedField.Local
+        private readonly ILogger _logger;
         public string Name { get; private set; }
 
         //                          section            key     value
         //                          unit.Parent.FullId unit.Id
         private readonly Dictionary<string, Dictionary<string, object>> _data;
 
-        public NamespaceProviderMemory(string specification)
+        public NamespaceProviderMemory(ILogger logger, string specification)
         {
+            _logger = logger;
             Name = specification;
             _data = new Dictionary<string, Dictionary<string, object>>();
         }

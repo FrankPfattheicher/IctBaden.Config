@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Linq;
 using System.Xml.Serialization;
-using System.ComponentModel;
 using IctBaden.Config.Session;
-using IctBaden.Framework.AppUtils;
 using IctBaden.Framework.PropertyProvider;
 using IctBaden.Framework.Types;
 using Newtonsoft.Json;
@@ -157,6 +155,13 @@ namespace IctBaden.Config.Unit
         /// </summary>
         [XmlAttribute]
         public string ValueSourceClass { get; set; }
+        
+        /// <summary>
+        /// Id of value source registered in session 
+        /// </summary>
+        [XmlAttribute]
+        public string ValueSourceId { get; set; }
+        
         [XmlAttribute]
         public string ValidationRule { get; set; }
         [XmlAttribute, DefaultValue(0)]
@@ -447,6 +452,7 @@ namespace IctBaden.Config.Unit
             destination.ValueList = source.ValueList;
             destination.ValueSourceUnitIds = source.ValueSourceUnitIds;
             destination.ValueSourceClass = source.ValueSourceClass;
+            destination.ValueSourceId = source.ValueSourceId;
             destination.ValidationRule = source.ValidationRule;
             destination.UserLevel = source.UserLevel;
 
@@ -776,35 +782,18 @@ namespace IctBaden.Config.Unit
                     specialList.Add(new SelectionValue { DisplayText = DefaultValueDisplayText, Value = null });
                 }
 
-                switch (_selection)
+                if(_selection == SelectionType.ListOnly)
                 {
-                    case SelectionType.AvailableComPorts:
-                        if(SystemInfo.Platform == Platform.Windows)
-                        {
-                            specialList.AddRange(SerialPort.GetPortNames()
-                                .Select(port => new SelectionValue {DisplayText = port, Value = port}));
-                        }
-                        else if (SystemInfo.Platform == Platform.Linux)
-                        {
-                            //TODO: add available serial ports
-                        }
-                        break;
-                    
-                    case SelectionType.AvailableTtsEngines:
-                        //TODO: IctBaden.Speech
-                        //    var speechSynthesizer = new SpeechSynthesizer();
-                        //    specialList.AddRange(from voice in speechSynthesizer.GetInstalledVoices()
-                        //                         order by voice.VoiceInfo.Name
-                        //                         select new SelectionValue { DisplayText = voice.VoiceInfo.Name + " (" + voice.VoiceInfo.Culture + ")", Value = voice.VoiceInfo.Name });
-                        break;
-                    case SelectionType.ListOnly:
-                        if (!string.IsNullOrEmpty(ValueSourceUnitIds) && (Session != null))
-                        {
-                            specialList.AddRange(Session.GetSelectionValues(this));
-                        }
-                        break;
+                    if (!string.IsNullOrEmpty(ValueSourceUnitIds) && (Session != null))
+                    {
+                        specialList.AddRange(Session.GetSelectionValues(this));
+                    }
+                    if (!string.IsNullOrEmpty(ValueSourceId) && (Session != null))
+                    {
+                        specialList.AddRange(Session.GetSelectionValues(this));
+                    }
                 }
-
+                
                 return specialList;
             }
         }

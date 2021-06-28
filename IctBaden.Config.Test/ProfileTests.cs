@@ -37,7 +37,7 @@ namespace IctBaden.Config.Test
             Assert.NotNull(session);
             session.Namespace.AddChild(root);
 
-            var ini = new NamespaceProviderProfile(ProfileName);
+            var ini = new NamespaceProviderProfile(null, ProfileName);
             session.RegisterNamespaceProvider("usr", ini);
         }
 
@@ -69,7 +69,7 @@ namespace IctBaden.Config.Test
 
             Assert.True(File.Exists(ProfileName), "Test data file not deployed");
 
-            var ini = new NamespaceProviderProfile(ProfileName);
+            var ini = new NamespaceProviderProfile(null, ProfileName);
             session.RegisterNamespaceProvider("persistence", ini);
             return session;
         }
@@ -82,7 +82,7 @@ namespace IctBaden.Config.Test
 
             Assert.True(File.Exists(ProfileName), "Test data file not deployed");
 
-            var ini = new NamespaceProviderProfile(ProfileName);
+            var ini = new NamespaceProviderProfile(null, ProfileName);
             session.RegisterNamespaceProvider("usr", ini);
             return session;
         }
@@ -99,7 +99,7 @@ namespace IctBaden.Config.Test
         public void SelectionValuesBase()
         {
             var session = CreateDefaultSessionSettings();
-            session.RegisterNamespaceProvider("test", new NamespaceProviderMemory(""));
+            session.RegisterNamespaceProvider("test", new NamespaceProviderMemory(null, ""));
             var unit = session.Namespace.GetUnitById("LogCycle");
             var selValues = unit.ValueList;
             Assert.NotNull(selValues);

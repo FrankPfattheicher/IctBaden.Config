@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 
 namespace IctBaden.Config.Namespace
 {
@@ -6,7 +7,7 @@ namespace IctBaden.Config.Namespace
     {
         //TODO: reflect classes
 
-        public static NamespaceProvider Create(string namespaceUri)
+        public static NamespaceProvider Create(ILogger logger, string namespaceUri)
         {
             var parts = namespaceUri.Split(new[] { "://" }, StringSplitOptions.None);
             if (parts.Length != 2)
@@ -18,13 +19,13 @@ namespace IctBaden.Config.Namespace
             switch (scheme)
             {
                 case "sql":
-                    return new NamespaceProviderSqlServer(specification);
+                    return new NamespaceProviderSqlServer(logger, specification);
                 case "mongo":
-                    return new NamespaceProviderMongoDb(specification);
+                    return new NamespaceProviderMongoDb(logger, specification);
                 case "file":
-                    return new NamespaceProviderProfile(specification);
+                    return new NamespaceProviderProfile(logger, specification);
                 case "memory":
-                    return new NamespaceProviderMemory(specification);
+                    return new NamespaceProviderMemory(logger, specification);
             }
             throw new ArgumentException("Unknown NamespaceProvider scheme: " + scheme);
         }

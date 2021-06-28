@@ -4,15 +4,19 @@ using System.IO;
 using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.IniFile;
+using Microsoft.Extensions.Logging;
+// ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderProfile : NamespaceProvider
     {
+        private readonly ILogger _logger;
         private readonly Profile _profile;
 
-        public NamespaceProviderProfile(string profileName)
+        public NamespaceProviderProfile(ILogger logger, string profileName)
         {
+            _logger = logger;
             _profile = new Profile(profileName);
         }
 
@@ -20,6 +24,7 @@ namespace IctBaden.Config.Namespace
         {
             if (File.Exists(_profile.FileName)) return true;
             
+            _logger.LogWarning($"NamespaceProviderProfile: Profile does not exist ({_profile.FileName}) - creating empty");
             File.WriteAllText(_profile.FileName, "");
             return _profile.Load();
         }

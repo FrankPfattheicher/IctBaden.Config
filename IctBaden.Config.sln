@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8B58490C-F
 		Docs\Config6.docx = Docs\Config6.docx
 		Docs\IctBaden.Config.docx = Docs\IctBaden.Config.docx
 		Docs\IctBaden.Config.vsd = Docs\IctBaden.Config.vsd
+		README.md = README.md
+		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IctBaden.Config.Test", "IctBaden.Config.Test\IctBaden.Config.Test.csproj", "{70255E64-8918-4D6B-8E7A-D9EFD6B3E9A4}"

@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using static System.Web.HttpUtility;
+// ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace IctBaden.Config.Namespace
 {
     public class NamespaceProviderMongoDb : NamespaceProvider
     {
+        private readonly ILogger _logger;
         private readonly string _dbName = "Configuration";
         private readonly string _collectionName = "CfgData";
 
@@ -23,8 +26,9 @@ namespace IctBaden.Config.Namespace
 
         private string _lastError;
 
-        public NamespaceProviderMongoDb(string connectionString)
+        public NamespaceProviderMongoDb(ILogger logger, string connectionString)
         {
+            _logger = logger;
             _connectionString = "mongodb://" + connectionString;
             _client = new MongoClient(_connectionString);
 
@@ -65,6 +69,7 @@ namespace IctBaden.Config.Namespace
             catch (Exception ex)
             {
                 _lastError = ex.Message;
+                _logger.LogError("NamespaceProviderMongoDb: " + ex.Message);
                 SignalWaiting(false);
                 return false;
             }
@@ -202,6 +207,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
+            _logger.LogCritical("NamespaceProviderMongoDb: GetSelectionValues not implemented");
             throw new NotImplementedException();
         }
     }
