@@ -24,7 +24,7 @@ namespace IctBaden.Config.Namespace
         {
             if (File.Exists(_profile.FileName)) return true;
             
-            _logger.LogWarning($"NamespaceProviderProfile: Profile does not exist ({_profile.FileName}) - creating empty");
+            _logger?.LogWarning($"NamespaceProviderProfile: Profile does not exist ({_profile.FileName}) - creating empty");
             File.WriteAllText(_profile.FileName, "");
             return _profile.Load();
         }

@@ -69,7 +69,7 @@ namespace IctBaden.Config.Namespace
             catch (Exception ex)
             {
                 _lastError = ex.Message;
-                _logger.LogError("NamespaceProviderMongoDb: " + ex.Message);
+                _logger?.LogError("NamespaceProviderMongoDb: " + ex.Message);
                 SignalWaiting(false);
                 return false;
             }
@@ -207,7 +207,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
-            _logger.LogCritical("NamespaceProviderMongoDb: GetSelectionValues not implemented");
+            _logger?.LogCritical("NamespaceProviderMongoDb: GetSelectionValues not implemented");
             throw new NotImplementedException();
         }
     }
