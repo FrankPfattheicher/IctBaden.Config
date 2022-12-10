@@ -364,6 +364,8 @@ namespace IctBaden.Config.Unit
             set => _isExpanded = value;
         }
 
+        public bool InitiallyExpanded { get; set; }
+        
         [XmlIgnore][JsonIgnore]
         public bool IsSelected { get; set; }
 
