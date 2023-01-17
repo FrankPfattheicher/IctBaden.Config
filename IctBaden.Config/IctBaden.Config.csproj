@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Copyright>(C) 2010-2023 ICT Baden GmbH</Copyright>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageVersion>1.1.0</PackageVersion>
     <Title>Universal Configuration Framework</Title>
     <Authors>Frank Pfattheicher</Authors>
     <PackageLicenseUrl>https://github.com/FrankPfattheicher/IctBaden.Config/blob/master/LICENSE</PackageLicenseUrl>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -28,8 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.32" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.32" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.32" />
-    <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Portable.Xaml" Version="0.26.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />

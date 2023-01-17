@@ -89,13 +89,13 @@ namespace IctBaden.Config.Session
                 Namespace = Namespace,
                 CurrentUserLevel = CurrentUserLevel
             };
-            foreach (var (key, value) in _namespaceProviders)
+            foreach (var keyValue in _namespaceProviders)
             {
-                clone._namespaceProviders.Add(key, value);
+                clone._namespaceProviders.Add(keyValue.Key, keyValue.Value);
             }
-            foreach (var (key, value) in _valueListProviders)
+            foreach (var keyValue in _valueListProviders)
             {
-                clone._valueListProviders.Add(key, value);
+                clone._valueListProviders.Add(keyValue.Key, keyValue.Value);
             }
             return clone;
         }
