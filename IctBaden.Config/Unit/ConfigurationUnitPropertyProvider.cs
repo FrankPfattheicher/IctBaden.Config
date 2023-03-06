@@ -17,21 +17,25 @@ namespace IctBaden.Config.Unit
 
         #region IPropertyProvider Members
 
-        public List<T> GetAll<T>()
+        public List<T?> GetAll<T>()
         {
             return (from property in _unit.Children where property.IsProperty && (property.GetType() == typeof(T)) select property.GetValue<T>()).ToList();
         }
 
-        public T Get<T>(string key)
+        public T? Get<T>(string key)
         {
             var prop = _unit.GetUnitById(key);
-            return prop.GetValue<T>();
+            return !prop.IsEmpty 
+                ? prop.GetValue<T>() ?? default 
+                : default;
         }
 
-        public T Get<T>(string key, T defaultValue)
+        public T? Get<T>(string key, T defaultValue)
         {
             var prop = _unit.GetUnitById(key);
-            return prop.IsEmpty ? defaultValue : prop.GetValue(defaultValue);
+            return prop is { IsEmpty: true } 
+                ? defaultValue 
+                : prop.GetValue(defaultValue);
         }
 
         public void Set<T>(string key, T newValue)
@@ -52,7 +56,7 @@ namespace IctBaden.Config.Unit
 
         #endregion
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
         {
             throw new NotImplementedException();
         }

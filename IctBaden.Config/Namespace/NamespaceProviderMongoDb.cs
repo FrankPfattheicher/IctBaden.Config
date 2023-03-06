@@ -21,10 +21,10 @@ namespace IctBaden.Config.Namespace
 
         private readonly string _connectionString;
         private readonly MongoClient _client;
-        private IMongoDatabase _db;
-        private IMongoCollection<BsonDocument> _collection;
+        private IMongoDatabase? _db;
+        private IMongoCollection<BsonDocument>? _collection;
 
-        private string _lastError;
+        private string _lastError = "";
 
         public NamespaceProviderMongoDb(ILogger logger, string connectionString)
         {
@@ -69,7 +69,7 @@ namespace IctBaden.Config.Namespace
             catch (Exception ex)
             {
                 _lastError = ex.Message;
-                _logger?.LogError("NamespaceProviderMongoDb: " + ex.Message);
+                _logger.LogError("NamespaceProviderMongoDb: " + ex.Message);
                 SignalWaiting(false);
                 return false;
             }
@@ -100,20 +100,20 @@ namespace IctBaden.Config.Namespace
             var childIds = childIdList.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
             foreach (var childId in childIds)
             {
-                var childDisplayName = GetValue(childId + "/DisplayName");
+                var childDisplayName = GetValue(childId + "/DisplayName")!;
                 var childClass = GetValue(childId + "/Class");
                 if (string.IsNullOrEmpty(childClass))
                 {
                     // folder
                     var newFolder = unit.Clone(childDisplayName, false);
                     newFolder.SetUserId(childId);
-                    newFolder.Description = unit.Session.Folder.DisplayName;
+                    newFolder.Description = unit.Session?.Folder.DisplayName;
                     children.Add(newFolder);
                 }
                 else
                 {
-                    var type = unit.Session.Namespace.GetUnitById(childClass);
-                    if (!type.IsEmpty)
+                    var type = unit.Session?.Namespace.GetUnitById(childClass);
+                    if (type is { IsEmpty: false })
                     {
                         var newItem = type.Clone(childDisplayName, true);
                         newItem.SetUserId(childId);
@@ -128,20 +128,22 @@ namespace IctBaden.Config.Namespace
             return children;
         }
 
-        private string GetValue(string key)
+        private string? GetValue(string key)
         {
-            var document = _collection.FindSync(filter: new BsonDocument("_id", key)).FirstOrDefault();
+            var document = _collection
+                .FindSync(filter: new BsonDocument("_id", key))
+                .FirstOrDefault();
             return document != null
                 ? document["value"].ToString()
                 : null;
         }
 
-        public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)
+        public override T? GetValue<T>(ConfigurationUnit unit, T defaultValue) where T : default
         {
             if (!Connect())
                 return defaultValue;
 
-            var key = unit.Parent.FullId + "/" + unit.Id;
+            var key = unit.Parent?.FullId + "/" + unit.Id;
             var value = GetValue(key);
             return value != null
                 ? UniversalConverter.ConvertTo<T>(value)
@@ -153,12 +155,12 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            var key = unit.Parent.FullId + "/" + unit.Id;
+            var key = unit.Parent?.FullId + "/" + unit.Id;
             var document = newValue == null
                 ? new BsonDocument { {"_id", key} } 
                 : new BsonDocument { {"_id", key}, {"value", newValue.ToString()} };
 
-            _collection.ReplaceOne(
+            _collection?.ReplaceOne(
                 filter: new BsonDocument("_id", key),
                 options: new ReplaceOptions {IsUpsert = true},
                 replacement: document);
@@ -175,8 +177,12 @@ namespace IctBaden.Config.Namespace
                 itemClass.SetValue(unit.Class);
             }
 
-            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            if (unit.Parent != null)
+            {
+                var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+                containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            }
+
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
             itemDisplayName.SetValue(unit.DisplayName);
         }
@@ -186,9 +192,12 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return;
 
-            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+            if (unit.Parent != null)
+            {
+                var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+                var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+                containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+            }
         }
 
         public override void DeleteUserUnit(ConfigurationUnit unit)
@@ -197,7 +206,7 @@ namespace IctBaden.Config.Namespace
                 return;
 
             var deleteFilter = Builders<BsonDocument>.Filter.Regex("_id", unit.Id + ".*");
-            _collection.DeleteMany(deleteFilter);
+            _collection?.DeleteMany(deleteFilter);
         }
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
@@ -207,7 +216,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
-            _logger?.LogCritical("NamespaceProviderMongoDb: GetSelectionValues not implemented");
+            _logger.LogCritical("NamespaceProviderMongoDb: GetSelectionValues not implemented");
             throw new NotImplementedException();
         }
     }

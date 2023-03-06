@@ -8,22 +8,22 @@ namespace IctBaden.Config.Configuration
 {
     public class UnitConfigurationSection : IConfigurationSection
     {
-        private readonly ConfigurationUnit _unit;
+        private readonly ConfigurationUnit? _unit;
 
-        public UnitConfigurationSection(ConfigurationUnit cfgUnit)
+        public UnitConfigurationSection(ConfigurationUnit? cfgUnit)
         {
             _unit = cfgUnit;
         }
         
-        public IConfigurationSection GetSection(string key)
+        public IConfigurationSection? GetSection(string key)
         {
-            var child = _unit.GetUnitById(key);
+            var child = _unit?.GetUnitById(key);
             return child == null 
                 ? null 
                 : new UnitConfigurationSection(child);
         }
 
-        public IEnumerable<IConfigurationSection> GetChildren() => _unit.Children
+        public IEnumerable<IConfigurationSection>? GetChildren() => _unit?.Children
                 .Select(ch => new UnitConfigurationSection(ch));
 
         public IChangeToken GetReloadToken()
@@ -33,16 +33,16 @@ namespace IctBaden.Config.Configuration
 
         public string this[string key]
         {
-            get => _unit.GetPropertyValue<string>(key);
-            set => _unit.SetPropertyValue(key, value);
+            get => _unit?.GetPropertyValue<string>(key) ?? "";
+            set => _unit?.SetPropertyValue(key, value);
         }
 
-        public string Key => _unit.Id;
-        public string Path => _unit.FullId;
+        public string Key => _unit?.Id ?? "";
+        public string Path => _unit?.FullId ?? "";
         public string Value 
         { 
-            get =>_unit.GetValue<string>();
-            set => _unit.SetValue(value);
+            get =>_unit?.GetValue<string>() ?? "";
+            set => _unit?.SetValue(value);
         }
         
     }

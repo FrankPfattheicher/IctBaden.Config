@@ -18,9 +18,7 @@ namespace IctBaden.Config.Configuration
         public IConfigurationSection GetSection(string key)
         {
             var child = _unit.GetUnitById(key);
-            return child == null 
-                ? null 
-                : new UnitConfigurationSection(child);
+            return new UnitConfigurationSection(child);
         }
 
         public IEnumerable<IConfigurationSection> GetChildren() => _unit.Children
@@ -31,7 +29,7 @@ namespace IctBaden.Config.Configuration
             return new UnitReloadToken(_unit);
         }
 
-        public string this[string key]
+        public string? this[string key]
         {
             get => _unit.GetPropertyValue<string>(key);
             set => _unit.SetPropertyValue(key, value);

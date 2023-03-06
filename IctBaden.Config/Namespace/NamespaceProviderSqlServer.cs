@@ -76,7 +76,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                _logger?.LogError($"NamespaceProviderSqlServer: Connect FAILED: {ex.Message}");
+                _logger.LogError($"NamespaceProviderSqlServer: Connect FAILED: {ex.Message}");
                 _lastError = ex.Message;
             }
 
@@ -126,11 +126,11 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                _logger?.LogError($"NamespaceProviderSqlServer: Create DB: {ex.Message}");
+                _logger.LogError($"NamespaceProviderSqlServer: Create DB: {ex.Message}");
             }
         }
 
-        private string GetValue(string parentId, string unitId)
+        private string? GetValue(string parentId, string unitId)
         {
             lock (_connection)
             {
@@ -153,7 +153,7 @@ namespace IctBaden.Config.Namespace
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogError($"NamespaceProviderSqlServer: GetValue: {ex.Message}");
+                    _logger.LogError($"NamespaceProviderSqlServer: GetValue: {ex.Message}");
                 }
                 finally
                 {
@@ -173,7 +173,7 @@ namespace IctBaden.Config.Namespace
                 return children;
             }
             
-            var parentId = unit.Id ?? "";
+            var parentId = unit.Id;
             var childIdList = GetValue(parentId, "Children");
             if (string.IsNullOrEmpty(childIdList)) return children;
 
@@ -189,13 +189,13 @@ namespace IctBaden.Config.Namespace
                     // folder
                     var newFolder = unit.Clone(childDisplayName, false);
                     newFolder.SetUserId(childId);
-                    newFolder.Description = unit.Session.Folder.DisplayName;
+                    newFolder.Description = unit.Session?.Folder.DisplayName;
                     children.Add(newFolder);
                 }
                 else
                 {
-                    var type = unit.Session.Namespace.GetUnitById(childClass);
-                    if (!type.IsEmpty)
+                    var type = unit.Session?.Namespace.GetUnitById(childClass);
+                    if (type is { IsEmpty: false })
                     {
                         var newItem = type.Clone(childDisplayName, true);
                         newItem.SetUserId(childId);
@@ -210,12 +210,12 @@ namespace IctBaden.Config.Namespace
             return children;
         }
 
-        public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)
+        public override T? GetValue<T>(ConfigurationUnit unit, T defaultValue) where T : default
         {
             if (!Connect())
                 return defaultValue;
 
-            var value = GetValue(unit.Parent.Id ?? "", unit.Id);
+            var value = GetValue(unit.Parent?.Id ?? "", unit.Id);
             return value != null
                 ? UniversalConverter.ConvertTo<T>(value)
                 : defaultValue;
@@ -232,7 +232,7 @@ namespace IctBaden.Config.Namespace
                 {
                     using var cmd1 = _connection.CreateCommand();
                     cmd1.CommandText = $"UPDATE {_tableName} SET Value=@val WHERE ParentId=@pid AND UnitId=@uid";
-                    cmd1.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd1.Parameters.Add(new SqlParameter("@pid", unit.Parent?.Id));
                     cmd1.Parameters.Add(new SqlParameter("@uid", unit.Id));
                     cmd1.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
                     var result = cmd1.ExecuteNonQuery();
@@ -240,7 +240,7 @@ namespace IctBaden.Config.Namespace
                     if (result != 0) return;
                     using var cmd2 = _connection.CreateCommand();
                     cmd2.CommandText = $"INSERT INTO {_tableName} (ParentId, UnitId, Value) VALUES (@pid, @uid, @val)";
-                    cmd2.Parameters.Add(new SqlParameter("@pid", unit.Parent.Id));
+                    cmd2.Parameters.Add(new SqlParameter("@pid", unit.Parent?.Id));
                     cmd2.Parameters.Add(new SqlParameter("@uid", unit.Id));
                     cmd2.Parameters.Add(new SqlParameter("@val", $"{newValue}"));
                     cmd2.ExecuteNonQuery();
@@ -248,7 +248,7 @@ namespace IctBaden.Config.Namespace
             }
             catch (Exception ex)
             {
-                _logger?.LogError($"NamespaceProviderSqlServer: SetValue: {ex.Message}");
+                _logger.LogError($"NamespaceProviderSqlServer: SetValue: {ex.Message}");
             }
         }
 
@@ -262,8 +262,13 @@ namespace IctBaden.Config.Namespace
                 var itemClass = ConfigurationUnit.GetProperty(unit, "Class");
                 itemClass.SetValue(unit.Class);
             }
-            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+
+            if (unit.Parent != null)
+            {
+                var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+                containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            }
+
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
             itemDisplayName.SetValue(unit.DisplayName);
         }
@@ -271,6 +276,8 @@ namespace IctBaden.Config.Namespace
         public override void RemoveUserUnit(ConfigurationUnit unit)
         {
             if (!Connect())
+                return;
+            if (unit.Parent == null)
                 return;
             
             var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
@@ -289,13 +296,13 @@ namespace IctBaden.Config.Namespace
                 {
                     using var cmd = _connection.CreateCommand();
                     cmd.CommandText = $"DELETE FROM {_tableName} WHERE ParentId=@pid";
-                    cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent.Class != null) ? unit.Parent.Id : unit.Id));
+                    cmd.Parameters.Add(new SqlParameter("@pid", (unit.Parent?.Class != null) ? unit.Parent.Id : unit.Id));
                     cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                _logger?.LogError($"NamespaceProviderSqlServer: DeleteUserUnit: {ex.Message}");
+                _logger.LogError($"NamespaceProviderSqlServer: DeleteUserUnit: {ex.Message}");
             }
         }
 
@@ -306,7 +313,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return list;
 
-            _logger?.LogCritical($"NamespaceProviderSqlServer: GetSelectionValues: NOT IMPLEMENTED");
+            _logger.LogCritical($"NamespaceProviderSqlServer: GetSelectionValues: NOT IMPLEMENTED");
             throw new NotImplementedException();
         }
 

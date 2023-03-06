@@ -14,7 +14,8 @@ namespace IctBaden.Config.Unit
             _values = this;
         }
 
-        public SelectionValue this[string value] => _values.FirstOrDefault(v => v.Value == value);
+        public SelectionValue? this[string value] => 
+            _values.FirstOrDefault(v => v.Value == value);
 
         public static explicit operator SelectionValueCollection(string selValStr)
         {
@@ -40,8 +41,8 @@ namespace IctBaden.Config.Unit
 
             foreach (var selectionValue in _values)
             {
-                text.Add(selectionValue.Value);
-                text.Add(selectionValue.DisplayText);
+                if (selectionValue.Value != null) text.Add(selectionValue.Value);
+                if (selectionValue.DisplayText != null) text.Add(selectionValue.DisplayText);
             }
 
             return string.Join(";", text.ToArray());

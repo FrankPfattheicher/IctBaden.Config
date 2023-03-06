@@ -42,7 +42,7 @@ namespace IctBaden.Config.Schema
                     Parent = sectionUnit,
                     Id = key.Name,
                     DisplayName = key.Name,
-                    DataType = DetectTypeFromValue(key.StringValue)
+                    DataType = DetectTypeFromValue(key.StringValue ?? "")
                 }))
                 {
                     sectionUnit.AddChild(keyUnit);

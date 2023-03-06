@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Session;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace IctBaden.Config.Test
@@ -73,9 +73,9 @@ namespace IctBaden.Config.Test
             var fromXml = xmlSerializer.Load(new StringReader(_testSettingsXml));
             var fromJson = jsonSerializer.Load(new StringReader(_testSettingsJson));
 
-            var settings = new JsonSerializerSettings{ Formatting = Formatting.Indented };
-            var jsonFromXml = JsonConvert.SerializeObject(fromXml, settings);
-            var jsonFromJson = JsonConvert.SerializeObject(fromJson, settings);
+            var settings = new JsonSerializerOptions {  WriteIndented = true };
+            var jsonFromXml = JsonSerializer.Serialize(fromXml, settings);
+            var jsonFromJson = JsonSerializer.Serialize(fromJson, settings);
             Assert.Equal(jsonFromXml, jsonFromJson);
         }
 

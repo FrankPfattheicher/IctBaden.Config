@@ -7,7 +7,7 @@ namespace IctBaden.Config.Namespace
     {
         //TODO: reflect classes
 
-        public static NamespaceProvider Create(ILogger logger, string namespaceUri)
+        public static NamespaceProvider? Create(ILogger logger, string namespaceUri)
         {
             var parts = namespaceUri.Split(new[] { "://" }, StringSplitOptions.None);
             if (parts.Length != 2)

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 using IctBaden.Config.Session;
 using IctBaden.Framework.PropertyProvider;
 using IctBaden.Framework.Types;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Portable.Xaml.Markup;
 
 namespace IctBaden.Config.Unit
@@ -17,20 +16,19 @@ namespace IctBaden.Config.Unit
     [XmlRoot(Namespace = "clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config")]
     public class ConfigurationUnit
     {
-        public event Action<ConfigurationUnit> Changed;
+        public event Action<ConfigurationUnit> Changed = _ => {};
         
         // basic data
-        [XmlAttribute]
-        public string Id { get; set; }
+        [XmlAttribute] public string Id { get; set; } = "";
         
         /// <summary>
         /// Given a unit type id all properties
         /// for this unit are copied from the given unit
         /// </summary>
-        public string UnitTypeId { get; set; }
+        public string UnitTypeId { get; set; } = "";
 
         [XmlIgnore][JsonIgnore]
-        public string ContextId
+        public string? ContextId
         {
             get
             {
@@ -40,7 +38,9 @@ namespace IctBaden.Config.Unit
                 return (unit is {IsUserUnit: true}) ? unit.Id : null;
             }
         }
-        [XmlIgnore][JsonIgnore]
+
+        [XmlIgnore]
+        [JsonIgnore]
         public string FullId
         {
             get
@@ -50,34 +50,34 @@ namespace IctBaden.Config.Unit
                 return ContextId + "/" + Id;
             }
         }
-        
+
         /// should be case insensitive
         [XmlAttribute]
-        public string Class { get; set; }    
+        public string? Class { get; set; }    
 
         // description
         [XmlAttribute]
-        public string Category { get; set; }
+        public string? Category { get; set; }
         [XmlAttribute, DefaultValue(0)]
         public int SortOrder { get; set; }
-        [XmlAttribute]
-        public string DisplayName { get; set; }
+
+        [XmlAttribute] public string DisplayName { get; set; } = "";
 
         
-        private string _displayNameSingular;
+        private string _displayNameSingular = "";
         [XmlAttribute]
         public string DisplayNameSingular
         {
-            get => _displayNameSingular ?? DisplayName;
+            get => string.IsNullOrEmpty(_displayNameSingular) ? DisplayName : _displayNameSingular;
             set => _displayNameSingular = value;
         }
 
         [XmlAttribute]
-        public string DisplayImage { get; set; }
+        public string DisplayImage { get; set; } = "";
 
-        private string _description;
+        private string? _description;
         [XmlAttribute]
-        public string Description
+        public string? Description
         {
             get => _description;
             set => _description = value;
@@ -88,34 +88,34 @@ namespace IctBaden.Config.Unit
         /// </summary>
         [XmlElement("ConfigurationUnit.Description")]
         [JsonIgnore]
-        public string ConfigurationUnitDescription
+        public string? ConfigurationUnitDescription
         {
             get => null;
             set => _description = value;
         }
 
         [XmlAttribute]
-        public string ToolTip { get; set; }
+        public string? ToolTip { get; set; }
 
         // value
         [XmlAttribute]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public TypeCode DataType { get; set; }
         [XmlAttribute]
         // ReSharper disable once InconsistentNaming
-        public string DefaultValue { get; set; }
+        public string? DefaultValue { get; set; }
         [XmlAttribute]
         // ReSharper disable once InconsistentNaming
-        public string DefaultValueDisplayText { get; set; }
+        public string? DefaultValueDisplayText { get; set; }
         [XmlAttribute]
-        public string Unit { get; set; }
+        public string? Unit { get; set; }
         [XmlAttribute, DefaultValue(InputType.Optional)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public InputType Input { get; set; }
 
         private SelectionType _selection;
         [XmlAttribute, DefaultValue(SelectionType.Edit)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public SelectionType Selection
         {
             set => _selection = value;
@@ -147,38 +147,40 @@ namespace IctBaden.Config.Unit
         /// for referenced user units.
         /// </summary>
         [XmlAttribute]
-        public string ValueSourceUnitIds { get; set; }
+        public string? ValueSourceUnitIds { get; set; }
 
         /// <summary>
         /// Configuration unit class
         /// for referenced user units
         /// </summary>
         [XmlAttribute]
-        public string ValueSourceClass { get; set; }
+        public string? ValueSourceClass { get; set; }
         
         /// <summary>
         /// Id of value source registered in session 
         /// </summary>
         [XmlAttribute]
-        public string ValueSourceId { get; set; }
+        public string? ValueSourceId { get; set; }
         
         [XmlAttribute]
-        public string ValidationRule { get; set; }
+        public string? ValidationRule { get; set; }
         [XmlAttribute, DefaultValue(0)]
         public int UserLevel { get; set; }
 
         public IEnumerable<ConfigurationUnit> GetUnitList(string idList)
         {
-            return GetUnitList(Parent.BaseUnitForUserUnits, idList);
+            return GetUnitList(Parent?.BaseUnitForUserUnits, idList);
         }
 
-        public IEnumerable<ConfigurationUnit> GetUnitList(ConfigurationUnit baseUnit, string idList)
+        public IEnumerable<ConfigurationUnit> GetUnitList(ConfigurationUnit? baseUnit, string idList)
         {
-            if (string.IsNullOrEmpty(idList))
+            if (string.IsNullOrEmpty(idList) || baseUnit == null)
                 return new List<ConfigurationUnit>();
 
             var ids = idList.Split(';');
-            return from id in ids let unit = baseUnit.GetUnitById(id) where unit is {IsEmpty: false} select unit;
+            return ids.Select(id => new { id, unit = baseUnit.GetUnitById(id) })
+                .Where(t => t.unit is { IsEmpty: false })
+                .Select(t => t.unit);
         }
 
         public static string GetUnitListIdList(IEnumerable<ConfigurationUnit> units)
@@ -198,37 +200,37 @@ namespace IctBaden.Config.Unit
 
         // hierarchy
         [XmlAttribute("NamespaceProvider")]
-        public string NamespaceProviderInternal { get; set; }
+        public string? NamespaceProviderInternal { get; set; }
         [XmlIgnore][JsonIgnore]
-        public string NamespaceProvider
+        public string? NamespaceProvider
         {
             get => !string.IsNullOrEmpty(NamespaceProviderInternal) ? NamespaceProviderInternal : Parent?.NamespaceProvider;
             set => NamespaceProviderInternal = value;
         }
+        [XmlIgnore]
+        public ConfigurationUnit? Parent;
         [XmlIgnore][JsonIgnore]
-        public ConfigurationUnit Parent;
-        [XmlIgnore][JsonIgnore]
-        public ConfigurationUnit ParentClass
+        public ConfigurationUnit? ParentClass
         {
             get
             {
                 if (Parent == null)
                     return null;
-                return (Parent.Class != null) ? Parent : Parent.ParentClass;
+                return (Parent?.Class != null) ? Parent : Parent?.ParentClass;
             }
         }
         [XmlIgnore][JsonIgnore]
         public string BrowserName => (IsSchemaItem && !string.IsNullOrEmpty(Id)) ? Id : DisplayName;
 
         [XmlIgnore][JsonIgnore]
-        public ConfigurationUnit Template => Parent?.Children
+        public ConfigurationUnit? Template => Parent?.Children
                     .FirstOrDefault(t => t.IsTemplate && string.Compare(t.Id, Class, StringComparison.InvariantCultureIgnoreCase) == 0);
 
         [XmlIgnore][JsonIgnore]
         public bool HasTemplates => Children.Any(t => t.IsTemplate);
 
         [XmlIgnore][JsonIgnore]
-        public IEnumerable<ConfigurationUnit> Templates
+        public IEnumerable<ConfigurationUnit>? Templates
         {
             get
             {
@@ -298,8 +300,8 @@ namespace IctBaden.Config.Unit
         private void AddUserChild(ConfigurationUnit userChild)
         {
             AddChild(userChild);
-            Session.AddUserUnit(userChild);
-            Changed?.Invoke(this);
+            Session?.AddUserUnit(userChild);
+            Changed.Invoke(this);
         }
 
         private bool RemoveUserChild(ConfigurationUnit userChild)
@@ -308,8 +310,8 @@ namespace IctBaden.Config.Unit
             {
                 return false;
             }
-            Session.RemoveUserUnit(userChild);
-            Changed?.Invoke(this);
+            Session?.RemoveUserUnit(userChild);
+            Changed.Invoke(this);
             return true;
         }
 
@@ -329,7 +331,7 @@ namespace IctBaden.Config.Unit
         public bool IsRoot => Parent is ConfigurationSessionUnit;
 
         [XmlIgnore][JsonIgnore]
-        public bool IsParent => (_selection == SelectionType.ParentFlat) || (_selection == SelectionType.ParentHierarchical);
+        public bool IsParent => _selection is SelectionType.ParentFlat or SelectionType.ParentHierarchical;
 
         [XmlIgnore][JsonIgnore]
         public bool IsFolder => (Class == null) && IsParent && !IsTemplate;
@@ -376,7 +378,7 @@ namespace IctBaden.Config.Unit
                    childUnits.Any(IsHierarchicalChildOf);
         }
 
-        public virtual ConfigurationSession Session => Parent?.Session;
+        public virtual ConfigurationSession? Session => Parent?.Session;
 
         public ConfigurationUnit()
         {
@@ -403,14 +405,14 @@ namespace IctBaden.Config.Unit
                 idProp.SetValue(newName);
 
                 Id = newName;
-                Changed?.Invoke(this);
+                Changed.Invoke(this);
                 return;
             }
 
             DisplayName = newName;
             var cfgProp = GetProperty(this, "DisplayName");
             cfgProp.SetValue(newName);
-            Changed?.Invoke(this);
+            Changed.Invoke(this);
 
             if (Template == null)
                 return;
@@ -418,11 +420,11 @@ namespace IctBaden.Config.Unit
             var nameProp = Properties.FirstOrDefault(prop => prop.Id == Template.DisplayName);
             if (nameProp != null)
             {
-                Session.SetValue(nameProp, newName);
+                Session?.SetValue(nameProp, newName);
             }
         }
 
-        public ConfigurationUnit ChangeClass(ConfigurationUnit typeUnit)
+        public ConfigurationUnit? ChangeClass(ConfigurationUnit typeUnit)
         {
             var me = this;
             var mySettings = me.GetProperties();
@@ -430,9 +432,9 @@ namespace IctBaden.Config.Unit
             if (!Delete())
                 return null;
 
-            var newMe = Parent.CreateItem(me.Id, typeUnit, me.DisplayName);
-            newMe.SetProperties(mySettings);
-            Changed?.Invoke(this);
+            var newMe = Parent?.CreateItem(me.Id, typeUnit, me.DisplayName);
+            newMe?.SetProperties(mySettings);
+            Changed.Invoke(this);
             return newMe;
         }
 
@@ -482,7 +484,7 @@ namespace IctBaden.Config.Unit
             if (!folder.IsFolder ||
                 folder.IsHierarchicalChildOf(this))return false;
             
-            Parent.RemoveUserChild(this);
+            Parent?.RemoveUserChild(this);
             folder.AddUserChild(this);
             return true;
         }
@@ -491,13 +493,19 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public bool CanCreateFolder => (_selection == SelectionType.ParentHierarchical) && !IsSchemaItem;
 
-        public ConfigurationUnit CreateFolder(string displayName) => CreateFolder(Session.GetNewUserId(this), displayName);
-
-        public ConfigurationUnit CreateFolder(string id, string displayName)
+        public ConfigurationUnit? CreateFolder(string displayName)
         {
-            var newFolder = Session.Folder.Clone(displayName, false);
+            if (Session == null) return null; 
+            return CreateFolder(Session.GetNewUserId(this), displayName);
+        }
+
+        public ConfigurationUnit? CreateFolder(string id, string displayName)
+        {
+            var newFolder = Session?.Folder.Clone(displayName, false);
+            if (newFolder == null) return null;
+            
             newFolder.SetUserId(id);
-            newFolder.Description = Session.Folder.DisplayName;
+            newFolder.Description = Session?.Folder.DisplayName;
             AddUserChild(newFolder);
             return newFolder;
         }
@@ -505,8 +513,9 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public bool CanCreateItem => IsParent && !string.IsNullOrEmpty(NamespaceProvider);
 
-        public ConfigurationUnit CreateItem(ConfigurationUnit type, string displayName)
+        public ConfigurationUnit? CreateItem(ConfigurationUnit type, string displayName)
         {
+            if (Session == null) return null;
             return CreateItem(Session.GetNewUserId(this), type, displayName);
         }
         public ConfigurationUnit CreateItem(string id, ConfigurationUnit type, string displayName)
@@ -526,16 +535,16 @@ namespace IctBaden.Config.Unit
         [XmlIgnore][JsonIgnore]
         public bool CanDelete => IsUserUnit;
 
-        public T GetValue<T>()
+        public T? GetValue<T>()
         {
             return GetValue(UniversalConverter.ConvertTo<T>(DefaultValue));
         }
-        public T GetValue<T>(T defaultValue)
+        public T? GetValue<T>(T defaultValue)
         {
             if (Session == null) return defaultValue;
             
             var value = Session.GetValue(this, defaultValue);
-            return (T)Convert.ChangeType(value, typeof(T));
+            return UniversalConverter.ConvertTo<T>(value);
         }
 
         [XmlIgnore][JsonIgnore]
@@ -568,13 +577,13 @@ namespace IctBaden.Config.Unit
 
         public void SetValue<T>(T value)
         {
-            if ((Parent.Template == null) || (Id != Parent.Template.DisplayName))
+            if ((Parent?.Template == null) || (Id != Parent.Template.DisplayName))
             {
-                Session.SetValue(this, value);
+                Session?.SetValue(this, value);
             }
-            else
+            else if(value != null)
             {
-                Parent.Rename(value.ToString());
+                Parent?.Rename($"{value}");
             }
         }
 
@@ -586,7 +595,7 @@ namespace IctBaden.Config.Unit
             }
             Debug.Assert(Parent != null);
             Parent.RemoveUserChild(this);
-            Session.DeleteUserUnit(this);
+            Session?.DeleteUserUnit(this);
             return true;
         }
 
@@ -651,7 +660,7 @@ namespace IctBaden.Config.Unit
         public ConfigurationUnit GetNewUnitBase()
         {
             var newUnit = Children.FirstOrDefault(child => child.IsTemplate);
-            return (newUnit != null) ? this : Parent.GetNewUnitBase();
+            return (newUnit != null) ? this : Parent!.GetNewUnitBase();
         }
 
         [XmlIgnore][JsonIgnore]
@@ -661,13 +670,15 @@ namespace IctBaden.Config.Unit
             {
                 ConfigurationUnit GetNonTemplateParent(ConfigurationUnit source)
                 {
-                    while (source != null && source.IsTemplate)
+                    while (source is { IsTemplate: true })
                     {
-                        source = source.Parent;
+                        source = source.Parent!;
                     }
                     return source;
                 }
-                var sourceUnits = ValueSourceUnitIds?.Split(';') ?? new string[0];
+                var sourceUnits = ValueSourceUnitIds?.Split(';') ?? Array.Empty<string>();
+                if (Session == null) return new List<ConfigurationUnit>();
+                
                 var sources = sourceUnits
                     .Select(su => Session.Namespace.GetUnitById(su))
                     .Select(GetNonTemplateParent)
@@ -746,18 +757,20 @@ namespace IctBaden.Config.Unit
 
         public static ConfigurationUnit GetProperty(ConfigurationUnit item, string name)
         {
-            var property = item.Clone(null, false);
+            var property = item.Clone("", false);
             property.SetUserId(name);
             property.Parent = item;
             return property;
         }
 
-        public T GetPropertyValue<T>(string property)
+        public T? GetPropertyValue<T>(string property)
         {
             var prop = GetUnitById(property);
-            return (prop.IsEmpty) ? default : GetPropertyValue(property, UniversalConverter.ConvertTo<T>(prop.DefaultValue));
+            return (prop.IsEmpty) 
+                ? default 
+                : GetPropertyValue(property, UniversalConverter.ConvertTo<T>(prop.DefaultValue));
         }
-        public T GetPropertyValue<T>(string property, T defaultValue)
+        public T? GetPropertyValue<T>(string property, T defaultValue)
         {
             var prop = GetUnitById(property);
             return (prop.IsEmpty) ? defaultValue : prop.GetValue(defaultValue);
@@ -800,13 +813,13 @@ namespace IctBaden.Config.Unit
             }
         }
 
-        public List<string> GetNamespaceProviderList()
+        public List<string?> GetNamespaceProviderList()
         {
-            var list = new List<string>();
+            var list = new List<string?>();
             EnumNamespaceProviderList(ref list);
             return list;
         }
-        private void EnumNamespaceProviderList(ref List<string> list)
+        private void EnumNamespaceProviderList(ref List<string?> list)
         {
             if (!string.IsNullOrEmpty(NamespaceProviderInternal) && !list.Contains(NamespaceProviderInternal))
             {

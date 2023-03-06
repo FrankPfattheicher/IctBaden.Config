@@ -5,9 +5,9 @@ namespace IctBaden.Config.Unit
 {
     public class ConfigurationSessionUnit : ConfigurationUnit
     {
-        public override ConfigurationSession Session { get; }
+        public override ConfigurationSession? Session { get; }
 
-        public ConfigurationSessionUnit(ConfigurationSession session)
+        public ConfigurationSessionUnit(ConfigurationSession? session)
         {
             Session = session;
             DataType = TypeCode.Object;

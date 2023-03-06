@@ -5,13 +5,13 @@ namespace IctBaden.Config.Unit
     public class SelectionValue
     {
         [XmlAttribute]
-        public string Value { get; set; }
+        public string? Value { get; set; }
         [XmlAttribute]
-        public string DisplayText { get; set; }
+        public string? DisplayText { get; set; }
 
         public override string ToString()
         {
-            return DisplayText;
+            return DisplayText ?? "";
         }
     }
 }

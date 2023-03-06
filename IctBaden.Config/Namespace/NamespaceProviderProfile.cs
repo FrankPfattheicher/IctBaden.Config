@@ -24,7 +24,7 @@ namespace IctBaden.Config.Namespace
         {
             if (File.Exists(_profile.FileName)) return true;
             
-            _logger?.LogWarning($"NamespaceProviderProfile: Profile does not exist ({_profile.FileName}) - creating empty");
+            _logger.LogWarning($"NamespaceProviderProfile: Profile does not exist ({_profile.FileName}) - creating empty");
             File.WriteAllText(_profile.FileName, "");
             return _profile.Load();
         }
@@ -37,26 +37,28 @@ namespace IctBaden.Config.Namespace
         public override IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
         {
             //Children=2DFA8F569C574CB787C9ACE8587A7749;C6D9E7D346234B55B3179750C81E8989;12DF7A3A144446DFB472FC28C9742C3E
-            var childIds = _profile[unit.FullId].Get("Children", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var childIds = _profile[unit.FullId]
+                .Get("Children", string.Empty)!
+                .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             var children = new List<ConfigurationUnit>();
             foreach (var childId in childIds)
             {
                 var childSection = _profile[childId];
-                var childDisplayName = childSection.Get<string>("DisplayName");
-                var childClass = childSection.Get<string>("Class");
+                var childDisplayName = childSection.Get<string>("DisplayName") ?? "";
+                var childClass = childSection.Get<string>("Class") ?? "";
                 if (string.IsNullOrEmpty(childClass))
                 {
                     // folder
                     var newFolder = unit.Clone(childDisplayName, false);
                     newFolder.SetUserId(childId);
-                    newFolder.Description = unit.Session.Folder.DisplayName;
+                    newFolder.Description = unit.Session?.Folder.DisplayName;
                     children.Add(newFolder);
                 }
                 else
                 {
-                    var type = unit.Session.Namespace.GetUnitById(childClass);
-                    if (!type.IsEmpty)
+                    var type = unit.Session?.Namespace.GetUnitById(childClass);
+                    if (type is { IsEmpty: false })
                     {
                         var newItem = type.Clone(childDisplayName, true);
                         newItem.SetUserId(childId);
@@ -73,7 +75,7 @@ namespace IctBaden.Config.Namespace
 
         public override List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
-            var sourceUnits = unit.ValueSourceUnitIds
+            var sourceUnits = unit.ValueSourceUnitIds!
                 .Split(';');
             var sections = sourceUnits
                 .Select(su => _profile[su])
@@ -83,9 +85,9 @@ namespace IctBaden.Config.Namespace
                 .ToList();
         }
 
-        public override T GetValue<T>(ConfigurationUnit unit, T defaultValue)
+        public override T? GetValue<T>(ConfigurationUnit unit, T defaultValue) where T : default
         {
-            var section = _profile[unit.Parent.FullId];
+            var section = _profile[unit.Parent?.FullId ?? ""];
             if (section.IsUnnamedGlobalSection)
                 section = _profile[ProfileSection.UnnamedGlobalSectionName];
             return section.Get(unit.Id, defaultValue);
@@ -93,7 +95,7 @@ namespace IctBaden.Config.Namespace
 
         public override void SetValue<T>(ConfigurationUnit unit, T newValue)
         {
-            var section = _profile[unit.Parent.FullId];
+            var section = _profile[unit.Parent?.FullId ?? ""];
             if (section.IsUnnamedGlobalSection)
                 section = _profile[ProfileSection.UnnamedGlobalSectionName];
 
@@ -137,17 +139,24 @@ namespace IctBaden.Config.Namespace
                 itemClass.SetValue(unit.Class);
             }
 
-            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            if (unit.Parent != null)
+            {
+                var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+                containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(unit.Parent.Children));
+            }
+
             var itemDisplayName = ConfigurationUnit.GetProperty(unit, "DisplayName");
             itemDisplayName.SetValue(unit.DisplayName);
         }
 
         public override void RemoveUserUnit(ConfigurationUnit unit)
         {
-            var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
-            var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
-            containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+            if (unit.Parent != null)
+            {
+                var containerChildren = ConfigurationUnit.GetProperty(unit.Parent, "Children");
+                var newChildren = unit.Parent.Children.Where(c => c.Id != unit.Id);
+                containerChildren.SetValue(ConfigurationUnit.GetUnitListIdList(newChildren));
+            }
         }
 
         public override void DeleteUserUnit(ConfigurationUnit unit)

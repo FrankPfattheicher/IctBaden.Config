@@ -1,8 +1,8 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using IctBaden.Config.Session;
 using IctBaden.Config.Unit;
-using Newtonsoft.Json;
 
 namespace IctBaden.Config.Namespace
 {
@@ -20,7 +20,7 @@ namespace IctBaden.Config.Namespace
             try
             {
                 var json = reader.ReadToEnd();
-                root = JsonConvert.DeserializeObject<ConfigurationUnit>(json);
+                root = JsonSerializer.Deserialize<ConfigurationUnit>(json);
                 _session.ResolveUnitTypesAndParents(root);
             }
             catch (Exception ex)
@@ -33,13 +33,12 @@ namespace IctBaden.Config.Namespace
         // ReSharper disable once UnusedMember.Global
         public void Save(ConfigurationUnit rootUnit, TextWriter writer)
         {
-            var settings = new JsonSerializerSettings
+            var settings = new JsonSerializerOptions
             {
-                NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                Formatting = Formatting.Indented
+                WriteIndented = true,
+                IgnoreNullValues = true
             };
-            var json = JsonConvert.SerializeObject(rootUnit, settings);
+            var json = JsonSerializer.Serialize(rootUnit, settings);
             writer.Write(json);
         }
 

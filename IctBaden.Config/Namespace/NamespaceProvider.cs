@@ -17,7 +17,7 @@ namespace IctBaden.Config.Namespace
 
         public abstract IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit);
 
-        public abstract T GetValue<T>(ConfigurationUnit unit, T defaultValue);
+        public abstract T? GetValue<T>(ConfigurationUnit unit, T defaultValue);
         public abstract void SetValue<T>(ConfigurationUnit unit, T newValue);
 
         public abstract void AddUserUnit(ConfigurationUnit unit);
@@ -40,6 +40,6 @@ namespace IctBaden.Config.Namespace
             Waiting?.Invoke(isWaiting);
         }
 
-        public event Action<bool> Waiting;
+        public event Action<bool>? Waiting;
     }
 }

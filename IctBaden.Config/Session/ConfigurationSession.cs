@@ -18,7 +18,7 @@ namespace IctBaden.Config.Session
 {
     public class ConfigurationSession
     {
-        private ILogger _logger;
+        private ILogger? _logger;
         private readonly Dictionary<string, NamespaceProvider> _namespaceProviders;
         private readonly Dictionary<string, IValueListProvider> _valueListProviders;
         public ConfigurationSessionUnit UnitTypes { get; private set; }
@@ -26,7 +26,7 @@ namespace IctBaden.Config.Session
         public string CurrentUser { get; private set; }
         public int CurrentUserLevel { get; private set; }
 
-        private ConfigurationUnit _folder;
+        private ConfigurationUnit? _folder;
 
         /// <summary>
         /// This is the folder unit used to group
@@ -39,21 +39,23 @@ namespace IctBaden.Config.Session
         {
             get
             {
-                if (_folder != null) return _folder;
-
                 _folder = Namespace.GetUnitById("Folder");
-                if(_folder.IsEmpty)
+                if (_folder != null)
                 {
-                    _folder = new ConfigurationUnit
-                           {
-                               Id = "Folder",
-                               DisplayName = "Ordner",
-                               DisplayImage = "fa fa-folder",
-                               Description = "Ordner zur Organisation von Elementen",
-                               DataType = TypeCode.Object,
-                               Selection = SelectionType.ParentHierarchical
-                           };
+                    _folder.DataType = TypeCode.Object;
+                    _folder.Selection = SelectionType.ParentHierarchical;
+                    return _folder;
                 }
+
+                _folder = new ConfigurationUnit
+                       {
+                           Id = "Folder",
+                           DisplayName = "Ordner",
+                           DisplayImage = "fa fa-folder",
+                           Description = "Ordner zur Organisation von Elementen",
+                           DataType = TypeCode.Object,
+                           Selection = SelectionType.ParentHierarchical
+                       };
                 return _folder;
             }
         }
@@ -62,21 +64,22 @@ namespace IctBaden.Config.Session
         public event Action<bool> Waiting = _ => { };
         // ReSharper restore EventNeverInvoked
 
-        public event Action<ConfigurationUnit> Changed;
+        public event Action<ConfigurationUnit> Changed = _ => { };
         [Obsolete("Use Changed event instead")]
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged = (_, _) => { };
 
         public ConfigurationSession() : this(null) // no logging
         {
         }
             
-        public ConfigurationSession(ILogger logger)
+        public ConfigurationSession(ILogger? logger)
         {
             _logger = logger;
             _namespaceProviders = new Dictionary<string, NamespaceProvider>();
             _valueListProviders = new Dictionary<string, IValueListProvider>();
             UnitTypes = new ConfigurationSessionUnit(this);
             Namespace = new ConfigurationSessionUnit(this);
+            CurrentUser = ""; 
             CurrentUserLevel = 99;
         }
 
@@ -106,18 +109,21 @@ namespace IctBaden.Config.Session
             if (!string.IsNullOrEmpty(item.UnitTypeId))
             {
                 var unitType = UnitTypes.GetUnitById(item.UnitTypeId);
-                if (unitType != null)
+                if (!unitType.IsEmpty)
                 {
                     var typeItem = unitType.Clone(unitType.DisplayName, true);
                     typeItem.Id = item.Id;
                     typeItem.Parent = item.Parent;
                     if(item.Category != null) typeItem.Category = item.Category;
-                    if(item.DisplayName != null) typeItem.DisplayName = item.DisplayName;
+                    typeItem.DisplayName = item.DisplayName;
                     if(item.Description != null) typeItem.Description = item.Description;
 
-                    item.Parent.Children = item.Parent.Children
-                        .Select(c => c == item ? typeItem : c)
-                        .ToList();
+                    if (item.Parent != null)
+                    {
+                        item.Parent.Children = item.Parent.Children
+                            .Select(c => c == item ? typeItem : c)
+                            .ToList();
+                    }
                 }
             }
 
@@ -167,7 +173,7 @@ namespace IctBaden.Config.Session
             CurrentUserLevel = level;
         }
 
-        public NamespaceProvider GetNamespaceProvider(string namespaceProvider)
+        public NamespaceProvider? GetNamespaceProvider(string? namespaceProvider)
         {
             if ((namespaceProvider == null) || !_namespaceProviders.ContainsKey(namespaceProvider))
                 return null;
@@ -185,15 +191,15 @@ namespace IctBaden.Config.Session
 
         private void SignalConfigurationUnitChanged(ConfigurationUnit unit)
         {
-            Changed?.Invoke(unit);
+            Changed.Invoke(unit);
 #pragma warning disable 618
-            PropertyChanged?.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
+            PropertyChanged.Invoke(unit, new PropertyChangedEventArgs(unit.Id));
 #pragma warning restore 618
         }
 
-        public T GetValue<T>(ConfigurationUnit unit, T defaultValue)
+        public T? GetValue<T>(ConfigurationUnit unit, T defaultValue)
         {
-            var provider = GetNamespaceProvider(unit.Parent.NamespaceProvider);
+            var provider = GetNamespaceProvider(unit.Parent?.NamespaceProvider);
             if (provider == null)
                 return defaultValue;
 
@@ -203,7 +209,7 @@ namespace IctBaden.Config.Session
 
         public void SetValue<T>(ConfigurationUnit unit, T newValue)
         {
-            var provider = GetNamespaceProvider(unit.Parent.NamespaceProvider);
+            var provider = GetNamespaceProvider(unit.Parent?.NamespaceProvider);
             if (provider == null)
                 return;
 
@@ -243,7 +249,7 @@ namespace IctBaden.Config.Session
 
         public List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
-            var source = unit.ValueSourceId;
+            var source = unit.ValueSourceId!;
             if (_valueListProviders.ContainsKey(source))
             {
                 return _valueListProviders[source].GetSelectionValues();
