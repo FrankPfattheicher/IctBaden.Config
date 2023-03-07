@@ -1,4 +1,5 @@
 
+* 2.0.1	- 07.03.2023 JsonObjectToStringConverter used for DefaultValue
 * 2.0.0	- 07.03.2023 Moved to netcoreapp3.1, removed Newtonsoft.JSON, Publish Nuget action
 
 * 1.2.0	- 17.01.2023 Moved to netstandard2.0

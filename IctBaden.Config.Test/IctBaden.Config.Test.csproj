@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +39,8 @@
     </EmbeddedResource>
     <None Remove="ConfigTestUnits.json" />
     <EmbeddedResource Include="ConfigTestUnits.json" />
+    <None Remove="ConfigSettings.json" />
+    <EmbeddedResource Include="ConfigSettings.json" />
   </ItemGroup>
 
   <ItemGroup>

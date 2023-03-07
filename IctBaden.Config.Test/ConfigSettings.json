@@ -1,0 +1,217 @@
+{
+  "Selection": "None",
+  "NamespaceProviderInternal": "persistence",
+  "Children": [
+
+    {
+      "Id": "AppServers",
+      "DisplayName": "Schnittstellen",
+      "DisplayImage": "fas fa-link",
+      "Description": "Schnittstellen die das Programm zur Anbindung externer System anbieten kann.",
+      "DataType": "Object",
+      "Selection": "None",
+      "Children": [
+        {
+          "Id": "UserInterface",
+          "DisplayName": "Benutzer-Schnittstelle",
+          "DisplayImage": "far fa-window-maximize",
+          "Description": "Benutzer-Schnittstelle (Webseite) der Anwendung.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Public",
+              "DisplayName": "Extern erreichbar",
+              "Description": "Aktiviert die Erreichbarkeit der Benutzer-Schnittstelle aus dem Netzwerk. Wird diese Option deaktiviert, ist sie nur auf dem lokalen Rechner erreichbar.",
+              "DataType": "Boolean",
+              "Selection": "Boolean",
+              "DefaultValue": false
+            },
+            {
+              "Id": "IpPort",
+              "DisplayName": "IP-Port",
+              "Description": "Unter diesem IP-Port ist die Benutzer-Schnittstelle erreichbar. Mit der Angabe 0 (Null) wird automatisch ein freier Port gewählt.",
+              "DataType": "UInt16",
+              "DefaultValue": "20080"
+            },
+            {
+              "Id": "FontSize",
+              "DisplayName": "Schriftgröße",
+              "Description": "Standardgröße der Schrift die für die Benutzeroberfläche verwendet wird.",
+              "DataType": "UInt16",
+              "DefaultValue": "9"
+            }
+          ]
+        },
+
+        {
+          "Id": "PageApi",
+          "DisplayName": "Socket",
+          "DisplayImage": "fas fa-ethernet",
+          "Description": "TCP-Socket Schnittstelle zu informel PageControl/PageServer. Es werden die Formate PageControl-Kommando und XML unterstützt.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Enable",
+              "DisplayName": "Aktivieren",
+              "Description": "Aktiviert den Socket-Server.",
+              "DataType": "Boolean",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "Public",
+              "DisplayName": "Extern erreichbar",
+              "Description": "Aktiviert die Erreichbarkeit des Socket-Servers aus dem Netzwerk. Wird diese Option deaktiviert, ist sie nur auf dem lokalen Rechner erreichbar.",
+              "DataType": "Boolean",
+              "Selection": "Boolean",
+              "DefaultValue": false
+            },
+            {
+              "Id": "IpPort",
+              "DisplayName": "IP-Port",
+              "Description": "Unter diesem IP-Port ist der Server erreichbar.",
+              "DataType": "UInt16",
+              "DefaultValue": "20000"
+            }
+          ]
+        },
+
+        {
+          "Id": "RestApi",
+          "DisplayName": "REST-API",
+          "DisplayImage": "fas fa-code",
+          "Description": "Es wird eine REST-Schnittstelle zur Übertragung von Meldungen und zur Abfrage des Status angeboten.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Enable",
+              "DisplayName": "Aktivieren",
+              "Description": "Aktiviert den REST-API-Server.",
+              "DataType": "Boolean",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "Public",
+              "DisplayName": "Extern erreichbar",
+              "Description": "Aktiviert die Erreichbarkeit der REST-API aus dem Netzwerk. Wird diese Option deaktiviert, ist sie nur auf dem lokalen Rechner erreichbar.",
+              "DataType": "Boolean",
+              "Selection": "Boolean",
+              "DefaultValue": false
+            },
+            {
+              "Id": "IpPort",
+              "DisplayName": "IP-Port",
+              "Description": "Unter diesem IP-Port ist der Server erreichbar.",
+              "DataType": "UInt16",
+              "DefaultValue": "20100"
+            }
+          ]
+        },
+
+        {
+          "Id": "SmartServer",
+          "DisplayName": "Smart Server",
+          "DisplayImage": "fas fa-mobile-alt",
+          "Description": "Es wird ein Server zur Unterstützung von Smart-Clients gestartet.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Enable",
+              "DisplayName": "Aktivieren",
+              "Description": "Aktiviert den Smart-Server.",
+              "DataType": "Boolean",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "Public",
+              "DisplayName": "Extern erreichbar",
+              "Description": "Aktiviert die Erreichbarkeit des Smart-Servers aus dem Netzwerk. Wird diese Option deaktiviert, muss ein entsprechender Reverse-Proxy eingerichtet werden.",
+              "DataType": "Boolean",
+              "Selection": "Boolean",
+              "DefaultValue": false
+            },
+            {
+              "Id": "IpPort",
+              "DisplayName": "IP-Port",
+              "Description": "Unter diesem IP-Port ist der Server erreichbar.",
+              "DataType": "UInt16",
+              "DefaultValue": "20200"
+            }
+          ]
+        },
+
+        {
+          "Id": "MqttApi",
+          "UserLevel": 4,
+          "DisplayName": "MQTT",
+          "DisplayImage": "fas fa-sitemap",
+          "Description": "Es wird eine MQTT-Schnittstelle zur Übertragung von Meldungen und zur Benachrichtigung des Status angeboten.",
+          "DataType": "Object",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Enable",
+              "DisplayName": "Aktivieren",
+              "Description": "Aktiviert die Verwendung der MQTT-Schnittstelle.",
+              "DataType": "Boolean",
+              "Selection": "Boolean"
+            },
+            {
+              "Id": "MqttBroker",
+              "DisplayName": "Broker",
+              "Description": "Definiert die art des MQTT-Brokers.",
+              "DataType": "Int16",
+              "DefaultValue": "2",
+              "Input": "Mandatory",
+              "Selection": "ListOnly",
+              "ValueList": [
+                {
+                  "Value": "1",
+                  "DisplayText": "Interner Broker"
+                },
+                {
+                  "Value": "2",
+                  "DisplayText": "Externer Broker"
+                }
+              ]
+            },
+            {
+              "Id": "Address",
+              "DisplayName": "IP-Addresse",
+              "Description": "IP-Addresse des MQTT-Brokers.",
+              "DataType": "UInt16",
+              "DefaultValue": "localhost"
+            },
+            {
+              "Id": "IpPort",
+              "DisplayName": "IP-Port",
+              "Description": "Unter diesem IP-Port ist der Server erreichbar.",
+              "DataType": "UInt16",
+              "DefaultValue": "21883"
+            },
+            {
+              "Id": "User",
+              "Category": "Sicherheit",
+              "DisplayName": "Anmeldung",
+              "Description": "Benutzername zur Anmeldung am MQTT-Server.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Password",
+              "Category": "Sicherheit",
+              "DisplayName": "Kennwort",
+              "Description": "Kennwort das für die Anmeldung erforderlich ist.",
+              "DataType": "String",
+              "Selection": "EditPassword"
+            }
+          ]
+        }
+
+      ]
+    }
+
+  ]
+}

@@ -103,6 +103,7 @@ namespace IctBaden.Config.Unit
         public TypeCode DataType { get; set; }
         [XmlAttribute]
         // ReSharper disable once InconsistentNaming
+        [JsonConverter(typeof(JsonObjectToStringConverter))]
         public string? DefaultValue { get; set; }
         [XmlAttribute]
         // ReSharper disable once InconsistentNaming
