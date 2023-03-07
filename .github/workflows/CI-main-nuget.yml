@@ -3,7 +3,7 @@ name: CI-main-nuget
 on: 
   push:
     branches: 
-      - main, master
+      - master
 
 jobs:
   build:
