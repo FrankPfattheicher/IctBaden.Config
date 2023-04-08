@@ -24,7 +24,7 @@ public class ReadConfigTests
         var root = serializer.Load(new StringReader(_unitsJson));
         
         Assert.Equal(SelectionType.None, root.Selection);
-        Assert.Equal(1, root.Children.Count);
+        Assert.Single(root.Children);
     }
     
     

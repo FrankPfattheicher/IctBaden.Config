@@ -280,6 +280,7 @@ namespace IctBaden.Config.Test
             var session = CreateDefaultSessionTargets(_logger);
             var targets = session.Namespace.GetUnitById("Targets");
             var newFolder = targets.CreateFolder("CreateFolder");
+            Assert.NotNull(newFolder);
             Assert.True(newFolder.IsUserUnit);
             Assert.True(newFolder.IsFolder);
 
@@ -316,6 +317,7 @@ namespace IctBaden.Config.Test
             var targets = session.Namespace.GetUnitById("Targets");
             var template = targets.GetUnitById("TargetSms");
             var newItem = targets.CreateItem(template, "CreateUserItem");
+            Assert.NotNull(newItem);
             Assert.True(newItem.IsItem);
 
             var session2 = CreateDefaultSessionTargets(_logger);
@@ -333,6 +335,7 @@ namespace IctBaden.Config.Test
             var targets = session.Namespace.GetUnitById("Targets");
             var template = targets.GetUnitById("TargetSms");
             var newItem = targets.CreateItem(template, "DeleteUserItem");
+            Assert.NotNull(newItem);
             Assert.True(newItem.IsItem);
 
             newItem.Delete();
@@ -368,10 +371,12 @@ namespace IctBaden.Config.Test
             // create folder in "Targets"
             const string folderName = "TargetFolder";
             var newFolder = targets.CreateFolder(folderName);
+            Assert.NotNull(newFolder);
             var folderId = newFolder.Id;
             // create "TargetSms" in "Targets"
             var template = targets.GetUnitById("TargetSms");
             var newItem = targets.CreateItem(template, "CreateUserItem");
+            Assert.NotNull(newItem);
 
             targets = session.Namespace.GetUnitById("Targets");
             Assert.Equal(count + 2, targets.Children.Count);  // folder AND item in Targets
@@ -403,7 +408,8 @@ namespace IctBaden.Config.Test
             const string folderName = "TargetFolder";
             const string folderName2 = "TargetFolder2";
             var newFolder2 = targets.CreateFolder(folderName2);
-            
+            Assert.NotNull(newFolder2);
+
             // get first folder
             var firstFolder = session.Namespace.GetUnitByName(folderName, true, false);
             Assert.Single(firstFolder.Children);
@@ -458,7 +464,7 @@ namespace IctBaden.Config.Test
         {
             var session = CreateDefaultSessionTargets(_logger);
             var targets = session.Namespace.GetUnitById("Targets");
-            var userUnits = targets.GetUserUnits(null);
+            var userUnits = targets.GetUserUnits(string.Empty);
             Assert.Equal(9, userUnits.Count);
             foreach (var unit in userUnits)
             {
@@ -484,6 +490,7 @@ namespace IctBaden.Config.Test
             var filters = session.Namespace.GetUnitById("MessageFilters");
             var template = filters.GetUnitById("MessageFilterText");
             var filter1 = filters.CreateItem(template, name);
+            Assert.NotNull(filter1);
             
             filter1.SetPropertyValue("Type", prop);
 
@@ -508,8 +515,11 @@ namespace IctBaden.Config.Test
             //        +-Target1
             
             var folder1 = targets.CreateFolder("Folder1");
+            Assert.NotNull(folder1);
             var folder2 = folder1.CreateFolder("Folder2");
+            Assert.NotNull(folder2);
             var target1 = folder2.CreateItem(template, "Target1");
+            Assert.NotNull(target1);
 
             Assert.True(folder1.IsHierarchicalChildOf(targets));
 
@@ -542,7 +552,9 @@ namespace IctBaden.Config.Test
             //        +-Target1
 
             var folder1 = targets.CreateFolder("Folder1");
+            Assert.NotNull(folder1);
             var folder2 = folder1.CreateFolder("Folder2");
+            Assert.NotNull(folder2);
             folder2.CreateItem(template, "Target1");
             
             // move Folder1 to Folder2

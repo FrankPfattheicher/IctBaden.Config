@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using IctBaden.Config.Namespace;
@@ -24,6 +25,7 @@ namespace IctBaden.Config.Test
         {
             var unit = _session.Namespace.GetUnitById("Targets");
             var templates = unit.Templates;
+            Assert.NotNull(templates);
             Assert.Equal(2, templates.Count());
         }
         
@@ -32,6 +34,7 @@ namespace IctBaden.Config.Test
         {
             var unit = _session.Namespace.GetUnitById("MessageFilters");
             var templates = unit.Templates;
+            Assert.NotNull(templates);
             Assert.Single(templates);
         }
 
@@ -43,7 +46,8 @@ namespace IctBaden.Config.Test
                 Selection = SelectionType.Reference,
                 ValueSourceUnitIds = "Targets;MessageFilters"
             };
-            var templates = unit.BaseUnitsForReferenceUnits.SelectMany(bu => bu.Templates);
+            var templates = unit.BaseUnitsForReferenceUnits
+                .SelectMany(bu => bu.Templates ?? Array.Empty<ConfigurationUnit>());
             Assert.Equal(3, templates.Count());
         }
         

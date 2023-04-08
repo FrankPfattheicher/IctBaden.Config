@@ -381,6 +381,8 @@ namespace IctBaden.Config.Unit
 
         public virtual ConfigurationSession? Session => Parent?.Session;
 
+        public static ConfigurationUnit Empty = new() { DataType = TypeCode.Empty };
+        
         public ConfigurationUnit()
         {
             _children = new List<ConfigurationUnit>();

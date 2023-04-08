@@ -137,28 +137,13 @@ namespace IctBaden.Config.Session
 
         public void RegisterNamespaceProvider(string name, NamespaceProvider namespaceProvider)
         {
-            if (_namespaceProviders.ContainsKey(name))
-            {
-                _namespaceProviders[name] = namespaceProvider;
-            }
-            else
-            {
-                _namespaceProviders.Add(name, namespaceProvider);
-            }
-
+            _namespaceProviders[name] = namespaceProvider;
             namespaceProvider.Waiting += isWaiting => Waiting(isWaiting);
         }
 
         public void RegisterValueListProvider(string name, IValueListProvider valueListProvider)
         {
-            if (_valueListProviders.ContainsKey(name))
-            {
-                _valueListProviders[name] = valueListProvider;
-            }
-            else
-            {
-                _valueListProviders.Add(name, valueListProvider);
-            }
+            _valueListProviders[name] = valueListProvider;
         }
         
         // ReSharper disable once UnusedParameter.Global
@@ -250,9 +235,9 @@ namespace IctBaden.Config.Session
         public List<SelectionValue> GetSelectionValues(ConfigurationUnit unit)
         {
             var source = unit.ValueSourceId!;
-            if (_valueListProviders.ContainsKey(source))
+            if (_valueListProviders.TryGetValue(source, out var listProvider))
             {
-                return _valueListProviders[source].GetSelectionValues();
+                return listProvider.GetSelectionValues();
             }
             
             var provider = GetNamespaceProvider(unit.NamespaceProvider);

@@ -57,16 +57,15 @@ namespace IctBaden.Config.Namespace
                 }
                 else
                 {
-                    var type = unit.Session?.Namespace.GetUnitById(childClass);
-                    if (type is { IsEmpty: false })
-                    {
-                        var newItem = type.Clone(childDisplayName, true);
-                        newItem.SetUserId(childId);
-                        newItem.Class = childClass;
-                        newItem.Description = type.DisplayName;
-                        newItem.DataType = TypeCode.Object;
-                        children.Add(newItem);
-                    }
+                    var type = unit.Session?.Namespace.GetUnitById(childClass) ?? ConfigurationUnit.Empty;
+                    var newItem = type.IsEmpty 
+                        ? unit.Clone(childDisplayName, false)
+                        : type.Clone(childDisplayName, true);
+                    newItem.SetUserId(childId);
+                    newItem.Class = childClass;
+                    newItem.Description = type.DisplayName;
+                    newItem.DataType = TypeCode.Object;
+                    children.Add(newItem);
                 }
             }
 
