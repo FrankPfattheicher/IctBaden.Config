@@ -59,7 +59,7 @@ namespace IctBaden.Config.Namespace
                 {
                     var type = unit.Session?.Namespace.GetUnitById(childClass) ?? ConfigurationUnit.Empty;
                     var newItem = type.IsEmpty 
-                        ? unit.Clone(childDisplayName, false)
+                        ? new ConfigurationUnit()
                         : type.Clone(childDisplayName, true);
                     newItem.SetUserId(childId);
                     newItem.Class = childClass;
