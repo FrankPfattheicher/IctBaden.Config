@@ -1,0 +1,1000 @@
+{
+  "Selection": "None",
+  "NamespaceProviderInternal": "persistence",
+  "Children": [
+    {
+      "Id": "Targets",
+      "DisplayName": "Empfänger",
+      "DataType": "Object",
+      "Selection": "ParentHierarchical",
+      "DisplayImage": "fa fa-folder",
+      "Children": [
+        {
+          "Id": "mailto",
+          "DisplayName": "E-Mail (allgemein)",
+          "DisplayImage": "far fa-envelope",
+          "Description": "E-Mail mit automatischer Auswahl des Versandweges",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"              
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Mail-Adresse",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "ValidationRule": ".+@.+\\..+"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "EmailSmtp",
+          "DisplayName": "E-Mail über SMTP-Server",
+          "DisplayImage": "far fa-envelope",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Mail-Adresse",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "ValidationRule": ".+@.+\\..+"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "EmailLteRouter",
+          "DisplayName": "E-Mail über ct/mc LTE-Router",
+          "DisplayImage": "far fa-envelope",
+          "Description": "E-Mail Versand über einen über Netzwerk angeschlossenen comtime oder MC-Technologies LTE-Router.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Mail-Adresse",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "ValidationRule": ".+@.+\\..+"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+
+        {
+          "Id": "sms",
+          "DisplayName": "SMS (allgemein)",
+          "DisplayImage": "fas fa-sms",
+          "Description": "SMS mit automatischer Auswahl des Versandweges",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "SmsGsm",
+          "DisplayName": "SMS über GSM Modem",
+          "DisplayImage": "fas fa-sms",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "SmsLteRouter",
+          "DisplayName": "SMS über ct/mc LTE-Router",
+          "DisplayImage": "fas fa-sms",
+          "Description": "SMS Versand über einen über Netzwerk angeschlossenen comtime oder MC-Technologies LTE-Router.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "SmsTwilio",
+          "DisplayName": "SMS über Twilio",
+          "DisplayImage": "fas fa-sms",
+          "Description": "SMS Versand über den Provider Twilio.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "SmsSinch",
+          "DisplayName": "SMS über Sinch",
+          "DisplayImage": "fas fa-sms",
+          "Description": "SMS Versand über den Provider Sinch.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "mqtt",
+          "DisplayName": "MQTT-Publish",
+          "DisplayImage": "fa-solid fa-share-nodes",
+          "Description": "Veröffentlichen einer MQTT Nachricht. Die Adresse wird als Topic verwendet. Die Nachricht wird als Daten gesendet.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Topic",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+
+        {
+          "Id": "telegram",
+          "DisplayName": "Telegram",
+          "DisplayImage": "fab fa-telegram",
+          "Description": "Meldung an Telegram Gruppe senden.",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "DataType": "String"
+            },
+            {
+              "Id": "BotToken",
+              "Category": "Adresse",
+              "DisplayName": "Bot-Token",
+              "Description": "Token, der im Laufe der Einrichtung des Bots ausgegeben wird.",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "GroupName",
+              "Category": "Adresse",
+              "DisplayName": "Gruppenname",
+              "Description": "Name der Telegram-Gruppe an die gesendet werden soll.",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "ChatId",
+              "Category": "Adresse",
+              "DisplayName": "Chat-Id",
+              "Description": "Anstatt dem Gruppennamen kann hier die Chat-Id direkt angegeben werden.",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+
+
+        {
+          "Id": "voice",
+          "DisplayName": "Telefon Sprachansage",
+          "DisplayImage": "far fa-comment-dots",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "TtsEngine",
+              "Category": "Extras",
+              "DisplayName": "Stimme",
+              "Description": "Die für diesen Teilnehmer zu verwendende Text-to-speech Stimme.",
+              "DataType": "String",
+              "DefaultValueDisplayText": "Automatische Auswahl",
+              "Selection": "AvailableTtsEngines",
+              "ValueList": [
+                {
+                  "DisplayText": "Automatische Auswahl"
+                },
+                {
+                  "Value": "Microsoft Hedda Desktop",
+                  "DisplayText": "Microsoft Hedda Desktop (de-DE)"
+                },
+                {
+                  "Value": "Microsoft Zira Desktop",
+                  "DisplayText": "Microsoft Zira Desktop (en-US)"
+                }
+              ]
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "ring",
+          "DisplayName": "Telefon Klingeln",
+          "DisplayImage": "far fa-bell",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Nummer",
+              "Description": ".",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "RingSeconds",
+              "Category": "Address",
+              "DisplayName": "Klingeldauer",
+              "Description": "Zeit für die das Klingeln andauern soll. Ohne Angabe wird der Standardwert aus den Einstellungen verwendet.",
+              "DataType": "UInt16",
+              "Unit": "Sekunden"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "speaker",
+          "DisplayName": "Lautsprecher",
+          "DisplayImage": "fas fa-volume-up",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "TtsEngine",
+              "Category": "Extras",
+              "DisplayName": "Stimme",
+              "Description": "Die für diesen Teilnehmer zu verwendende Text-to-speech Stimme.",
+              "DataType": "String",
+              "DefaultValueDisplayText": "Automatische Auswahl",
+              "Selection": "AvailableTtsEngines",
+              "ValueList": [
+                {
+                  "DisplayText": "Automatische Auswahl"
+                },
+                {
+                  "Value": "Microsoft Hedda Desktop",
+                  "DisplayText": "Microsoft Hedda Desktop (de-DE)"
+                },
+                {
+                  "Value": "Microsoft Zira Desktop",
+                  "DisplayText": "Microsoft Zira Desktop (en-US)"
+                }
+              ]
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "file",
+          "DisplayName": "Meldedatei",
+          "DisplayImage": "far fa-file-alt",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": "Ausgabe der Meldung in eine Textdatei.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Dateiname",
+              "Description": "Dateiname der Meldungsausgabe mit voller Pfadangabe.",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Encoding",
+              "DisplayName": "Zeichenkodierung",
+              "Description": "Angabe der Zeichenkodierung die für die Ausgabe verwendet werden soll.",
+              "DataType": "String",
+              "DefaultValue": "",
+              "Selection": "ListOnly",
+              "ValueList": [
+                {
+                  "Value": "",
+                  "DisplayText": "Standard (wie beim Dienst angegeben)"
+                },
+                {
+                  "Value": "ISO-8859-1",
+                  "DisplayText": "ISO-8859-1 (Latin-1, ISO Western European)"
+                },
+                {
+                  "Value": "Windows-1252",
+                  "DisplayText": "Windows (Western European)"
+                },
+                {
+                  "Value": "IBM850",
+                  "DisplayText": "MS-DOS (Western European)"
+                },
+                {
+                  "Value": "UTF-8",
+                  "DisplayText": "UTF 8"
+                }
+              ]
+            },
+            {
+              "Id": "Mode",
+              "DisplayName": "Modus",
+              "Description": "Modus der zur Ausgabe der Meldung in die Datei verwendet wird.",
+              "DataType": "Int16",
+              "DefaultValue": "0",
+              "Input": "Mandatory",
+              "Selection": "ListOnly",
+              "ValueList": [
+                {
+                  "Value": "0",
+                  "DisplayText": "Am Ende anhängen"
+                },
+                {
+                  "Value": "1",
+                  "DisplayText": "Am Anfang einfügen"
+                }
+              ]
+            },
+            {
+              "Id": "MaxSize",
+              "DisplayName": "Maximale Dateigröße",
+              "Description": "Begrenzt die Ausgabedatei auf die angegebene Größe in Kilobytes.",
+              "DataType": "Int32",
+              "Unit": "kB"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "script",
+          "DisplayName": "Skript Interpreter",
+          "DisplayImage": "fas fa-scroll",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "AckCode",
+              "Category": "Bestätigung",
+              "DisplayName": "Quittungscode",
+              "Description": "Der persönliche Quittierungscode des Teilnehmers mit dem er die an ihn gesendeten Meldungen quittieren kann.",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Script Code",
+              "Description": "C# Skript Code.",
+              "DataType": "String",
+              "Input": "Mandatory"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "UnitTypeId": "TypeSpecialTimingRef"
+            }
+          ]
+        },
+        
+        {
+          "Id": "parallel",
+          "SortOrder": -3,
+          "DisplayName": "Gruppe",
+          "DisplayImage": "fas fa-user-friends",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Teilnehmer",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "Selection": "ReferenceList",
+              "ValueSourceUnitIds": "Targets"
+            },
+            {
+              "Id": "MinSuccess",
+              "Category": "Extras",
+              "DisplayName": "Mindestanzahl erforderlicher Quittierungen",
+              "Description": "Gibt die Anzahl der Empfänger an, die die Meldung positiv quittieren müssen, damit die Zustellung als erfolgreich beendet wird. Bei der Angabe von 0 (Null) erfolgt nur eine Zustellung an alle Teilnehmer, bei -1 müssen alle Teilnehmer quittieren.",
+              "DataType": "Int16",
+              "DefaultValue": "1"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "Category": "Extras",
+              "DisplayName": "Eskalationszeiten",
+              "Description": "Individuelle Eskalationszeiten die für diese Gruppe verwendet werden sollen.",
+              "DataType": "String",
+              "Selection": "Reference",
+              "ValueSourceUnitIds": "UserTiming",
+              "ValueSourceClass": "UserParallel"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        },
+        {
+          "Id": "sequence",
+          "SortOrder": -2,
+          "DisplayName": "Eskalationsfolge",
+          "Description": "Folge (Sequenz) von zu benachrichtigenden Teilnehmern.",
+          "DisplayImage": "fas fa-users-cog",
+          "Selection": "None",
+          "Children": [
+            {
+              "Id": "Description",
+              "Category": "Bezeichnung",
+              "DisplayName": "Beschreibung",
+              "Description": ".",
+              "DataType": "String"
+            },
+            {
+              "Id": "Address",
+              "Category": "Adresse",
+              "DisplayName": "Teilnehmer",
+              "DataType": "String",
+              "Input": "Mandatory",
+              "Selection": "ReferenceList",
+              "ValueSourceUnitIds": "Targets"
+            },
+            {
+              "Id": "MaxLoopCount",
+              "Category": "Extras",
+              "DisplayName": "Wiederholungen",
+              "Description": "Gibt die maximale Anzahl der Wiederholungen der Folge an bevor die Zustellung abgebrochen wird. Die Angabe von 0 (Null) ergibt eine unendliche wiederholung.",
+              "DataType": "Int16",
+              "DefaultValue": "1"
+            },
+            {
+              "Id": "Presence",
+              "UnitTypeId": "TypePresence"
+            },
+            {
+              "Id": "TimeModelRef",
+              "UnitTypeId": "TypeTimeModelRef"
+            },
+            {
+              "Id": "SchedulingRef",
+              "UnitTypeId": "TypeSchedulingRef"
+            },
+            {
+              "Id": "SpecialTiming",
+              "Category": "Extras",
+              "DisplayName": "Eskalationszeiten",
+              "Description": "Individuelle Eskalationszeiten die für diese Folge verwendet werden sollen.",
+              "DataType": "String",
+              "Selection": "Reference",
+              "ValueSourceUnitIds": "UserTiming",
+              "ValueSourceClass": "UserSequence"
+            },
+            {
+              "Id": "Priority",
+              "UnitTypeId": "TypePriority"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

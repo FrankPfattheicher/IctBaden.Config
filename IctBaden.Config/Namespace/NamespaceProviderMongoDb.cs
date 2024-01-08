@@ -24,7 +24,7 @@ namespace IctBaden.Config.Namespace
         private IMongoDatabase? _db;
         private IMongoCollection<BsonDocument>? _collection;
 
-        private string _lastError = "";
+        private string _lastError = string.Empty;
 
         public NamespaceProviderMongoDb(ILogger logger, string connectionString)
         {

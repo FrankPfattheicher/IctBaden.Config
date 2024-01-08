@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-    <Copyright>(C) 2010-2023 ICT Baden GmbH</Copyright>
-    <LangVersion>10</LangVersion>
+    <TargetFrameworks>net6.0;netcoreapp3.1;net8.0</TargetFrameworks>
+    <Copyright>(C) 2010-2024 ICT Baden GmbH</Copyright>
+    <LangVersion>12</LangVersion>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageVersion>1.1.0</PackageVersion>
+    <PackageVersion>3.0.0</PackageVersion>
     <Title>Universal Configuration Framework</Title>
     <Authors>Frank Pfattheicher</Authors>
     <PackageLicenseUrl>https://github.com/FrankPfattheicher/IctBaden.Config/blob/master/LICENSE</PackageLicenseUrl>

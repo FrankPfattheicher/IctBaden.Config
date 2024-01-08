@@ -188,6 +188,26 @@
                     }
                   ],
                   "Children": []
+                },
+                {
+                  "Id": "Presence",
+                  "UnitTypeId": "TypePresence"
+                },
+                {
+                  "Id": "TimeModelRef",
+                  "UnitTypeId": "TypeTimeModelRef"
+                },
+                {
+                  "Id": "SchedulingRef",
+                  "UnitTypeId": "TypeSchedulingRef"
+                },
+                {
+                  "Id": "SpecialTiming",
+                  "UnitTypeId": "TypeSpecialTimingRef"
+                },
+                {
+                  "Id": "Priority",
+                  "UnitTypeId": "TypePriority"
                 }
               ]
             },
@@ -524,7 +544,7 @@
                   "DisplayName": "Eigene Nummer",
                   "Description": "Rufnummer des Anschlusses.",
                   "DataType": "String"
-                },
+                }
               ]
             },
             {

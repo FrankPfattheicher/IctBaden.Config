@@ -1,10 +1,11 @@
 ﻿<ConfigurationUnit xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config">
     <!-- ReSharper disable MarkupAttributeTypo -->
     <!-- ReSharper disable MarkupTextTypo -->
+    <!-- ReSharper disable Xaml.UnexpectedElement -->
  
     <ConfigurationUnit Id="Folder" DataType="Empty" DisplayName="Ordner" Description="DescriptionAsAttribute" />
 
-    <ConfigurationUnit Id="License" NamespaceProvider="usr" DataType="Empty" >
+    <ConfigurationUnit Id="License" NamespaceProvider="persistence" DataType="Empty" >
         <ConfigurationUnit.Description>DescriptionAsEmbedded</ConfigurationUnit.Description>
         <ConfigurationUnit Id="Customer" DataType="String" />
         <ConfigurationUnit Id="SerialNumber" DataType="String" />
@@ -120,7 +121,7 @@
 
         </ConfigurationUnit>
 
-        <ConfigurationUnit Id="Channels" NamespaceProvider="usr" DataType="Object" DisplayName="Anschlüsse" DisplayImage="plug_usb" >
+        <ConfigurationUnit Id="Channels" NamespaceProvider="persistence" DataType="Object" DisplayName="Anschlüsse" DisplayImage="plug_usb" >
             <ConfigurationUnit.Description>Konfiguriert die Anschlüsse zu externen Geräten (z.B. Modems)</ConfigurationUnit.Description>
 
             <ConfigurationUnit Id="ChannelGsm" DataType="Empty" DisplayName="GSM Modem" DisplayImage="antenna" >

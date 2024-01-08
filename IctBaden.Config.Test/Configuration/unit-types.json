@@ -1,0 +1,123 @@
+{
+  "Id": "UnitTypes",
+  "Children": [
+    
+    {
+      "Id": "TypePresence",
+      "Category": "Extras",
+      "DisplayName": "Präsenz",
+      "DataType": "Int16",
+      "DefaultValue": "1",
+      "Input": "Mandatory",
+      "Selection": "ListOnly",
+      "ValueList": [
+        {
+          "Value": "0",
+          "DisplayText": "Abwesend"
+        },
+        {
+          "Value": "1",
+          "DisplayText": "Bereit"
+        },
+        {
+          "Value": "2",
+          "DisplayText": "Beschäftigt"
+        },
+        {
+          "Value": "4",
+          "DisplayText": "Nicht stören"
+        },
+        {
+          "Value": "5",
+          "DisplayText": "Im Urlaub"
+        },
+        {
+          "Value": "6",
+          "DisplayText": "Krank"
+        }
+      ]
+    },
+    
+    {
+      "Id": "TypeSpecialTimingRef",
+      "Category": "Extras",
+      "DisplayName": "Eskalationszeiten",
+      "Description": "Individuelle Eskalationszeiten die für diesen Empfänger verwendet werden sollen.",
+      "DataType": "String",
+      "Selection": "Reference",
+      "ValueSourceUnitIds": "UserTiming",
+      "ValueSourceClass": "UserParallel"
+    },
+
+    {
+      "Id": "TypeTimeModelRef",
+      "Category": "Extras",
+      "DisplayName": "Zeitmodell",
+      "Description": "Zeit- bzw. Schichtmodell für einen Einsatz.",
+      "DataType": "String",
+      "Selection": "Reference",
+      "ValueSourceUnitIds": "Calendar",
+      "ValueSourceClass": "TimeModel"
+    },
+
+    {
+      "Id": "TypeSchedulingRef",
+      "Category": "Extras",
+      "DisplayName": "Einsatz",
+      "Description": "Festlegung der Zeiträume für einen Einsatz.",
+      "DataType": "String",
+      "Selection": "Reference",
+      "ValueSourceUnitIds": "Calendar",
+      "ValueSourceClass": "SchedulingRange"
+    },
+
+    {
+      "Id": "TypePriority",
+      "Category": "Extras",
+      "DisplayName": "Priorität",
+      "Description": "Gibt die Priorität an mit der Meldungen an die Teilnehmer dieser Folge gesendet werden.",
+      "DataType": "String",
+      "DefaultValue": "0",
+      "Selection": "ListOnly",
+      "ValueList": [
+        {
+          "Value": "0",
+          "DisplayText": "Standard"
+        },
+        {
+          "Value": "1",
+          "DisplayText": "Notruf"
+        },
+        {
+          "Value": "2",
+          "DisplayText": "Sehr sehr hoch"
+        },
+        {
+          "Value": "3",
+          "DisplayText": "Sehr hoch"
+        },
+        {
+          "Value": "4",
+          "DisplayText": "Hoch"
+        },
+        {
+          "Value": "5",
+          "DisplayText": "Normal"
+        },
+        {
+          "Value": "6",
+          "DisplayText": "Niedrig"
+        },
+        {
+          "Value": "7",
+          "DisplayText": "Sehr niedrig"
+        },
+        {
+          "Value": "8",
+          "DisplayText": "Sehr sehr niedrig"
+        }
+      ]
+    }
+    
+  ]
+}

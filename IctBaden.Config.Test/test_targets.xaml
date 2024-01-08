@@ -1,8 +1,9 @@
 ﻿<ConfigurationUnit xmlns="clr-namespace:IctBaden.Config.Unit;assembly=IctBaden.Config" >
     <!-- ReSharper disable MarkupAttributeTypo -->
     <!-- ReSharper disable MarkupTextTypo -->
+    <!-- ReSharper disable Xaml.UnexpectedElement -->
 
-    <ConfigurationUnit Id="Targets" NamespaceProvider="usr" DataType="Object" DisplayName="Empfänger" Selection="ParentHierarchical">
+    <ConfigurationUnit Id="Targets" NamespaceProvider="persistence" DataType="Object" DisplayName="Empfänger" Selection="ParentHierarchical">
 
         <ConfigurationUnit Id="TargetEmail" DataType="Empty" DisplayName="E-Mail" >
             <ConfigurationUnit Id="Presence" DataType="Int16" DisplayName="Präsenz" DefaultValue="1" Selection="ListOnly" Input="Mandatory" >

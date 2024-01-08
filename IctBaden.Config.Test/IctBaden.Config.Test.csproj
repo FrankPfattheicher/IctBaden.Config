@@ -41,6 +41,12 @@
     <EmbeddedResource Include="ConfigTestUnits.json" />
     <None Remove="ConfigSettings.json" />
     <EmbeddedResource Include="ConfigSettings.json" />
+    <None Remove="Configuration\settings.json" />
+    <EmbeddedResource Include="Configuration\settings.json" />
+    <None Remove="Configuration\targets.json" />
+    <EmbeddedResource Include="Configuration\targets.json" />
+    <None Remove="Configuration\unit-types.json" />
+    <EmbeddedResource Include="Configuration\unit-types.json" />
   </ItemGroup>
 
   <ItemGroup>

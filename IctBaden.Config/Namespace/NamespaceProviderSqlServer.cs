@@ -37,7 +37,7 @@ namespace IctBaden.Config.Namespace
         public NamespaceProviderSqlServer(ILogger logger, string connectionString)
         {
             _logger = logger;
-            _lastError = "";
+            _lastError = string.Empty;
             _connectionString = connectionString;
             _connection = new SqlConnection(connectionString);
         }
