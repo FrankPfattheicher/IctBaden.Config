@@ -13,13 +13,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 3.1.100
-    - name: Setup .NET 6
-      uses: actions/setup-dotnet@v1
+        dotnet-version: 3.1.x
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@3
       with:
-        dotnet-version: 6.x
+        dotnet-version: 8.x
     - name: Build with dotnet
       run: |
         version=$(grep -oP -m 1 '\* \K[0-9]*\.[0-9]*\.[0-9]*' ReleaseNotes.md)
