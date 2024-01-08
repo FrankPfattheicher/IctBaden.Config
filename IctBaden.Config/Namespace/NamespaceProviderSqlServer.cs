@@ -215,7 +215,7 @@ namespace IctBaden.Config.Namespace
             if (!Connect())
                 return defaultValue;
 
-            var value = GetValue(unit.Parent?.Id ?? "", unit.Id);
+            var value = GetValue(unit.Parent?.Id ?? string.Empty, unit.Id);
             return value != null
                 ? UniversalConverter.ConvertTo<T>(value)
                 : defaultValue;

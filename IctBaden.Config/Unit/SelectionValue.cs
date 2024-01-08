@@ -11,7 +11,7 @@ namespace IctBaden.Config.Unit
 
         public override string ToString()
         {
-            return DisplayText ?? "";
+            return DisplayText ?? string.Empty;
         }
     }
 }

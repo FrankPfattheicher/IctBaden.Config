@@ -511,7 +511,7 @@ public class ProfileTests : IDisposable
         var session = CreateDefaultSessionTargets(_logger);
         var targets = session.Namespace.GetUnitById("Targets");
         var userUnits = targets.GetUserUnits(string.Empty);
-        Assert.Equal(9, userUnits.Count);
+        Assert.Equal(10, userUnits.Count);
         foreach (var unit in userUnits)
         {
             Assert.True(unit.IsUserUnit);
@@ -609,6 +609,16 @@ public class ProfileTests : IDisposable
         // move Folder1 to Folder2
         var moved = folder1.MoveToFolder(folder2);
         Assert.False(moved);
+    }
+
+    [Fact]
+    public void TargetWithTestClassShouldBeLoaded()
+    {
+        var session = CreateDefaultSessionTargets(_logger);
+        var target = session.Namespace.GetUnitByName("Tester", false, false);
+        Assert.False(target.IsEmpty);
+        Assert.Equal("Test", target.Class);
+        Assert.Equal("testClass", target.Description);
     }
 
 }

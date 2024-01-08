@@ -33,15 +33,15 @@ namespace IctBaden.Config.Configuration
 
         public string this[string key]
         {
-            get => _unit?.GetPropertyValue<string>(key) ?? "";
+            get => _unit?.GetPropertyValue<string>(key) ?? string.Empty;
             set => _unit?.SetPropertyValue(key, value);
         }
 
-        public string Key => _unit?.Id ?? "";
-        public string Path => _unit?.FullId ?? "";
+        public string Key => _unit?.Id ?? string.Empty;
+        public string Path => _unit?.FullId ?? string.Empty;
         public string Value 
         { 
-            get =>_unit?.GetValue<string>() ?? "";
+            get =>_unit?.GetValue<string>() ?? string.Empty;
             set => _unit?.SetValue(value);
         }
         

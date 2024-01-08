@@ -56,8 +56,8 @@ namespace IctBaden.Config.Namespace
             foreach (var childId in childIds)
             {
                 var childSection = _data[childId];
-                var childDisplayName = childSection["DisplayName"]?.ToString() ?? "";
-                var childClass = childSection["Class"]?.ToString() ?? "";
+                var childDisplayName = childSection["DisplayName"]?.ToString() ?? string.Empty;
+                var childClass = childSection["Class"]?.ToString() ?? string.Empty;
                 if (string.IsNullOrEmpty(childClass))
                 {
                     // folder

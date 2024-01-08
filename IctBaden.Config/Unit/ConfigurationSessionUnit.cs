@@ -1,17 +1,16 @@
 ﻿using System;
 using IctBaden.Config.Session;
 
-namespace IctBaden.Config.Unit
-{
-    public class ConfigurationSessionUnit : ConfigurationUnit
-    {
-        public override ConfigurationSession? Session { get; }
+namespace IctBaden.Config.Unit;
 
-        public ConfigurationSessionUnit(ConfigurationSession? session)
-        {
-            Session = session;
-            DataType = TypeCode.Object;
-            ChildrenLoaded = true;
-        }
+public class ConfigurationSessionUnit : ConfigurationUnit
+{
+    public override ConfigurationSession? Session { get; }
+
+    public ConfigurationSessionUnit(ConfigurationSession? session)
+    {
+        Session = session;
+        DataType = TypeCode.Object;
+        ChildrenLoaded = true;
     }
 }

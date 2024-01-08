@@ -1,4 +1,5 @@
 
+* 3.0.1	- 08.01.2024 Fixed NamespaceProviderProfile loading user units with unknown class
 * 3.0.0	- 08.01.2024 C#12, added net6.0 and net8.0, fixed UnitTypeId property references
 
 * 2.0.2	- 08.04.2023 Refactoring Allow Profile GetChildren with missing type class

@@ -555,7 +555,7 @@ public class ConfigurationUnit
     {
         get
         {
-            var text = GetValue<string>() ?? "";
+            var text = GetValue<string>() ?? string.Empty;
 
             if (Selection is SelectionType.Reference or SelectionType.ReferenceList)
             {
