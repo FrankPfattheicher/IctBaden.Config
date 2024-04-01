@@ -23,6 +23,9 @@ jobs:
       with:
         dotnet-version: 8.x
         
+    - name: Setup Nuget
+      uses: NuGet/setup-nuget@v1
+      
     - name: Build with dotnet
       run: |
         version=$(grep -oP -m 1 '\* \K[0-9]*\.[0-9]*\.[0-9]*' ReleaseNotes.md)
@@ -34,6 +37,13 @@ jobs:
         version=$(grep -oP -m 1 '\* \K[0-9]*\.[0-9]*\.[0-9]*' ReleaseNotes.md)
         echo Version=$version
         dotnet test ./IctBaden.Config.sln --configuration Release -p:AssemblyVersion=$version -p:PackageVersion=$version -p:Version=1.0
+        
+    - name: Pack Nuget
+      run: |
+        version=$(grep -oP -m 1 '\* \K[0-9]*\.[0-9]*\.[0-9]*' ReleaseNotes.md)
+        echo Version=$version
+        cd artifacts
+        nuget pack ../IctBaden.Config.nuspec -BasePath . -Version $version
         
     - name: Publish NuGet
       run: |
