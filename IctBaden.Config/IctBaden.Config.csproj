@@ -4,8 +4,7 @@
     <TargetFrameworks>net6.0;netcoreapp3.1;net8.0</TargetFrameworks>
     <Copyright>(C) 2010-2024 ICT Baden GmbH</Copyright>
     <LangVersion>12</LangVersion>
-    <IsPackable>true</IsPackable>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IsPackable>false</IsPackable>
     <PackageVersion>3.0.0</PackageVersion>
     <Title>Universal Configuration Framework</Title>
     <Authors>Frank Pfattheicher</Authors>
@@ -24,13 +23,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IctBaden.Framework" Version="2.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.32" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.32" />
-    <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+    <PackageReference Include="IctBaden.Framework" Version="3.2.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="Portable.Xaml" Version="0.26.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.7.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
 </Project>

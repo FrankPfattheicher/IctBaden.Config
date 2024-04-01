@@ -35,7 +35,9 @@ public class ConfigurationNamespaceJsonSerializer(ConfigurationSession session) 
 #if NET6_0_OR_GREATER
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 #else
+#pragma warning disable SYSLIB0020
             IgnoreNullValues = true
+#pragma warning restore SYSLIB0020
 #endif
         };
         var json = JsonSerializer.Serialize(rootUnit, settings);

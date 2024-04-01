@@ -1,4 +1,6 @@
 
+* 3.1.0 - 01.04.2024 IDisposableAnalyzers, nuspec
+
 * 3.0.1	- 08.01.2024 Fixed NamespaceProviderProfile loading user units with unknown class
 * 3.0.0	- 08.01.2024 C#12, added net6.0 and net8.0, fixed UnitTypeId property references
 

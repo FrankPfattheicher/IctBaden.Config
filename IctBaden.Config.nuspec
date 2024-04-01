@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>IctBaden.Config</id>
+        <version>3.1.0</version>
+        <authors>Frank Pfattheicher</authors>
+        <owners>Frank Pfattheicher</owners>
+        <license type="expression">MIT</license>
+        <projectUrl>https://github.com/FrankPfattheicher/IctBaden.Config</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Universal Configuration Framework</description>
+        <releaseNotes>Stable</releaseNotes>
+        <copyright>Copyright ICT Baden GmbH 2010-2024</copyright>
+        <tags>.NET Core</tags>
+        <dependencies>
+            <dependency id="IctBaden.Framework" version="3.2.1" />
+        </dependencies>
+        <references>
+            <group targetFramework="net8.0" >
+                <reference file="IctBaden.Config.dll"/>
+            </group>
+        </references>
+    </metadata>
+    <files>
+        <file src="lib/IctBaden.Config.dll" target="lib/net8.0"/>
+    </files>
+</package>
