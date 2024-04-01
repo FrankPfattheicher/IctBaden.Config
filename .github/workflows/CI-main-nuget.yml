@@ -26,11 +26,18 @@ jobs:
     - name: Setup Nuget
       uses: NuGet/setup-nuget@v1
       
+    - name: Prepare Artifacts
+      run: |
+        mkdir artifacts
+        mkdir artifacts/lib
+        mkdir artifacts/images
+        
     - name: Build with dotnet
       run: |
         version=$(grep -oP -m 1 '\* \K[0-9]*\.[0-9]*\.[0-9]*' ReleaseNotes.md)
         echo Version=$version
         dotnet build --configuration Release ./IctBaden.Config.sln -p:AssemblyVersion=$version -p:PackageVersion=$version -p:Version=1.0
+        cp IctBaden.Config/bin/Release/net8.0/IctBaden.Config.dll artifacts/lib
         
     - name: Test with dotnet
       run: |
