@@ -47,6 +47,8 @@
     <EmbeddedResource Include="Configuration\targets.json" />
     <None Remove="Configuration\unit-types.json" />
     <EmbeddedResource Include="Configuration\unit-types.json" />
+    <None Remove="unit-types.json" />
+    <EmbeddedResource Include="unit-types.json" />
   </ItemGroup>
 
   <ItemGroup>

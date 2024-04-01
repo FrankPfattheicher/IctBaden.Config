@@ -4,6 +4,7 @@ using System.Text.Json;
 using IctBaden.Config.Namespace;
 using IctBaden.Config.Session;
 using Xunit;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace IctBaden.Config.Test;
 
@@ -39,6 +40,7 @@ public class SerializerJsonTests
         {
             caught = true;
         }
+
         Assert.True(caught);
     }
 
@@ -73,10 +75,23 @@ public class SerializerJsonTests
         var fromXml = xmlSerializer.Load(new StringReader(_testSettingsXml));
         var fromJson = jsonSerializer.Load(new StringReader(_testSettingsJson));
 
-        var settings = new JsonSerializerOptions {  WriteIndented = true };
+        var settings = new JsonSerializerOptions { WriteIndented = true };
         var jsonFromXml = JsonSerializer.Serialize(fromXml, settings);
         var jsonFromJson = JsonSerializer.Serialize(fromJson, settings);
         Assert.Equal(jsonFromXml, jsonFromJson);
     }
 
+    [Fact]
+    public void LoadingJsonUnitTypesShouldSucceed()
+    {
+        var json = TestResources.LoadResourceString("unit-types.json");
+        var reader = new StringReader(json);
+
+        var session = new ConfigurationSession();
+        var jsonCfgLoader = new ConfigurationNamespaceJsonSerializer(session);
+
+        var unit = jsonCfgLoader.Load(reader);
+
+        Assert.NotNull(unit);
+    }
 }

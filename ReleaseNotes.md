@@ -1,4 +1,5 @@
 
+* 3.1.1 - 01.04.2024 Fixed nuget dependencies
 * 3.1.0 - 01.04.2024 IDisposableAnalyzers, nuspec
 
 * 3.0.1	- 08.01.2024 Fixed NamespaceProviderProfile loading user units with unknown class
