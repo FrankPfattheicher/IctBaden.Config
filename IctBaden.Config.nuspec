@@ -14,7 +14,7 @@
         <tags>.NET Core</tags>
         <dependencies>
             <dependency id="IctBaden.Framework" version="3.2.1" />
-            <dependency id="MongoDB.Driver" version="2.24.0" />
+            <dependency id="MongoDB.Driver" version="2.25.0" />
             <dependency id="Portable.Xaml" version="0.26.0" />
             <dependency id="System.Data.SqlClient" version="4.8.6" />
         </dependencies>

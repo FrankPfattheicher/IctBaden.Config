@@ -1,4 +1,5 @@
 
+* 3.1.2 - 01.04.2024 Fixed templated display name
 * 3.1.1 - 01.04.2024 Fixed nuget dependencies
 * 3.1.0 - 01.04.2024 IDisposableAnalyzers, nuspec
 

@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="IctBaden.Framework" Version="3.2.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
     <PackageReference Include="Portable.Xaml" Version="0.26.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>

@@ -15,9 +15,10 @@ namespace IctBaden.Config.Test;
 
 public class ProfileTests : IDisposable
 {
-    private readonly ILogger _logger; 
+    private readonly ILogger _logger;
     private static readonly string ProfileCfg = TestResources.LoadResourceString("Profile.cfg");
-    private static readonly string ProfileName = 
+
+    private static readonly string ProfileName =
         Path.Combine(Path.GetDirectoryName(typeof(ProfileTests).Assembly.Location)!, "TempProfile.cfg");
 
     public ProfileTests()
@@ -61,6 +62,7 @@ public class ProfileTests : IDisposable
     {
         return CreateDefaultSession(logger, TestResources.LoadResourceString("test_settings.xaml"));
     }
+
     private static ConfigurationSession CreateDefaultSessionTargets(ILogger logger)
     {
         var session = CreateDefaultSession(logger, string.Empty);
@@ -85,6 +87,7 @@ public class ProfileTests : IDisposable
 
         return session;
     }
+
     private static ConfigurationSession CreateDefaultSessionConfigTest(ILogger logger)
     {
         var definition = TestResources.LoadResourceString("ConfigTestUnits.json");
@@ -99,6 +102,7 @@ public class ProfileTests : IDisposable
         session.RegisterNamespaceProvider("persistence", ini);
         return session;
     }
+
     private static ConfigurationSession CreateDefaultSession(ILogger logger, string definition)
     {
         var session = new ConfigurationSession();
@@ -232,11 +236,11 @@ public class ProfileTests : IDisposable
         {
             foreach (var propertyUnit in unit.Children)
             {
-                Assert.False(string.IsNullOrEmpty(propertyUnit.DisplayName)); 
+                Assert.False(string.IsNullOrEmpty(propertyUnit.DisplayName));
             }
         }
     }
-        
+
 
     [Fact]
     public void RegisterProvider()
@@ -424,9 +428,9 @@ public class ProfileTests : IDisposable
         Assert.NotNull(newItem);
 
         targets = session.Namespace.GetUnitById("Targets");
-        Assert.Equal(count + 2, targets.Children.Count);  // folder AND item in Targets
-        Assert.Empty(newFolder.Children);   // no item in folder
-            
+        Assert.Equal(count + 2, targets.Children.Count); // folder AND item in Targets
+        Assert.Empty(newFolder.Children); // no item in folder
+
         // move newItem to newFolder
         var moved = newItem.MoveToFolder(newFolder);
         Assert.True(moved);
@@ -444,7 +448,7 @@ public class ProfileTests : IDisposable
     public void MoveFolderToFolderShouldIncludeFolderContents()
     {
         MoveUserItemToFolder();
-            
+
         var session = CreateDefaultSessionTargets(_logger);
         var targets = session.Namespace.GetUnitById("Targets");
         var count = targets.Children.Count;
@@ -458,15 +462,15 @@ public class ProfileTests : IDisposable
         // get first folder
         var firstFolder = session.Namespace.GetUnitByName(folderName, true, false);
         Assert.Single(firstFolder.Children);
-            
+
         // move firstFolder to newFolder2
         var moved = firstFolder.MoveToFolder(newFolder2);
         Assert.True(moved);
-            
+
         var session2 = CreateDefaultSessionTargets(_logger);
         var targets2 = session2.Namespace.GetUnitById("Targets");
         Assert.Equal(count, targets2.Children.Count);
-            
+
         var folder1 = session.Namespace.GetUnitByName(folderName, true, false);
         Assert.Single(folder1.Children);
         var folder2 = session.Namespace.GetUnitByName(folderName2, true, false);
@@ -522,23 +526,25 @@ public class ProfileTests : IDisposable
     private enum FilterType
     {
         // ReSharper disable once UnusedMember.Local
-        ContainsText, StartsWithText, RegularExpression
+        ContainsText,
+        StartsWithText,
+        RegularExpression
     }
-        
-        
+
+
     [Fact]
     public void SetEnumShouldGetSameValue()
     {
         const string name = "Filter1";
         const FilterType prop = FilterType.RegularExpression;
-            
+
         var session = CreateDefaultSessionConfigTest(_logger);
         var filters = session.Namespace.GetUnitById("MessageFilters");
         var template = filters.GetUnitById("MessageFilterText");
         Assert.False(template.IsEmpty);
         var filter1 = filters.CreateItem(template, name);
         Assert.NotNull(filter1);
-            
+
         filter1.SetPropertyValue("Type", prop);
 
         var userFilter = filters.GetUnitByName(name, false, true);
@@ -556,12 +562,12 @@ public class ProfileTests : IDisposable
         var targets = session.Namespace.GetUnitById("Targets");
         var template = targets.GetUnitById("sms");
         Assert.False(template.IsEmpty);
-            
+
         // Targets
         //  +-Folder1
         //     +-Folder2
         //        +-Target1
-            
+
         var folder1 = targets.CreateFolder("Folder1");
         Assert.NotNull(folder1);
         var folder2 = folder1.CreateFolder("Folder2");
@@ -573,14 +579,14 @@ public class ProfileTests : IDisposable
 
         Assert.True(folder2.IsHierarchicalChildOf(targets));
         Assert.True(folder2.IsHierarchicalChildOf(folder1));
-            
+
         Assert.True(target1.IsHierarchicalChildOf(targets));
         Assert.True(target1.IsHierarchicalChildOf(folder1));
         Assert.True(target1.IsHierarchicalChildOf(folder2));
 
         Assert.False(folder1.IsHierarchicalChildOf(folder2));
         Assert.False(folder1.IsHierarchicalChildOf(target1));
-            
+
         Assert.False(folder2.IsHierarchicalChildOf(target1));
     }
 
@@ -588,7 +594,7 @@ public class ProfileTests : IDisposable
     public void MoveFolderToFolderShouldFailIfTargetIsChildOfSource()
     {
         MoveUserItemToFolder();
-            
+
         var session = CreateDefaultSessionTargets(_logger);
         var targets = session.Namespace.GetUnitById("Targets");
         var template = targets.GetUnitById("sms");
@@ -605,7 +611,7 @@ public class ProfileTests : IDisposable
         var folder2 = folder1.CreateFolder("Folder2");
         Assert.NotNull(folder2);
         folder2.CreateItem(template, "Target1");
-            
+
         // move Folder1 to Folder2
         var moved = folder1.MoveToFolder(folder2);
         Assert.False(moved);
@@ -621,4 +627,21 @@ public class ProfileTests : IDisposable
         Assert.Equal("testClass", target.Description);
     }
 
+    [Fact]
+    public void TemplatedUnitShouldBecomeTemplateDisplayName()
+    {
+        var session = CreateDefaultSessionTargets(_logger);
+        var unit = session.Namespace.GetUnitById("Targets/EmailSmtp/Presence");
+        
+        Assert.Equal("Präsenz", unit.DisplayName);
+    }
+
+    [Fact]
+    public void TemplatedUnitShouldUseOwnDisplayName()
+    {
+        var session = CreateDefaultSessionTargets(_logger);
+        var unit = session.Namespace.GetUnitById("Targets/mailto/Presence");
+        
+        Assert.Equal("Mail-Präsenz", unit.DisplayName);
+    }
 }

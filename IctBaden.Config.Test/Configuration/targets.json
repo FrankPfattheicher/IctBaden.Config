@@ -41,6 +41,7 @@
             },
             {
               "Id": "Presence",
+              "DisplayName": "Mail-Präsenz",
               "UnitTypeId": "TypePresence"
             },
             {

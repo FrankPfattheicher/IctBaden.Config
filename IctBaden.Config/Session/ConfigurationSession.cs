@@ -115,7 +115,9 @@ public class ConfigurationSession
                 typeItem.Id = item.Id;
                 typeItem.Parent = item.Parent;
                 if(unitType.Category != null) typeItem.Category = unitType.Category;
-                typeItem.DisplayName = unitType.DisplayName;
+                typeItem.DisplayName = !string.IsNullOrEmpty(item.DisplayName)
+                    ? item.DisplayName
+                    : unitType.DisplayName;
                 if(unitType.Description != null) typeItem.Description = unitType.Description;
 
                 if (item.Parent != null)
