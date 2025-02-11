@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;netcoreapp3.1;net8.0</TargetFrameworks>
-    <Copyright>(C) 2010-2024 ICT Baden GmbH</Copyright>
-    <LangVersion>12</LangVersion>
+    <Copyright>(C) 2010-2025 ICT Baden GmbH</Copyright>
+    <LangVersion>13</LangVersion>
     <IsPackable>false</IsPackable>
-    <PackageVersion>3.0.0</PackageVersion>
+    <PackageVersion>4.0.0</PackageVersion>
     <Title>Universal Configuration Framework</Title>
     <Authors>Frank Pfattheicher</Authors>
     <PackageLicenseUrl>https://github.com/FrankPfattheicher/IctBaden.Config/blob/master/LICENSE</PackageLicenseUrl>
     <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -23,10 +23,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IctBaden.Framework" Version="3.2.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+    <PackageReference Include="IctBaden.Framework" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
     <PackageReference Include="Portable.Xaml" Version="0.26.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
 </Project>

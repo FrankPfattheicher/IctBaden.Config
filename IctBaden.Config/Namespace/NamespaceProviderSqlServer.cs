@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using IctBaden.Config.Unit;
 using IctBaden.Framework.Types;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
+
 // ReSharper disable TemplateIsNotCompileTimeConstantProblem
 
 namespace IctBaden.Config.Namespace
