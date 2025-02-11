@@ -13,18 +13,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-        
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x
         
     - name: Setup Nuget
-      uses: NuGet/setup-nuget@v1
+      uses: NuGet/setup-nuget@v2.0.1
       
     - name: Prepare Artifacts
       run: |
