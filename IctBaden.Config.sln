@@ -26,6 +26,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{DC3548E9
 		IctBaden.Config.nuspec = IctBaden.Config.nuspec
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{00CE6233-96EB-4273-BBD6-2891A9D3F113}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\CI-main-nuget.yml = .github\workflows\CI-main-nuget.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
