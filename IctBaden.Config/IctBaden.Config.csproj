@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Copyright>(C) 2010-2025 ICT Baden GmbH</Copyright>
-    <LangVersion>13</LangVersion>
+    <LangVersion>12</LangVersion>
     <IsPackable>false</IsPackable>
     <PackageVersion>4.0.0</PackageVersion>
     <Title>Universal Configuration Framework</Title>
