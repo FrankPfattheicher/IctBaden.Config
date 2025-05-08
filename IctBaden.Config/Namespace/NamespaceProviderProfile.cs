@@ -22,10 +22,9 @@ public class NamespaceProviderProfile(ILogger logger, string profileName) : Name
         return _profile.Load();
     }
 
-    public override string GetPersistenceInfo()
-    {
-        return _profile.FileName;
-    }
+    public override bool IsReadOnly() => _profile.ReadOnly;
+
+    public override string GetPersistenceInfo() => _profile.FileName;
 
     public override IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
     {

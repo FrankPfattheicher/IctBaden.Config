@@ -1,4 +1,5 @@
 
+* 4.1.0 - 08.05.2025 Added NamespaceProvider.IsReadOnly()
 * 4.0.0 - 11.02.2025 Removed netcore3.1 and net6.0, System.Data.SqlClient replaced by Microsoft.Data.SqlClient
 
 * 3.1.2 - 01.04.2024 Fixed templated display name
