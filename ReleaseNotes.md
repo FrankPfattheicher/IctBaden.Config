@@ -1,4 +1,5 @@
 
+* 4.1.3 - 23.06.2025 Fixed session DeleteUserUnit also
 * 4.1.2 - 23.06.2025 Fixed nuget package references
 * 4.1.1 - 23.06.2025 Fixed session RemoveUserUnit
 * 4.1.0 - 08.05.2025 Added NamespaceProvider.IsReadOnly()

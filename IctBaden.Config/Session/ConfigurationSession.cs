@@ -232,6 +232,7 @@ public class ConfigurationSession
             return;
 
         provider.DeleteUserUnit(unit);
+        unit.Parent?.RemoveUserChild(unit);
         SignalConfigurationUnitChanged(unit);
     }
 

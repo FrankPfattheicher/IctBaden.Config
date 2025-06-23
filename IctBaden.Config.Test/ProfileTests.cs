@@ -407,6 +407,27 @@ public class ProfileTests : IDisposable
         Assert.NotNull(newItem);
         Assert.True(newItem.IsItem);
 
+        session.DeleteUserUnit(newItem);
+
+        var target = session.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in same session");
+
+        var session2 = CreateDefaultSessionTargets(_logger);
+        target = session2.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in new session");
+    }
+
+    [Fact]
+    public void RemoveUserItemFromSession()
+    {
+        var session = CreateDefaultSessionTargets(_logger);
+        var targets = session.Namespace.GetUnitById("Targets");
+        var template = targets.GetUnitById("sms");
+        Assert.False(template.IsEmpty);
+        var newItem = targets.CreateItem(template, "DeleteUserItem");
+        Assert.NotNull(newItem);
+        Assert.True(newItem.IsItem);
+
         session.RemoveUserUnit(newItem);
 
         var target = session.Namespace.GetUnitByName("DeleteUserItem", false, false);
