@@ -305,7 +305,7 @@ public class ConfigurationUnit
         Changed.Invoke(this);
     }
 
-    private bool RemoveUserChild(ConfigurationUnit userChild)
+    internal bool RemoveUserChild(ConfigurationUnit userChild)
     {
         if (!_children.Remove(userChild))
         {
@@ -640,7 +640,7 @@ public class ConfigurationUnit
         if ((includeFolders || !IsFolder) && matchName)
             return this;
 
-        foreach (var child in Children.Where(child => (!child.IsFolder && !child.IsTemplate && !child.IsProperty)))
+        foreach (var child in Children.Where(child => child is { IsFolder: false, IsTemplate: false, IsProperty: false }))
         {
             var unit = child.GetUnitByName(name, includeFolders, matchCase);
             if (!unit.IsEmpty)
@@ -648,7 +648,7 @@ public class ConfigurationUnit
         }
 
         var path = name.Split('/').ToList();
-        foreach (var child in Children.Where(child => child.IsFolder && !child.IsTemplate))
+        foreach (var child in Children.Where(child => child is { IsFolder: true, IsTemplate: false }))
         {
             var unit = child.GetUnitByName(name, includeFolders, matchCase);
             if (!unit.IsEmpty)
@@ -681,7 +681,7 @@ public class ConfigurationUnit
                 }
                 return source;
             }
-            var sourceUnits = ValueSourceUnitIds?.Split(';') ?? Array.Empty<string>();
+            var sourceUnits = ValueSourceUnitIds?.Split(';') ?? [];
             if (Session == null) return new List<ConfigurationUnit>();
                 
             var sources = sourceUnits

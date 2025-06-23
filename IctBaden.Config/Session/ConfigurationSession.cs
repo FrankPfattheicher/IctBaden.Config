@@ -21,8 +21,8 @@ public class ConfigurationSession
     private ILogger? _logger;
     private readonly Dictionary<string, NamespaceProvider> _namespaceProviders;
     private readonly Dictionary<string, IValueListProvider> _valueListProviders;
-    public ConfigurationSessionUnit UnitTypes { get; private set; }
-    public ConfigurationSessionUnit Namespace { get; private set; }
+    public ConfigurationSessionUnit UnitTypes { get; private init; }
+    public ConfigurationSessionUnit Namespace { get; private init; }
     public string CurrentUser { get; private set; }
     public int CurrentUserLevel { get; private set; }
 
@@ -162,9 +162,9 @@ public class ConfigurationSession
 
     public NamespaceProvider? GetNamespaceProvider(string? namespaceProvider)
     {
-        if ((namespaceProvider == null) || !_namespaceProviders.ContainsKey(namespaceProvider))
+        if (namespaceProvider == null || !_namespaceProviders.TryGetValue(namespaceProvider, out var provider))
             return null;
-        return _namespaceProviders[namespaceProvider];
+        return provider;
     }
 
     public IEnumerable<ConfigurationUnit> GetChildren(ConfigurationUnit unit)
@@ -221,6 +221,7 @@ public class ConfigurationSession
             return;
 
         provider.RemoveUserUnit(unit);
+        unit.Parent?.RemoveUserChild(unit);
         SignalConfigurationUnitChanged(unit);
     }
 

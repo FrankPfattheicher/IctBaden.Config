@@ -83,7 +83,7 @@ public class ProfileTests : IDisposable
         var settingsJson = ResourceLoader.LoadString(settingsCfgName);
         if (settingsJson == null) throw new ApplicationException("Missing settings.json resource");
         var settings = jsonCfgLoader.Load(new StringReader(settingsJson));
-        session.Namespace.AddChildren(new[] { targets, settings });
+        session.Namespace.AddChildren([targets, settings]);
 
         return session;
     }
@@ -376,7 +376,7 @@ public class ProfileTests : IDisposable
     }
 
     [Fact]
-    public void DeleteUserItem()
+    public void DeleteUserItemFromUnit()
     {
         var session = CreateDefaultSessionTargets(_logger);
         var targets = session.Namespace.GetUnitById("Targets");
@@ -388,9 +388,33 @@ public class ProfileTests : IDisposable
 
         newItem.Delete();
 
+        var target = session.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in same session");
+
         var session2 = CreateDefaultSessionTargets(_logger);
-        var target = session2.Namespace.GetUnitByName("DeleteUserItem", false, false);
-        Assert.True(target.IsEmpty);
+        target = session2.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in new session");
+    }
+
+    [Fact]
+    public void DeleteUserItemFromSession()
+    {
+        var session = CreateDefaultSessionTargets(_logger);
+        var targets = session.Namespace.GetUnitById("Targets");
+        var template = targets.GetUnitById("sms");
+        Assert.False(template.IsEmpty);
+        var newItem = targets.CreateItem(template, "DeleteUserItem");
+        Assert.NotNull(newItem);
+        Assert.True(newItem.IsItem);
+
+        session.RemoveUserUnit(newItem);
+
+        var target = session.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in same session");
+
+        var session2 = CreateDefaultSessionTargets(_logger);
+        target = session2.Namespace.GetUnitByName("DeleteUserItem", false, false);
+        Assert.True(target.IsEmpty, "Should not exist in new session");
     }
 
     [Fact]
@@ -523,13 +547,14 @@ public class ProfileTests : IDisposable
     }
 
 
+    // ReSharper disable UnusedMember.Local
     private enum FilterType
     {
-        // ReSharper disable once UnusedMember.Local
         ContainsText,
         StartsWithText,
         RegularExpression
     }
+    // ReSharper restore UnusedMember.Local
 
 
     [Fact]
