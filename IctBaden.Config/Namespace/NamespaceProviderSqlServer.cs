@@ -24,16 +24,18 @@ public class NamespaceProviderSqlServer : NamespaceProvider
     private string _lastError;
 
     private const string CreateTable = 
-        @"CREATE TABLE [dbo].[CfgData](
-	            [ParentId] [nvarchar](50) NOT NULL,
-	            [UnitId] [nvarchar](50) NOT NULL,
-	            [Value] [nvarchar](max) NULL,
-             CONSTRAINT [PK_CfgData] PRIMARY KEY CLUSTERED 
-                (
-	                [ParentId] ASC,
-	                [UnitId] ASC
-                )
-             WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
+        """
+        CREATE TABLE [dbo].[CfgData](
+        	            [ParentId] [nvarchar](50) NOT NULL,
+        	            [UnitId] [nvarchar](50) NOT NULL,
+        	            [Value] [nvarchar](max) NULL,
+                     CONSTRAINT [PK_CfgData] PRIMARY KEY CLUSTERED 
+                        (
+        	                [ParentId] ASC,
+        	                [UnitId] ASC
+                        )
+                     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+        """;
         
     public NamespaceProviderSqlServer(ILogger logger, string connectionString)
     {
@@ -83,6 +85,38 @@ public class NamespaceProviderSqlServer : NamespaceProvider
 
         SignalWaiting(false);
         return _connection.State == ConnectionState.Open;
+    }
+
+    public override bool IsReadOnly()
+    {
+        
+        if (_connection.State != ConnectionState.Open) return true;
+
+        try
+        {
+            lock (_connection)
+            {
+                SqlCommand cmd;
+                using var command = cmd = _connection.CreateCommand();
+                cmd.CommandText = $"SELECT DATABASEPROPERTYEX('{_connection.Database}', 'Updateability') AS Status;";
+                using var rdr = cmd.ExecuteReader();
+                if (!rdr.Read())
+                {
+                    return true;
+                }
+                if (rdr[0] is bool updatable)
+                {
+                    return !updatable;
+                }
+
+                return true;
+            }
+        }
+        catch (SqlException)
+        {
+            // ignore
+        }
+        return true;
     }
 
     private void CreateCfgDataTableIfNotExists()
