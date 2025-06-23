@@ -1,4 +1,5 @@
 
+* 4.1.2 - 23.06.2025 Fixed nuget package references
 * 4.1.1 - 23.06.2025 Fixed session RemoveUserUnit
 * 4.1.0 - 08.05.2025 Added NamespaceProvider.IsReadOnly()
 * 4.0.0 - 11.02.2025 Removed netcore3.1 and net6.0, System.Data.SqlClient replaced by Microsoft.Data.SqlClient
